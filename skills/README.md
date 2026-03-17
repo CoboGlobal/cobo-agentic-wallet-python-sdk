@@ -45,6 +45,7 @@ Core capabilities:
 
 Always use --format json for programmatic output. Check exit code and stderr on failure.
 If a transfer is denied by policy, parse the error's "suggestion" field for the corrected parameters.
+See error-handling.md for common error codes and recovery steps.
 
 For DeFi operations (Uniswap swaps, Aave lending, Jupiter swaps on Solana), use caw tx call
 with the appropriate contract address and calldata.
@@ -63,9 +64,23 @@ The cobo-agentic-wallet skill is installed at ./skills/cobo-agentic-wallet/.
 When asked to perform wallet operations:
 1. Use `caw` CLI with `--format json` for all commands
 2. Always check transaction status after submission
-3. Handle policy denials by parsing the suggestion field
+3. Handle policy denials by parsing the suggestion field — see [Error Handling](./skills/cobo-agentic-wallet/recipes/error-handling.md)
 4. For DeFi operations, refer to the skill's recipe files
 ```
+
+### Post-setup persistence
+
+After completing wallet setup, the agent should save the following to its memory or config file:
+
+| Field | Source | Purpose |
+|-------|--------|---------|
+| `wallet_uuid` | `caw profile current` | Identify the wallet |
+| `api_key` | onboard output | Authenticate API calls |
+| `addresses` | `caw address list` | Per-chain addresses |
+| `env` | setup parameter | sandbox/dev/prod |
+| `policy_limits` | `caw policy list` (if available) | Know spending constraints |
+
+Without this, the agent loses wallet context on restart and must re-onboard or re-discover.
 
 ## DeFi recipes
 
@@ -93,20 +108,45 @@ cd cobo-agentic-wallet/evals/
 ./run_evals.sh all       # Run both (~5 min, requires claude CLI)
 ```
 
+## Updating the skill
+
+Skill 分为三个版本：canonical source 和两个环境特定版本。
+
+1. **编辑 canonical source** — 修改 `cobo-agentic-wallet/` 下的文件（SKILL.md、recipes 等）
+2. **运行同步脚本** — 将改动同步到 sandbox 和 dev 版本：
+
+```bash
+cd skills/
+python3 sync_env_skills.py
+```
+
+脚本会从 canonical source 自动生成 `cobo-agentic-wallet-sandbox/` 和 `cobo-agentic-wallet-dev/` 的全部内容（SKILL.md + recipes），环境相关的字段（name、URL、`--env` 值）自动替换。
+
+> **不要直接编辑** `cobo-agentic-wallet-sandbox/` 或 `cobo-agentic-wallet-dev/` 下的文件，下次运行同步脚本会被覆盖。
+
 ## File structure
 
 ```
 skills/
 ├── README.md                            # This file
-└── cobo-agentic-wallet/
-    ├── SKILL.md                         # Main instructions (loaded on trigger)
-    ├── commands.md                      # caw CLI command reference
-    ├── recipes.md                       # Recipe index
-    ├── recipes/                         # DeFi + operational recipes
-    ├── scripts/
-    │   └── convert_jupiter.sh           # Jupiter API → caw CLI format converter
-    └── evals/
-        ├── trigger-eval.json            # Trigger accuracy tests
-        ├── evals.json                   # Output quality tests
-        └── run_evals.sh                 # Eval runner script
+├── sync_env_skills.py                   # Sync canonical → env-specific skills
+├── cobo-agentic-wallet/                 # Canonical source (edit here)
+│   ├── SKILL.md                         # Main instructions (loaded on trigger)
+│   ├── commands.md                      # caw CLI command reference
+│   ├── recipes.md                       # Recipe index
+│   ├── recipes/                         # DeFi + operational recipes
+│   ├── scripts/
+│   │   └── convert_jupiter.sh           # Jupiter API → caw CLI format converter
+│   └── evals/
+│       ├── trigger-eval.json            # Trigger accuracy tests
+│       ├── evals.json                   # Output quality tests
+│       └── run_evals.sh                 # Eval runner script
+├── cobo-agentic-wallet-sandbox/         # Auto-generated (sandbox env)
+│   ├── SKILL.md
+│   ├── recipes.md
+│   └── recipes/
+└── cobo-agentic-wallet-dev/             # Auto-generated (dev env)
+    ├── SKILL.md
+    ├── recipes.md
+    └── recipes/
 ```

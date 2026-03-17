@@ -1,49 +1,64 @@
 ---
-name: cobo-agentic-wallet
+name: cobo-agentic-wallet-dev
 description: |
-  Use this skill whenever a task involves a Cobo Agentic Wallet — including wallet setup and onboarding, token transfers, contract calls, balance checks, transaction queries, and policy denial handling. Also use it for DeFi strategy execution: Aave V3 borrow/repay, DEX token swaps (Uniswap V3), DCA (dollar cost averaging), grid trading, and prediction market positions — on EVM chains (Ethereum, Base, Arbitrum, Optimism, Polygon) or Solana (mainnet via Jupiter, devnet). Use it whenever the user mentions `caw`, `cobo-agentic-wallet`, MPC wallet agent operations, or needs to call a smart contract or DeFi protocol through a policy-enforced wallet. Use it even if they don't say "Cobo" — if they're building or operating an AI agent that needs to spend crypto with guardrails, this skill applies.
+  Cobo Agentic Wallet skill for the **dev** environment (`--env dev`, API: api-agentic-wallet-core.dev.cobo.com).
+  Use for agent wallet use cases and agent-wallet-related guidance — including Cobo Agentic Wallet operations via the `caw` CLI or Cobo API: wallet onboarding and setup, transfers of stablecoins (USDC, USDT, DAI) and tokens (ETH, WETH, WBTC, SOL, ARB, OP, MATIC), smart contract calls, balance and transaction queries, and policy denial handling.
+  Covers DeFi execution through Cobo's MPC/TSS policy layer on EVM chains (Base, Ethereum, Arbitrum, Optimism, Polygon) and Solana (mainnet via Jupiter, devnet): Aave V3 borrow/repay, Uniswap V3 swaps, DCA strategies, grid trading, and prediction market positions.
+  Use when: user mentions caw, cobo-agentic-wallet, MPC wallet, TSS node, Cobo Portal; needs smart contract or DeFi protocol access through a policy-enforced agent wallet; or asks about agent wallets, policy-enforced wallets, or how agents manage crypto in general — and the target environment is dev.
+  NOT for: fiat currency operations — credit card payments, bank wire transfers, or crypto-to-fiat off-ramp flows.
 ---
 
-# Cobo Agentic Wallet
+# Cobo Agentic Wallet (Dev)
 
 Cobo Agentic Wallet is a policy-enforced crypto wallet for AI agents. Owners set spending limits and approve transactions; agents operate within those guardrails. The `caw` CLI is the primary interface.
 
-> **Deterministic execution** — follow every step exactly, do NOT improvise or skip steps.
-
 ## Install
 
+On first use in a conversation, run this to install the required version:
+
 ```bash
-pip install --upgrade cobo-agentic-wallet
-caw --help
+pip install cobo-agentic-wallet==0.1.24 && caw --version
 ```
 
-> **Before using this skill**, ensure `cobo-agentic-wallet` is updated to the latest version. Commands and parameters may depend on the newest SDK.
+Skip if you have already confirmed the version in this session.
 
-## Environments
+## Environment
 
 | Environment | `--env` value | API URL                                          | Web Console |
 |-------------|---------------|--------------------------------------------------|-------------|
-| Sandbox | `sandbox` | `https://api-agent-wallet-core.sandbox.cobo.com` | https://agenticwallet.sandbox.cobo.com/ |
 | Dev | `dev` | `https://api-agentic-wallet-core.dev.cobo.com`   | https://agenticwallet.dev.cobo.com/ |
 
 Set the API URL before any command:
 
 ```bash
-export AGENT_WALLET_API_URL=https://api-agent-wallet-core.sandbox.cobo.com
+export AGENT_WALLET_API_URL=https://api-agentic-wallet-core.dev.cobo.com
 ```
 
-## Onboarding Modes
+## Onboarding
 
-Choose the mode that matches the user's instruction:
+If the user provides a **token** → Supervised path. Otherwise → Autonomous path (default).
 
-### Supervised Mode
+### Autonomous Path (default — no token)
+
+```bash
+caw onboard --create-wallet --env dev
+```
+
+> See [Error Handling — Onboarding errors](./recipes/error-handling.md#onboarding-errors) for onboarding errors.
+
+This single command completes the full setup. **Do NOT create addresses or run self-test after this** — the wallet is ready to use immediately. Only proceed with further steps if the user explicitly requests them.
+
+Notes:
+- **`--sponsor false` is required** for transfers — autonomous wallets do NOT support gas sponsorship.
+
+### Supervised Path (token provided)
 
 Human initiates from Web Console, provides a setup token. Agent pairs + creates a wallet under owner's policy supervision.
 
 **Step 1 — Run onboard**
 
 ```bash
-caw onboard --token <TOKEN> --create-wallet --env sandbox
+caw onboard --token <TOKEN> --create-wallet --env dev
 ```
 
 Runs 5 sequential steps (~60–180s):
@@ -85,22 +100,9 @@ Print a summary with: `agent_id`, `wallet_uuid`, address(es), `env`, and config 
 
 ---
 
-### Autonomous Mode
+### Claiming — Transfer Ownership to a Human
 
-No token needed. Agent self-provisions and creates its own wallet with no human owner.
-
-```bash
-caw onboard --create-wallet --env sandbox
-```
-
-This single command completes the full setup. **Do NOT create addresses or run self-test after this** — the wallet is ready to use immediately. Only proceed with further steps if the user explicitly requests them.
-
-Notes:
-- **`--sponsor false` is required** for transfers — autonomous wallets do NOT support gas sponsorship.
-
-**Claiming — transfer ownership to a human:**
-
-An autonomous wallet has no human owner. To let a human claim it:
+When the user wants to claim a wallet (e.g., "我要 claim 这个钱包", "claim the wallet"), use these commands:
 
 ```bash
 caw profile claim                   # generate a claim link
@@ -125,7 +127,7 @@ Each `caw onboard` creates a separate **profile** — an isolated identity with 
 caw --profile caw_agent_abc123 tx transfer --to 0x... --token SOLDEV_SOL_USDC --amount 0.0001 --chain SOLDEV_SOL
 ```
 
-See `caw profile --help` and [commands.md](./commands.md) for all profile subcommands (`list`, `current`, `use`, `env`, `archive`, `restore`).
+See `caw profile --help` for all profile subcommands (`list`, `current`, `use`, `env`, `archive`, `restore`).
 
 > **ONLY use archive when a previous onboarding has failed and you need to retry.** Do NOT archive before a fresh onboarding — the `onboard` command creates a new profile automatically.
 
@@ -133,24 +135,18 @@ See `caw profile --help` and [commands.md](./commands.md) for all profile subcom
 
 ## Key Notes
 
+- **`--format json`** for programmatic output; `--format table` only when displaying to the user.
 - **`--sponsor` option**: `--sponsor true` (default) uses Cobo Gasless. Autonomous mode wallets must use `--sponsor false`.
-- **TSS Node auto-start**: `caw tx transfer` and `caw tx call` automatically check TSS Node status and start it if offline.
-- **`caw node stop`**: Checks for pending transactions before stopping. Use `--force` to skip the check.
+- **Long-running commands** (`caw onboard --create-wallet`): run in background, poll output every 10–15s, report each `[n/total]` progress step.
+- **TSS Node auto-start**: `caw tx transfer` and `caw tx call` automatically check TSS Node status and start it if offline. `caw node stop` checks for pending transactions — use `--force` to skip.
 - **wallet_uuid is optional** in most commands — if omitted, the CLI uses the active profile's wallet.
-
-## Execution Guidance for AI Agents
-
-1. **Always use `--format json`** for programmatic output. Use `--format table` only when displaying to the user.
-2. **Long-running commands** (`caw onboard --create-wallet`): run in background, poll output every 10–15s, report each `[n/total]` progress step.
-3. **Non-zero exit codes** indicate failure — always check stdout/stderr for details before retrying.
-4. **Do NOT run `caw profile archive` before a fresh onboarding.** Only archive if a previous onboarding failed and you need to clean up before retrying.
-5. **StandardResponse format** — API responses are wrapped as `{ success: true, result: <data> }`. When parsing JSON, extract from `result` first.
+- **StandardResponse format** — API responses are wrapped as `{ success: true, result: <data> }`. Extract from `result` first.
+- **Non-zero exit codes** indicate failure — check stdout/stderr before retrying.
 
 ## Reference
 
 Read the file that matches the user's task. Do not load files that aren't relevant.
 
-- [CLI Command Reference](./commands.md) — Read when you need the full `caw` command syntax
 - [Recipes](./recipes.md) — Read for quick one-liner examples of common operations
   - [Policy Management](./recipes/policy-management.md)
   - [Error Handling](./recipes/error-handling.md)
