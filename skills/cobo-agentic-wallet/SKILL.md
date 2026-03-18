@@ -17,7 +17,7 @@ Cobo Agentic Wallet is a policy-enforced crypto wallet for AI agents. Owners set
 On first use in a conversation, run this to install the required version:
 
 ```bash
-pip install cobo-agentic-wallet==0.1.27 && caw --version
+pip install cobo-agentic-wallet==0.1.28 && caw --version
 ```
 
 Skip if you have already confirmed the version in this session.
@@ -135,6 +135,7 @@ See `caw profile --help` for all profile subcommands (`list`, `current`, `use`, 
 - **wallet_uuid is optional** in most commands — if omitted, the CLI uses the active profile's wallet.
 - **StandardResponse format** — API responses are wrapped as `{ success: true, result: <data> }`. Extract from `result` first.
 - **Non-zero exit codes** indicate failure — check stdout/stderr before retrying.
+- **Show the command**: When reporting `caw` results to the user, always include the full CLI command that was executed, so the user can reproduce or debug independently.
 
 ## Reference
 
