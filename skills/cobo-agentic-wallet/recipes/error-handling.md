@@ -8,16 +8,32 @@ The response includes structured fields:
 
 ```json
 {
+  "success": false,
   "error": {
     "code": "TRANSFER_LIMIT_EXCEEDED",
     "reason": "max_per_tx",
-    "details": {"limit_value": "100"},
-    "suggestion": "Try amount <= 100"
+    "details": {"limit_value": "100", "remaining": "60"},
+    "suggestion": "Retry with amount <= 60."
   }
 }
 ```
 
-**Recovery:** Use the `suggestion` field to retry with adjusted parameters.
+Read the `suggestion` field — it says what to do next in plain language.
+
+- If it says to adjust a parameter (e.g. "Retry with amount <= 60") and the adjusted value still satisfies the user's request, retry silently.
+- If it says to ask the wallet owner to take action, stop and tell the user.
+
+### Communicating denials to the user
+
+> "Transfer blocked: `<suggestion>`. To update the policy, ask the wallet owner."
+
+**Example — limit can be partially satisfied (retry silently):**
+User asked to send $80; suggestion says "Retry with amount <= 60." The reduced amount doesn't satisfy the request → tell the user:
+> "Transfer blocked: the per-transaction limit is $60. I can retry with $60 — would you like that, or do you want to ask the wallet owner to raise the limit?"
+
+**Example — owner action required:**
+Suggestion says "Ask the wallet owner to whitelist contract 0xUniswap..." → tell the user:
+> "Transfer blocked: this contract isn't whitelisted. To proceed, ask the wallet owner to whitelist it."
 
 ## Validation error (422)
 

@@ -12,15 +12,21 @@ description: |
 
 Cobo Agentic Wallet is a policy-enforced crypto wallet for AI agents. Owners set spending limits and approve transactions; agents operate within those guardrails. The `caw` CLI is the primary interface.
 
-## Install
+## Bootstrap
 
-On first use in a conversation, run this to install the required version:
+Run `./scripts/bootstrap-env.sh --env dev` to install caw and TSS Node (download sources are built into the script). caw → `~/.cobo-agentic-wallet/bin/caw`; add that dir to PATH.
 
-```bash
-pip install cobo-agentic-wallet==0.1.28 && caw --version
-```
+**Rule:** Before any onboard, run bootstrap and wait for `ready` or `[3/3] Done`. If caw and tss-node already exist, script exits immediately with `ready`.
 
-Skip if you have already confirmed the version in this session.
+**Prompt → action:**
+
+| User prompt | Action |
+|-------------|--------|
+| `BootStrap a new Cobo Agentic Wallet with token <TOKEN>` | Then `caw onboard --create-wallet --token <TOKEN> --env dev` |
+| `BootStrap a new Cobo Agentic Wallet with invitation code <CODE>` | Then `caw onboard --create-wallet --invitation-code <CODE> --env dev` |
+| `BootStrap a new Cobo Agentic Wallet` (no token/code) | Run invite-code flow (see below); once code is available, `caw onboard --create-wallet --invitation-code <CODE> --env dev` |
+
+**General:** Onboard ~50-60s. See [Error Handling](./recipes/error-handling.md#onboarding-errors).
 
 ## Environment
 
@@ -36,60 +42,49 @@ export AGENT_WALLET_API_URL=https://api-agentic-wallet-core.dev.cobo.com
 
 ## Onboarding
 
-If the user provides a **token** → Supervised path. Otherwise → Autonomous path (default).
+### Autonomous onboarding (invitation code)
 
-### Autonomous Path (default — no token)
-
-```bash
-caw onboard --create-wallet --env dev
-```
-
-> See [Error Handling — Onboarding errors](./recipes/error-handling.md#onboarding-errors) for onboarding errors.
-
-This single command completes the full setup. **Do NOT create addresses or run self-test after this** — the wallet is ready to use immediately. Only proceed with further steps if the user explicitly requests them.
-
-
-### Supervised Path (token provided)
-
-Human initiates from Web Console, provides a setup token. Agent pairs + creates a wallet under owner's policy supervision.
-
-**Step 1 — Run onboard**
+1. After bootstrap-env ready, run:
 
 ```bash
-caw onboard --token <TOKEN> --create-wallet --env dev
+export PATH="$HOME/.cobo-agentic-wallet/bin:$PATH"
+caw --format table onboard --create-wallet --env dev --invitation-code <INVITATION_CODE>
 ```
 
-Runs 5 sequential steps (~60–180s):
-`[1/5]` Register → `[2/5]` Download TSS → `[3/5]` Init TSS → `[4/5]` Start TSS → `[5/5]` Create wallet.
+~60s: Register → Init TSS → Start TSS → Create wallet. Wallet ready.
 
-> **IMPORTANT:** Long-running command. Run in background, poll output every 10–15s, report each `[n/5]` step to the user.
+### Invite-code acquisition (when no token/code)
 
-
-**Step 2 — Verify profile**
+1. Submit waitlist. Get curl from script:
 
 ```bash
-caw profile current
+./scripts/bootstrap-env.sh --env dev --print-waitlist-curl
 ```
 
-Confirm `agent_id`, `wallet_uuid`, `env`, and `onboarded_at` are populated.
-
-**Step 3 — Create an address**
+Fill in `agent_name`, `agent_description`, `email`, `telegram` and run the printed curl.
+2. Ask human to open returned `auth_url` and complete X login.
+3. After approval, invite code is sent via X DM.
+4. After bootstrap-env ready, run:
 
 ```bash
-caw --format json address create --chain SOL
+export PATH="$HOME/.cobo-agentic-wallet/bin:$PATH"
+caw --format table onboard --create-wallet --env dev --invitation-code <INVITATION_CODE>
 ```
 
-> `--chain` accepts user-friendly chain IDs (e.g., `SOL`, `ETH`). The CLI resolves them to internal identifiers automatically.
+### Supervised onboarding (token provided)
 
-**Step 4 — Validate with self-test**
+Human initiates from Web Console, provides setup token.
+
+1. After bootstrap-env ready:
 
 ```bash
-caw --format json onboard self-test
+export PATH="$HOME/.cobo-agentic-wallet/bin:$PATH"
+caw --format table onboard --create-wallet --env dev --token <TOKEN>
 ```
 
-**Step 5 — Report to user**
+~60s: Pairing → Init TSS → Start TSS → Create wallet.
 
-Print a summary with: `agent_id`, `wallet_uuid`, address(es), `env`, and config paths.
+Optional post-onboard: `caw profile current` → create address → `onboard self-test` → report summary to user.
 
 ---
 
@@ -126,24 +121,52 @@ See `caw profile --help` for all profile subcommands (`list`, `current`, `use`, 
 
 ---
 
+## Common Operations
+
+```bash
+# Transfer tokens
+caw --format json tx transfer --to 0x1234...abcd --token USDC --amount 10 --chain BASE --request-id pay-invoice-1001
+
+# Check wallet balance
+caw --format json wallet balance
+
+# List recent transactions
+caw --format json tx list --limit 20
+
+# Estimate fee before transfer
+caw --format json tx estimate-transfer-fee --to 0x1234...abcd --token USDC --amount 10 --chain BASE
+
+# Contract call
+caw --format json tx call --contract 0xContractAddr --calldata 0x... --chain ETH
+
+# Poll a pending approval
+caw --format json pending get <operation_id>
+```
+
 ## Key Notes
 
 - **`--format json`** for programmatic output; `--format table` only when displaying to the user.
 - **`--sponsor`**: `true` to have gas fees covered by Cobo Gasless; `false` to pay gas from the wallet's own balance.
+- **Gas address** (when not using `--sponsor true`): Keep one fixed address per ecosystem to hold native tokens for fees — one for EVM (ETH), one for Solana (SOL). Before executing any transfer or contract call, check the relevant gas address has sufficient balance:
+  ```bash
+  caw --format json wallet balance --address <gas-address> --chain <CHAIN>
+  ```
+  If the balance is low, warn the user and top it up from wherever funds are available before proceeding.
 - **Long-running commands** (`caw onboard --create-wallet`): run in background, poll output every 10–15s, report each `[n/total]` progress step.
 - **TSS Node auto-start**: `caw tx transfer` and `caw tx call` automatically check TSS Node status and start it if offline. `caw node stop` checks for pending transactions — use `--force` to skip.
 - **wallet_uuid is optional** in most commands — if omitted, the CLI uses the active profile's wallet.
 - **StandardResponse format** — API responses are wrapped as `{ success: true, result: <data> }`. Extract from `result` first.
 - **Non-zero exit codes** indicate failure — check stdout/stderr before retrying.
 - **Show the command**: When reporting `caw` results to the user, always include the full CLI command that was executed, so the user can reproduce or debug independently.
+- **Policy denial**: Tell the user what was blocked and why — see [error-handling.md](./recipes/error-handling.md#communicating-denials-to-the-user) for the message template.
 
 ## Reference
 
 Read the file that matches the user's task. Do not load files that aren't relevant.
 
-- [Recipes](./recipes.md) — Read for quick one-liner examples of common operations
-  - [Policy Management](./recipes/policy-management.md)
-  - [Error Handling](./recipes/error-handling.md)
+- [Policy Management](./recipes/policy-management.md) — Inspect, test, and troubleshoot policies
+- [Error Handling](./recipes/error-handling.md) — Common errors, policy denials, recovery patterns, and user communication
+- [Security](./recipes/security.md) — Prompt injection, credential protection, delegation boundaries, incident response
 
 **DeFi recipes** — read the matching file when the user asks about a specific strategy:
 
