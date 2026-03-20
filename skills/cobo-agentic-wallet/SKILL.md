@@ -149,7 +149,7 @@ caw --format json pending get <operation_id>
 - **`--sponsor`**: `true` to have gas fees covered by Cobo Gasless; `false` to pay gas from the wallet's own balance.
 - **Gas address** (when not using `--sponsor true`): Keep one fixed address per ecosystem to hold native tokens for fees — one for EVM (ETH), one for Solana (SOL). Before executing any transfer or contract call, check the relevant gas address has sufficient balance:
   ```bash
-  caw --format json wallet balance --address <gas-address> --chain <CHAIN>
+  caw --format json wallet balance --address <gas-address> --chain-id <CHAIN>
   ```
   If the balance is low, warn the user and top it up from wherever funds are available before proceeding.
 - **Long-running commands** (`caw onboard --create-wallet`): run in background, poll output every 10–15s, report each `[n/total]` progress step.
