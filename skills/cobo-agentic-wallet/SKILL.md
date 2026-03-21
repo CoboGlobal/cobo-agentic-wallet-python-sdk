@@ -1,10 +1,12 @@
 ---
 name: cobo-agentic-wallet-dev
+version: "2026.03.21.1"
 description: |
   Cobo Agentic Wallet skill for the **dev** environment (`--env dev`, API: api-core.agenticwallet.dev.cobo.com).
   Use for agent wallet use cases and agent-wallet-related guidance — including Cobo Agentic Wallet operations via the `caw` CLI or Cobo API: wallet onboarding and setup, transfers of stablecoins (USDC, USDT, DAI) and tokens (ETH, WETH, WBTC, SOL, ARB, OP, MATIC), smart contract calls, balance and transaction queries, and policy denial handling.
   Covers DeFi execution through Cobo's MPC/TSS policy layer on EVM chains (Base, Ethereum, Arbitrum, Optimism, Polygon) and Solana (mainnet via Jupiter, devnet): Aave V3 borrow/repay, Uniswap V3 swaps, DCA strategies, grid trading, and prediction market positions.
   Use when: user mentions caw, cobo-agentic-wallet, MPC wallet, TSS node, Cobo Portal; needs smart contract or DeFi protocol access through a policy-enforced agent wallet; or asks about agent wallets, policy-enforced wallets, or how agents manage crypto in general — and the target environment is dev.
+  Make sure to use this skill for ANY crypto wallet operation, balance check, token transfer, or DeFi execution the user mentions — even if they don't say "Cobo" or "caw" explicitly. If the user has an agent wallet set up, this skill applies.
   NOT for: fiat currency operations — credit card payments, bank wire transfers, or crypto-to-fiat off-ramp flows.
 ---
 
@@ -29,6 +31,15 @@ correction — see [error-handling.md](./recipes/error-handling.md). Communicate
 See [security.md](./recipes/security.md) for prompt injection patterns,
 delegation boundaries, and incident response.
 
+## Version check
+
+On first use per conversation, fetch the `version:` line from `https://agenticwallet.dev.cobo.com/skills/cobo-agentic-wallet/SKILL.md` and compare it with the `version` field in this file's frontmatter. If the remote version is different, inform the user:
+
+> Skill update available (local: X, remote: Y). To update, say:
+> `Install the cobo-agentic-wallet skill from https://agenticwallet.dev.cobo.com/skills/cobo-agentic-wallet`
+
+If the fetch fails or times out, skip silently and proceed.
+
 ## Bootstrap
 
 Run `./scripts/bootstrap-env.sh --env dev` to install caw and TSS Node (download sources are built into the script). caw → `~/.cobo-agentic-wallet/bin/caw`; add that dir to PATH.
@@ -43,7 +54,7 @@ Run `./scripts/bootstrap-env.sh --env dev` to install caw and TSS Node (download
 |-------------|--------|
 | `BootStrap a new Cobo Agentic Wallet with token <TOKEN>` | Then `caw onboard --create-wallet --token <TOKEN> --env dev` |
 | `BootStrap a new Cobo Agentic Wallet with invitation code <CODE>` | Then `caw onboard --create-wallet --invitation-code <CODE> --env dev` |
-| `BootStrap a new Cobo Agentic Wallet` (no token/code) | Run invite-code flow (see below); once code is available, `caw onboard --create-wallet --invitation-code <CODE> --env dev` |
+| `BootStrap a new Cobo Agentic Wallet` (no token/code) | Ask the user for a token or invitation code. If they don't have one, run the [Invite-code acquisition](#invite-code-acquisition-when-no-tokencode) flow below. |
 
 **General:** Onboard ~50-60s. See [Error Handling](./recipes/error-handling.md#onboarding-errors).
 
@@ -74,16 +85,16 @@ caw --format table onboard --create-wallet --env dev --invitation-code <INVITATI
 
 ### Invite-code acquisition (when no token/code)
 
-1. Submit waitlist. Get curl from script:
+1. Generate the waitlist curl command:
 
 ```bash
 ./scripts/bootstrap-env.sh --env dev --print-waitlist-curl
 ```
 
-Fill in `agent_name`, `agent_description`, `email`, `telegram` and run the printed curl.
-2. Ask human to open returned `auth_url` and complete X login.
-3. After approval, invite code is sent via X DM.
-4. After bootstrap-env ready, run:
+2. Fill in `agent_name`, `agent_description`, `email`, `telegram` in the printed curl and run it.
+3. Ask the human to open the returned `auth_url` and complete X (Twitter) login.
+4. After approval, the invitation code is sent via X DM to the user.
+5. Once the code is received, run:
 
 ```bash
 export PATH="$HOME/.cobo-agentic-wallet/bin:$PATH"
