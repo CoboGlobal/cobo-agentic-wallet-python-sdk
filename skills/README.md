@@ -2,19 +2,51 @@
 
 A Claude Code skill that enables AI agents to operate Cobo Agentic Wallets, aka caw or CAW — policy-enforced crypto wallets with spending limits, approval workflows, and DeFi strategy execution.
 
+## Use Cases
+
+This skill is relevant if your agent needs to do any of the following:
+
+**Token transfers & payments**
+- Send stablecoins (USDC, USDT, DAI) or tokens (ETH, SOL, WBTC, …) to an address
+- Pay other agents or services autonomously
+- Split or batch payments across multiple recipients
+
+**DeFi execution**
+- Swap tokens on DEXs (Uniswap V3 on EVM, Jupiter V6 on Solana)
+- Lend and borrow on Aave V3
+- Run DCA strategies or grid trading loops
+- Execute prediction market positions (Drift, Polymarket)
+
+**On-chain automation**
+- Call arbitrary smart contracts on a schedule or in response to conditions
+- Monitor balances and trigger actions when thresholds are crossed
+
+**Policy-enforced agent wallets**
+- Operate within owner-set spending limits and approval workflows
+- Let a human owner approve high-value or out-of-policy transactions
+- Audit all agent activity with a full transaction history
+
+If none of the above apply, this skill is probably not what you need.
+
 ## Install
 
 ### 1. Install the skill
 
-在 Claude Code 或其他支持 skill 的 AI 工具中直接说：
+In Claude Code or another AI agent that supports skills, say:
 
 ```
 Install the cobo-agentic-wallet skill from https://github.com/CoboGlobal/cobo-agentic-wallet-python-sdk/tree/master/skills/cobo-agentic-wallet
 ```
 
-### 2. Try it
+### 2. Restart the gateway
 
-安装后尝试以下 prompt：
+After installing the skill, restart your AI agent's gateway or skill runtime so it picks up the new skill. The exact command depends on the platform you're using.
+
+After restarting, the agent will automatically load this skill the next time it receives a wallet-related request.
+
+### 3. Try it
+
+After installation, try these prompts:
 
 ```
 "Set up a Cobo Agentic Wallet for my AI agent on sandbox"
@@ -51,9 +83,9 @@ For DeFi operations (Uniswap swaps, Aave lending, Jupiter swaps on Solana), use 
 with the appropriate contract address and calldata.
 ```
 
-### Claude Code — CLAUDE.md configuration
+### Agent instructions configuration
 
-Add to your project's `.claude/CLAUDE.md`:
+Add the following to your agent's instructions file (e.g. `CLAUDE.md`, `AGENTS.md`, or your platform's equivalent):
 
 ```markdown
 ## Wallet Operations
@@ -96,6 +128,26 @@ Each recipe supports both testnet (simulation) and mainnet (real execution):
 
 Also see: [Policy Management](./cobo-agentic-wallet/recipes/policy-management.md) | [Error Handling](./cobo-agentic-wallet/recipes/error-handling.md)
 
+## Supported Chains
+
+| Chain | Chain ID | Type |
+|---|---|---|
+| Ethereum | `ETH` | EVM |
+| Base | `BASE` | EVM |
+| Arbitrum | `ARBITRUM` | EVM |
+| Optimism | `OP` | EVM |
+| Polygon | `MATIC` | EVM |
+| Solana | `SOL` | Solana |
+| Sepolia (testnet) | `SETH` | EVM |
+| Solana Devnet | `SOLDEV_SOL` | Solana |
+
+For the full list of supported chains and tokens, run:
+
+```bash
+caw --format json chain list
+caw --format json token list --chain <CHAIN>
+```
+
 ## Evals
 
 Validate the skill works correctly:
@@ -110,43 +162,29 @@ cd cobo-agentic-wallet/evals/
 
 ## Updating the skill
 
-Skill 分为三个版本：canonical source 和两个环境特定版本。
+The skill has three versions: a canonical source and two environment-specific variants.
 
-1. **编辑 canonical source** — 修改 `cobo-agentic-wallet/` 下的文件（SKILL.md、recipes 等）
-2. **运行同步脚本** — 将改动同步到 sandbox 和 dev 版本：
+1. **Edit the canonical source** — modify files under `cobo-agentic-wallet/` (SKILL.md, recipes, etc.)
+2. **Run the sync script** — propagate changes to the sandbox and dev versions:
 
 ```bash
 cd skills/
 python3 sync_env_skills.py
 ```
 
-脚本会从 canonical source 自动生成 `cobo-agentic-wallet-sandbox/` 和 `cobo-agentic-wallet-dev/` 的全部内容（SKILL.md + recipes），环境相关的字段（name、URL、`--env` 值）自动替换。
+The script auto-generates the full contents of `cobo-agentic-wallet-sandbox/` and `cobo-agentic-wallet-dev/` (SKILL.md + recipes) from the canonical source, substituting environment-specific fields (name, URL, `--env` value) automatically.
 
-> **不要直接编辑** `cobo-agentic-wallet-sandbox/` 或 `cobo-agentic-wallet-dev/` 下的文件，下次运行同步脚本会被覆盖。
+> **Do not edit** `cobo-agentic-wallet-sandbox/` or `cobo-agentic-wallet-dev/` directly — they will be overwritten the next time the sync script runs.
 
 ## File structure
 
 ```
 skills/
 ├── README.md                            # This file
-├── sync_env_skills.py                   # Sync canonical → env-specific skills
 ├── cobo-agentic-wallet/                 # Canonical source (edit here)
 │   ├── SKILL.md                         # Main instructions (loaded on trigger)
-│   ├── commands.md                      # caw CLI command reference
-│   ├── recipes.md                       # Recipe index
 │   ├── recipes/                         # DeFi + operational recipes
-│   ├── scripts/
-│   │   └── convert_jupiter.sh           # Jupiter API → caw CLI format converter
-│   └── evals/
-│       ├── trigger-eval.json            # Trigger accuracy tests
-│       ├── evals.json                   # Output quality tests
-│       └── run_evals.sh                 # Eval runner script
-├── cobo-agentic-wallet-sandbox/         # Auto-generated (sandbox env)
-│   ├── SKILL.md
-│   ├── recipes.md
-│   └── recipes/
-└── cobo-agentic-wallet-dev/             # Auto-generated (dev env)
-    ├── SKILL.md
-    ├── recipes.md
-    └── recipes/
+│   └── scripts/
+│       ├── bootstrap-env.sh             # Install caw and TSS Node
+│       └── convert_jupiter.sh           # Jupiter API → caw CLI format converter
 ```

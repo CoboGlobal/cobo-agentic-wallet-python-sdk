@@ -7,46 +7,39 @@ set -euo pipefail
 # caw: Cobo Agentic Wallet binary release (tar.gz). Package: caw-{version}-{os}-{arch}.tar.gz
 # Bucket: cobo-agenticwallet, path: /binary-release/0.1.0/ (linux-amd64, linux-arm64; darwin when published)
 CAW_BASE_URL="${CAW_BASE_URL:-https://download.agenticwallet.cobo.com/binary-release}"
-CAW_VERSION="${CAW_VERSION:-v0.2.4}"
+CAW_VERSION="${CAW_VERSION:-v0.2.5}"
 # TSS Node: Cobo download (tar.gz)
 TSS_BASE_URL="${TSS_BASE_URL:-https://download.tss.cobo.com/binary-release/latest}"
-ENV_NAME="${ENV_NAME:-sandbox}"
+ENV_NAME="${ENV_NAME:-dev}"
 INSTALL_ROOT="${INSTALL_ROOT:-$HOME/.cobo-agentic-wallet}"
 BIN_DIR="${BIN_DIR:-$INSTALL_ROOT/bin}"
 CACHE_TSS_DIR="${CACHE_TSS_DIR:-$INSTALL_ROOT/cache/tss-node}"
 LOG_DIR="${LOG_DIR:-$INSTALL_ROOT/logs}"
 FORCE_DOWNLOAD=false
 PRINT_WAITLIST_CURL=false
-
-# Waitlist API URL (separate from caw API URL); controlled by --env
-# sandbox -> api-agentic-wallet-assistant.sandbox.cobo.com
-# dev     -> api-agentic-wallet-assistant.dev.cobo.com
-resolve_waitlist_url() {
-  case "$ENV_NAME" in
-    dev) echo "${WAITLIST_API_URL:-https://api-agentic-wallet-assistant.dev.cobo.com/api/v1/waitlist/apply}" ;;
-    *)   echo "${WAITLIST_API_URL:-https://api-agentic-wallet-assistant.sandbox.cobo.com/api/v1/waitlist/apply}" ;;
-  esac
-}
+# Replaced per-environment by sync_env_skills.py; default to sandbox for direct use
+WAITLIST_URL="${WAITLIST_API_URL:-https://api-assistant.agenticwallet.dev.cobo.com/api/v1/waitlist/apply}"
 
 usage() {
   cat <<'EOF'
 Usage:
-  bootstrap-env.sh [--env sandbox] [--base-url URL] [--caw-version VER] [--force-download] [--print-waitlist-curl]
+  bootstrap-env.sh [--env dev] [--base-url URL] [--caw-version VER] [--force-download] [--print-waitlist-curl]
 
 Options:
-  --env               Cobo environment (sandbox/dev), default: sandbox
+  --env               Cobo environment (sandbox/dev/prod), default: dev
   --base-url          TSS Node base URL (default: https://download.tss.cobo.com/binary-release/latest)
   --caw-version       caw package version (default: 0.1.0). Path: {base}/{ver}/caw-{ver}-{os}-{arch}.tar.gz
   --force-download    Always download (ignore existing caw and tss-node)
-  --print-waitlist-curl  Print curl command for waitlist apply; URL follows --env
+  --print-waitlist-curl  Print curl command for waitlist apply and exit
 
 Download sources:
   caw:  https://cobo-agenticwallet.s3.us-west-2.amazonaws.com/binary-release/{ver}/caw-{ver}-{os}-{arch}.tar.gz
   TSS:  https://download.tss.cobo.com/binary-release/latest/cobo-tss-node-{os}-{arch}.tar.gz
 
 Examples:
-  bootstrap-env.sh --env sandbox
-  bootstrap-env.sh --env sandbox --caw-version 0.1.0 --print-waitlist-curl
+  bootstrap-env.sh --env dev
+  bootstrap-env.sh --env dev --caw-version 0.1.0
+  bootstrap-env.sh --env dev --print-waitlist-curl
 EOF
 }
 
@@ -85,7 +78,6 @@ while [[ $# -gt 0 ]]; do
 done
 
 if [[ "$PRINT_WAITLIST_CURL" == "true" ]]; then
-  WAITLIST_URL="$(resolve_waitlist_url)"
   echo "curl -X POST \"$WAITLIST_URL\" \\"
   echo "  -H \"Content-Type: application/json\" \\"
   echo "  -d '{\"agent_name\":\"YOUR_AGENT_NAME\",\"agent_description\":\"Brief description\",\"email\":\"user@example.com\",\"telegram\":\"@handle\"}'"
