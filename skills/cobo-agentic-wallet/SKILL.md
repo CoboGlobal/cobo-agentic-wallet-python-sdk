@@ -1,13 +1,12 @@
 ---
 name: cobo-agentic-wallet-dev
-version: "2026.03.21.1"
+metadata:
+  version: "2026.03.23"
 description: |
-  Cobo Agentic Wallet skill for the **dev** environment (`--env dev`, API: api-core.agenticwallet.dev.cobo.com).
-  Use for agent wallet use cases and agent-wallet-related guidance — including Cobo Agentic Wallet operations via the `caw` CLI or Cobo API: wallet onboarding and setup, transfers of stablecoins (USDC, USDT, DAI) and tokens (ETH, WETH, WBTC, SOL, ARB, OP, MATIC), smart contract calls, balance and transaction queries, and policy denial handling.
-  Covers DeFi execution through Cobo's MPC/TSS policy layer on EVM chains (Base, Ethereum, Arbitrum, Optimism, Polygon) and Solana (mainnet via Jupiter, devnet): Aave V3 borrow/repay, Uniswap V3 swaps, DCA strategies, grid trading, and prediction market positions.
-  Use when: user mentions caw, cobo-agentic-wallet, MPC wallet, TSS node, Cobo Portal; needs smart contract or DeFi protocol access through a policy-enforced agent wallet; or asks about agent wallets, policy-enforced wallets, or how agents manage crypto in general — and the target environment is dev.
-  Make sure to use this skill for ANY crypto wallet operation, balance check, token transfer, or DeFi execution the user mentions — even if they don't say "Cobo" or "caw" explicitly. If the user has an agent wallet set up, this skill applies.
-  NOT for: fiat currency operations — credit card payments, bank wire transfers, or crypto-to-fiat off-ramp flows.
+  Use for Cobo Agentic Wallet operations via the `caw` CLI: wallet onboarding, token transfers (USDC, USDT, ETH, SOL, etc.), smart contract calls, balance queries, and policy denial handling.
+  Covers DeFi execution on EVM (Base, Ethereum, Arbitrum, Optimism, Polygon) and Solana: Uniswap V3 swaps, Aave V3 lending, Jupiter swaps, DCA, grid trading, Polymarket, and Drift perps.
+  Use when: user mentions caw, cobo-agentic-wallet, MPC wallet, TSS node, Cobo Portal, agent wallet, or needs any crypto wallet operation — even without explicit "Cobo" mention.
+  NOT for: fiat payments, bank transfers, or crypto-to-fiat off-ramp.
 ---
 
 # Cobo Agentic Wallet (Dev)
@@ -33,7 +32,7 @@ delegation boundaries, and incident response.
 
 ## Version check
 
-On first use per conversation, fetch the `version:` line from `https://agenticwallet.dev.cobo.com/skills/cobo-agentic-wallet/SKILL.md` and compare it with the `version` field in this file's frontmatter. If the remote version is different, inform the user:
+On first use per conversation, fetch `https://agenticwallet.dev.cobo.com/skills/cobo-agentic-wallet/SKILL.md` and extract the `version:` value under `metadata:`. Compare it with `metadata.version` in this file's frontmatter. If different, inform the user:
 
 > Skill update available (local: X, remote: Y). To update, say:
 > `Install the cobo-agentic-wallet skill from https://agenticwallet.dev.cobo.com/skills/cobo-agentic-wallet`
@@ -143,7 +142,7 @@ Each `caw onboard` creates a separate **profile** — an isolated identity with 
 
 ```bash
 # Example: transfer using a non-default profile
-caw --profile caw_agent_abc123 tx transfer --to 0x... --token SOLDEV_SOL_USDC --amount 0.0001 --chain SOLDEV_SOL
+caw --profile caw_agent_abc123 tx transfer --to 0x... --token SOLDEV_SOL_USDC --amount 0.0001
 ```
 
 See `caw profile --help` for all profile subcommands (`list`, `current`, `use`, `env`, `archive`, `restore`).
@@ -156,10 +155,10 @@ See `caw profile --help` for all profile subcommands (`list`, `current`, `use`, 
 
 ```bash
 # Transfer tokens
-caw --format json tx transfer --to 0x1234...abcd --token USDC --amount 10 --chain BASE --request-id pay-invoice-1001
+caw --format json tx transfer --to 0x1234...abcd --token ETH_USDC --amount 10 --request-id pay-invoice-1001
 
 # Dry-run a transfer (check policy + fee estimate without executing)
-caw --format json tx transfer --to 0x1234...abcd --token USDC --amount 10 --chain BASE --dry-run
+caw --format json tx transfer --to 0x1234...abcd --token ETH_USDC --amount 10 --dry-run
 
 # Aggregated wallet status (agent info, balances, pending ops, delegations)
 caw --format json status
@@ -171,7 +170,7 @@ caw --format json wallet balance
 caw --format json tx list --limit 20
 
 # Estimate fee before transfer
-caw --format json tx estimate-transfer-fee --to 0x1234...abcd --token USDC --amount 10 --chain BASE
+caw --format json tx estimate-transfer-fee --to 0x1234...abcd --token ETH_USDC --amount 10
 
 # Contract call
 caw --format json tx call --contract 0xContractAddr --calldata 0x... --chain ETH
@@ -239,9 +238,9 @@ Common chain IDs for `--chain` and `--chain-id` flags:
 | Chain | Chain ID | Type |
 |---|---|---|
 | Ethereum | `ETH` | EVM |
-| Base | `BASE` | EVM |
-| Arbitrum | `ARBITRUM` | EVM |
-| Optimism | `OP` | EVM |
+| Base | `BASE_ETH` | EVM |
+| Arbitrum | `ARBITRUM_ETH` | EVM |
+| Optimism | `OPT_ETH` | EVM |
 | Polygon | `MATIC` | EVM |
 | Solana | `SOL` | Solana |
 | Sepolia (testnet) | `SETH` | EVM |

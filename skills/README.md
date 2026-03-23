@@ -70,7 +70,7 @@ Environment:
 - CLI tool: caw
 
 Core capabilities:
-- Transfer tokens: caw tx transfer <wallet_uuid> --to <addr> --token <id> --amount <n> --chain <id>
+- Transfer tokens: caw tx transfer <wallet_uuid> --to <addr> --token <id> --amount <n>
 - Contract call: caw tx call <wallet_uuid> --contract <addr> --calldata <hex> --chain <id>
 - Check balance: caw wallet balance <wallet_uuid>
 - List transactions: caw tx list <wallet_uuid>
@@ -130,12 +130,14 @@ Also see: [Policy Management](./cobo-agentic-wallet/recipes/policy-management.md
 
 ## Supported Chains
 
+Common chain IDs for `--chain` and `--chain-id` flags:
+
 | Chain | Chain ID | Type |
 |---|---|---|
 | Ethereum | `ETH` | EVM |
-| Base | `BASE` | EVM |
-| Arbitrum | `ARBITRUM` | EVM |
-| Optimism | `OP` | EVM |
+| Base | `BASE_ETH` | EVM |
+| Arbitrum | `ARBITRUM_ETH` | EVM |
+| Optimism | `OPT_ETH` | EVM |
 | Polygon | `MATIC` | EVM |
 | Solana | `SOL` | Solana |
 | Sepolia (testnet) | `SETH` | EVM |
