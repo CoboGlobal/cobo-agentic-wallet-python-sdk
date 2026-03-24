@@ -1,7 +1,7 @@
 ---
 name: cobo-agentic-wallet-dev
 metadata:
-  version: "2026.03.23"
+  version: "2026.03.24.1"
 description: |
   Use for Cobo Agentic Wallet operations via the `caw` CLI: wallet onboarding, token transfers (USDC, USDT, ETH, SOL, etc.), smart contract calls, balance queries, and policy denial handling.
   Covers DeFi execution on EVM (Base, Ethereum, Arbitrum, Optimism, Polygon) and Solana: Uniswap V3 swaps, Aave V3 lending, Jupiter swaps, DCA, grid trading, Polymarket, and Drift perps.
@@ -25,7 +25,15 @@ Cobo Agentic Wallet enforces spend limits and approval workflows at the service 
 **When an operation is denied or requires approval**
 
 The service returns a structured denial with the reason and a suggested
-correction — see [error-handling.md](./recipes/error-handling.md). Communicate this to the user clearly. If the policy limit needs to change, the owner must update it in the Web Console or Human App.
+correction — see [error-handling.md](./recipes/error-handling.md).
+
+After a denial:
+- Report the denial and the `suggestion` field to the user.
+- If the suggestion offers a parameter adjustment (e.g. "Retry with amount <= 60") that still fulfills the user's intent, you may retry with the adjusted value.
+- Never initiate additional transactions that the user did not request.
+- If the denial is a cumulative limit (daily/monthly), do not attempt further transactions — inform the user and wait.
+
+If the policy limit needs to change, the owner must update it in the Web Console or Human App.
 
 See [security.md](./recipes/security.md) for prompt injection patterns,
 delegation boundaries, and incident response.
@@ -39,23 +47,44 @@ On first use per conversation, fetch `https://agenticwallet.dev.cobo.com/skills/
 
 If the fetch fails or times out, skip silently and proceed.
 
-## Bootstrap
+## Onboarding
 
-Run `./scripts/bootstrap-env.sh --env dev` to install caw and TSS Node (download sources are built into the script). caw → `~/.cobo-agentic-wallet/bin/caw`; add that dir to PATH.
+### 1. Install caw
 
-**Prerequisites:** `python3` (pre-installed on most systems) and `node` / `npm` (required for on-chain calldata encoding in DeFi recipes). Install Node.js if absent: https://nodejs.org. Several recipes also require `ethers`: `npm install ethers`.
+Run `./scripts/bootstrap-env.sh --env dev --caw-only` to install caw. caw → `~/.cobo-agentic-wallet/bin/caw`; add that dir to PATH. TSS Node is downloaded automatically during onboard when needed.
 
-**Rule:** Before any onboard, run bootstrap and wait for `ready` or `[3/3] Done`. If caw and tss-node already exist, script exits immediately with `ready`.
+**Prerequisites:** `python3` and `node` / `npm` (for DeFi calldata encoding). Install Node.js if absent: https://nodejs.org. Several recipes also require `ethers`: `npm install ethers`.
 
-**Prompt → action:**
+### 2. Onboard
 
-| User prompt | Action |
-|-------------|--------|
-| `BootStrap a new Cobo Agentic Wallet with token <TOKEN>` | Then `caw onboard --create-wallet --token <TOKEN> --env dev` |
-| `BootStrap a new Cobo Agentic Wallet with invitation code <CODE>` | Then `caw onboard --create-wallet --invitation-code <CODE> --env dev` |
-| `BootStrap a new Cobo Agentic Wallet` (no token/code) | Ask the user for a token or invitation code. If they don't have one, run the [Invite-code acquisition](#invite-code-acquisition-when-no-tokencode) flow below. |
+`caw onboard` is interactive by default — it walks through mode selection, credential input, waitlist, and wallet creation step by step via JSON prompts. Each call returns a `next_action` telling you the exact next step; follow it until `wallet_status` becomes `active`.
 
-**General:** Onboard ~50-60s. See [Error Handling](./recipes/error-handling.md#onboarding-errors).
+```bash
+export PATH="$HOME/.cobo-agentic-wallet/bin:$PATH"
+caw --format json onboard --create-wallet --env dev
+```
+
+If the user already has a token or invitation code, pass it directly to skip the corresponding prompts:
+
+```bash
+# Supervised (Web Console setup token)
+caw --format json onboard --create-wallet --env dev --token <TOKEN>
+
+# Autonomous (invitation code)
+caw --format json onboard --create-wallet --env dev --invitation-code <CODE>
+```
+
+**How the interactive loop works:**
+1. Call `caw onboard` — read the returned `phase`, `prompts`, and `next_action`.
+2. Supply answers via `--answers '{"key":"value"}'` (or `--answers-file`). Answers accumulate across calls.
+3. Repeat until `phase` is `wallet_active`.
+4. If input is invalid, the response includes `last_error` with correction guidance — re-submit with the correct value.
+
+Without `--profile`, starts a new onboarding; with `--profile <agent_id>`, resumes an existing one.
+
+**Non-interactive mode:** For scripted / CI usage, add `--non-interactive` to get the legacy synchronous behavior (requires `--token` and/or `--create-wallet`).
+
+See [Error Handling](./recipes/error-handling.md#onboarding-errors) for common onboarding errors.
 
 ## Environment
 
@@ -68,52 +97,6 @@ Set the API URL before any command:
 ```bash
 export AGENT_WALLET_API_URL=https://api-core.agenticwallet.dev.cobo.com
 ```
-
-## Onboarding
-
-### Autonomous onboarding (invitation code)
-
-1. After bootstrap-env ready, run:
-
-```bash
-export PATH="$HOME/.cobo-agentic-wallet/bin:$PATH"
-caw --format table onboard --create-wallet --env dev --invitation-code <INVITATION_CODE>
-```
-
-~60s: Register → Init TSS → Start TSS → Create wallet. Wallet ready. → See [Common Operations](#common-operations) for your first transfer.
-
-### Invite-code acquisition (when no token/code)
-
-1. Generate the waitlist curl command:
-
-```bash
-./scripts/bootstrap-env.sh --env dev --print-waitlist-curl
-```
-
-2. Fill in `agent_name`, `agent_description`, `email`, `telegram` in the printed curl and run it.
-3. Ask the human to open the returned `auth_url` and complete X (Twitter) login.
-4. After approval, the invitation code is sent via X DM to the user.
-5. Once the code is received, run:
-
-```bash
-export PATH="$HOME/.cobo-agentic-wallet/bin:$PATH"
-caw --format table onboard --create-wallet --env dev --invitation-code <INVITATION_CODE>
-```
-
-### Supervised onboarding (token provided)
-
-Human initiates from Web Console, provides setup token.
-
-1. After bootstrap-env ready:
-
-```bash
-export PATH="$HOME/.cobo-agentic-wallet/bin:$PATH"
-caw --format table onboard --create-wallet --env dev --token <TOKEN>
-```
-
-~60s: Pairing → Init TSS → Start TSS → Create wallet. → See [Common Operations](#common-operations) for your first transfer.
-
-Optional post-onboard: `caw profile current` → create address → `onboard self-test` → report summary to user.
 
 ---
 
@@ -190,7 +173,7 @@ caw --format json pending get <operation_id>
 
 **Transactions**
 - **`--request-id` idempotency**: Always set a unique, deterministic request ID per logical transaction (e.g. `invoice-001`, `swap-20240318-1`). Retrying with the same `--request-id` is safe — the server deduplicates. Retrying without it may cause duplicate execution.
-- **`--dry-run` on `tx transfer`**: Simulates the transfer without executing it. Returns a combined result: policy dry-run check (`policy` field), fee estimate (`fee_estimate` field), and current balance (`balance` field). Use before submitting to catch policy denials and check fees.
+- **`--dry-run` before every transfer**: Always run `caw --format json tx transfer ... --dry-run` before the actual transfer. This checks policy rules, estimates fees, and returns current balance — all without moving funds. If the dry-run shows a denial, report it to the user instead of submitting the real transaction.
 - **Pre-flight balance check**: Before executing a transfer, run `caw --format json wallet balance` to verify sufficient funds. If balance is insufficient, inform the user rather than submitting a doomed transaction.
 - **`--gasless`**: `true` (default) to have gas fees covered by Cobo Gasless (recommended); `false` to pay gas from the wallet's own balance. The old `--sponsor` flag is deprecated — use `--gasless` instead.
 - **Gas address** (when not using `--gasless`): Keep one fixed address per ecosystem to hold native tokens for fees — one for EVM (ETH), one for Solana (SOL). Before executing any transfer or contract call, check the relevant gas address has sufficient balance:
