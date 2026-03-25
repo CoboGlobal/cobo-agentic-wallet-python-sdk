@@ -32,11 +32,11 @@ If none of the above apply, this skill is probably not what you need.
 
 ### 1. Install the skill
 
-In Claude Code or another AI agent that supports skills, say:
+```bash
+npx skills add CoboGlobal/cobo-agentic-wallet-python-sdk --skill cobo-agentic-wallet-dev --yes --global
+```
 
-```
-Install the cobo-agentic-wallet skill from https://agenticwallet.cobo.com/skills/cobo-agentic-wallet
-```
+Or via [ClawHub](https://clawhub.ai/) registry: `npx clawhub@latest install cobo-agentic-wallet-dev`
 
 ### 2. Restart the gateway
 

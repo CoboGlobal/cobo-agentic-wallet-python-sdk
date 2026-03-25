@@ -82,7 +82,7 @@ The environment requires an invitation code for autonomous onboarding.
 **Recovery:** Ask the user for an invitation code, then retry with `--invitation-code`:
 
 ```bash
-caw onboard --create-wallet --env sandbox --invitation-code <CODE>
+caw onboard --create-wallet --env dev --invitation-code <CODE>
 ```
 
 ### `Invalid invitation code` / `Invitation code already used`
