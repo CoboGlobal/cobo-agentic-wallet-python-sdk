@@ -25,7 +25,7 @@ caw --format json wallet list       # → wallet_uuid
 import asyncio
 from cobo_agentic_wallet.client import WalletAPIClient
 
-API_URL = "https://api-core.agenticwallet.dev.cobo.com"  # or sandbox/dev
+API_URL = "https://api-core.agenticwallet.dev.cobo.com"
 API_KEY = "your-api-key"
 WALLET_UUID = "your-wallet-uuid"
 

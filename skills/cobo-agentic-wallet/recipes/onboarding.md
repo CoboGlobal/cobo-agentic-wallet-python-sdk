@@ -18,10 +18,11 @@ caw --format json onboard --create-wallet --env dev
 If the user already has a token or invitation code, pass it directly to skip the corresponding prompts:
 
 ```bash
-# Supervised (Web Console setup token)
+# Token from the Web Console — human-owned wallet, full functionality from the start
 caw --format json onboard --create-wallet --env dev --token <TOKEN>
 
-# Autonomous (invitation code)
+# Invitation code from Cobo — you own the wallet initially, with limited functionality.
+# Your owner can claim the wallet later to unlock full functionality (see Claiming below).
 caw --format json onboard --create-wallet --env dev --invitation-code <CODE>
 ```
 
@@ -30,6 +31,8 @@ caw --format json onboard --create-wallet --env dev --invitation-code <CODE>
 2. Supply answers via `--answers '{"key":"value"}'` (or `--answers-file`). Answers accumulate across calls.
 3. Repeat until `phase` is `wallet_active`.
 4. If input is invalid, the response includes `last_error` with correction guidance — re-submit with the correct value.
+
+**Assistants / LLM agents:** When `needs_input` is true, read `prompts` and present each question to the **human**; only pass `--answers` with keys matching the current prompt `id` values after you have their input. **Do not** pass `{"skip_phase":true}` unless the user explicitly asks to skip that optional step—`skip_phase` completes the pending phase without collecting those answers, which is only for explicit opt-out.
 
 Without `--profile`, starts a new onboarding; with `--profile <agent_id>`, resumes an existing one.
 
@@ -58,7 +61,7 @@ caw profile claim                   # generate a claim link
 caw profile claim-info              # check claim status
 ```
 
-`claim` returns a `claim_link` URL. Share this link with the human — they open it in the Web Console to complete the ownership transfer. Once claimed, the wallet switches to Supervised mode (delegation is created, Cobo Gasless sponsorship remains available via `--gasless`).
+`claim` returns a `claim_link` URL. Share this link with your owner — they open it in the Web Console to complete the ownership transfer. Once claimed, the wallet becomes human-owned with full functionality (Cobo Gasless sponsorship becomes available via `--gasless`).
 
 Use `claim-info` to check the current state: `not_found` (no claim initiated), `valid` (pending, waiting for human), `expired`, or `claimed` (transfer complete).
 
