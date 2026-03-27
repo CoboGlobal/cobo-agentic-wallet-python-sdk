@@ -96,7 +96,7 @@ The cobo-agentic-wallet skill is installed at ./skills/cobo-agentic-wallet/.
 When asked to perform wallet operations:
 1. Use `caw` CLI with `--format json` for all commands
 2. Always check transaction status after submission
-3. Handle policy denials by parsing the suggestion field — see [Error Handling](./skills/cobo-agentic-wallet/recipes/error-handling.md)
+3. Handle policy denials by parsing the suggestion field — see [Error Handling](./skills/cobo-agentic-wallet/references/error-handling.md)
 4. For DeFi operations, refer to the skill's recipe files
 ```
 
@@ -114,19 +114,17 @@ After completing wallet setup, the agent should save the following to its memory
 
 Without this, the agent loses wallet context on restart and must re-onboard or re-discover.
 
-## DeFi recipes
+## DeFi skills
 
-Each recipe supports both testnet (simulation) and mainnet (real execution):
+DeFi strategies are published as standalone skills. Use `caw schema` or `npx skills add CoboGlobal/cobo-agentic-wallet-python-sdk --list` to discover available skills.
 
-| Strategy | EVM | Solana |
-|----------|-----|--------|
-| DEX Swap | [Uniswap V3](./evm-defi-dex-swap/SKILL.md) (standalone skill) | [Jupiter V6](./cobo-agentic-wallet/recipes/solana-defi-dex-swap.md) |
-| DCA | [EVM DCA](./cobo-agentic-wallet/recipes/evm-defi-dca.md) | [Solana DCA](./cobo-agentic-wallet/recipes/solana-defi-dca.md) |
-| Grid Trading | [EVM Grid](./cobo-agentic-wallet/recipes/evm-defi-grid-trading.md) | [Solana Grid](./cobo-agentic-wallet/recipes/solana-defi-grid-trading.md) |
-| Lending | [Aave V3](./cobo-agentic-wallet/recipes/evm-defi-aave.md) | — |
-| Prediction Market | — | [Drift / Polymarket](./cobo-agentic-wallet/recipes/solana-defi-prediction-market.md) |
+| Strategy | Skill |
+|----------|-------|
+| DEX Swap (EVM) | [evm-defi-dex-swap](./evm-defi-dex-swap/SKILL.md) |
 
-Also see: [Policy Management](./cobo-agentic-wallet/recipes/policy-management.md) | [Error Handling](./cobo-agentic-wallet/recipes/error-handling.md)
+More DeFi skills (Aave, DCA, grid trading, Jupiter, Polymarket, etc.) will be published as standalone skills — search with `npx skills find cobo-agentic-wallet "<protocol>"`.
+
+Also see: [Policy Management](./cobo-agentic-wallet/references/policy-management.md) | [Error Handling](./cobo-agentic-wallet/references/error-handling.md)
 
 ## Supported Chains
 
@@ -166,7 +164,7 @@ cd cobo-agentic-wallet/evals/
 
 The skill has three versions: a canonical source and two environment-specific variants.
 
-1. **Edit the canonical source** — modify files under `cobo-agentic-wallet/` (SKILL.md, recipes, etc.)
+1. **Edit the canonical source** — modify files under `cobo-agentic-wallet/` (SKILL.md, references, etc.)
 2. **Run the sync script** — propagate changes to the sandbox and dev versions:
 
 ```bash
@@ -174,7 +172,7 @@ cd skills/
 python3 sync_env_skills.py
 ```
 
-The script auto-generates the full contents of `cobo-agentic-wallet-sandbox/` and `cobo-agentic-wallet-dev/` (SKILL.md + recipes) from the canonical source, substituting environment-specific fields (name, URL, `--env` value) automatically.
+The script auto-generates the full contents of `cobo-agentic-wallet-sandbox/` and `cobo-agentic-wallet-dev/` (SKILL.md + references) from the canonical source, substituting environment-specific fields (name, URL, `--env` value) automatically.
 
 > **Do not edit** `cobo-agentic-wallet-sandbox/` or `cobo-agentic-wallet-dev/` directly — they will be overwritten the next time the sync script runs.
 
@@ -185,7 +183,7 @@ skills/
 ├── README.md                            # This file
 ├── cobo-agentic-wallet/                 # Core wallet skill (edit here)
 │   ├── SKILL.md                         # Main instructions (loaded on trigger)
-│   ├── recipes/                         # DeFi + operational recipes
+│   ├── references/                      # Operational reference docs
 │   └── scripts/
 │       ├── bootstrap-env.sh             # Install caw and TSS Node
 │       └── convert_jupiter.sh           # Jupiter API → caw CLI format converter

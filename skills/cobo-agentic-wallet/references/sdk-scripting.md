@@ -4,6 +4,30 @@ Use the `cobo-agentic-wallet` Python SDK for complex or multi-step operations: D
 
 **SDK docs**: https://agent-wallet-doc-preview.cobo.com/llms.txt
 
+## Script Management
+
+**All scripts MUST be stored in [`../scripts/`](../scripts/)** — do not create scripts elsewhere.
+
+**Before writing any script:**
+
+1. **Search existing scripts first** — check the `scripts/` directory for a script that matches the task:
+   ```bash
+   ls ./scripts/  # list available scripts
+   ```
+   Common naming patterns: `swap-*.py`, `transfer-*.py`, `claim-*.py`, `bridge-*.py`, `dca-*.py`, `payroll-*.py`
+
+2. **Reuse if exists** — if a matching script is found, use it directly with appropriate parameters. Report the script name to the user.
+
+3. **Evaluate generalization** — if an existing script is close but not exact:
+   - Prefer **modifying the existing script** to make it more generic (add parameters, handle more cases)
+   - Only create a new script if the use case is fundamentally different
+   - When modifying, ensure backward compatibility — existing invocations should still work
+
+4. **Create new script only when necessary** — if no suitable script exists:
+   - Save to `./scripts/<descriptive-name>.py` (use kebab-case, e.g., `cross-chain-swap.py`)
+   - Design for reuse: parameterize all inputs via CLI args or env vars
+   - Include docstring explaining usage and parameters
+
 ## Install
 
 ```bash
