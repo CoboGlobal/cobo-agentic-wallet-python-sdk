@@ -2,7 +2,7 @@
 
 ## 1. Install caw
 
-Run `./scripts/bootstrap-env.sh --env dev --caw-only` to install caw. caw → `~/.cobo-agentic-wallet/bin/caw`; add that dir to PATH. TSS Node is downloaded automatically during onboard when needed.
+Run `./scripts/bootstrap-env.sh --env dev --only caw` to install caw. caw → `~/.cobo-agentic-wallet/bin/caw`; add that dir to PATH. TSS Node is downloaded automatically during onboard when needed.
 
 **Prerequisites:** `python3` and `node` / `npm` (for DeFi calldata encoding). Install Node.js if absent: https://nodejs.org. Several recipes also require `ethers`: `npm install ethers`.
 
@@ -15,7 +15,7 @@ export PATH="$HOME/.cobo-agentic-wallet/bin:$PATH"
 caw --format json onboard --create-wallet --env dev
 ```
 
-If the user already has a token or invitation code, pass it directly to skip the corresponding prompts:
+If the user already has a token or invitation code **before starting**, pass it directly on the **first call** to skip mode selection and credential prompts:
 
 ```bash
 # Token from the Web Console — human-owned wallet, full functionality from the start
@@ -26,24 +26,29 @@ caw --format json onboard --create-wallet --env dev --token <TOKEN>
 caw --format json onboard --create-wallet --env dev --invitation-code <CODE>
 ```
 
+> **CRITICAL:** The shortcut commands above are for the **first call only**. Once you have called `caw onboard` and received a `session_id`, you **MUST** include `--session-id <SESSION_ID>` on **every** subsequent call — even when adding `--invitation-code` or `--token`. Omitting `--session-id` starts a brand-new session, discarding prior progress and TSS prewarm work.
+
 **How the interactive loop works:**
-1. Call `caw onboard` — read the returned `phase`, `prompts`, and `next_action`.
-2. If the response includes `onboard_session_id`, keep using that same session on every follow-up call with `--onboard-session <ID>`.
-3. Supply answers via `--answers '{"key":"value"}'` (or `--answers-file`). Answers accumulate across calls for the same session.
-4. Repeat until `phase` is `wallet_active`.
-5. If input is invalid, the response includes `last_error` with correction guidance — re-submit with the correct value.
+1. Call `caw onboard` — read `phase`, `prompts`, `needs_input`, `next_action`, and `session_id`.
+2. On each follow-up, pass `--session-id` with the **latest** `session_id` from the previous response, and keep the same `--create-wallet` and `--env` as the initial call. If the response says the session was not found and a new one was created, use that **new** `session_id`.
+3. When `needs_input` is true, pass `--answers` as JSON whose keys match `prompts[].id` (e.g. `onboard_mode`: `option_a` or `option_b`; later `invitation_code`, `agent_name`, etc., depending on phase).
+4. Repeat until onboarding finishes — typically `wallet_status` is `active` and/or `phase` is `wallet_active`. If input is invalid, use `last_error` and resubmit with corrected `--answers`.
+5. If the background bootstrap worker fails or stops (`phase` is `error`, or `next_action` mentions `--retry-bootstrap`), follow that `next_action` exactly. Typically you re-run onboard with **`--retry-bootstrap`**, the **same `--session-id`**, and the same **`--create-wallet` / `--env`** (and `--api-url` if you used it).
 
 Example follow-up call:
 
 ```bash
-caw --format json onboard --profile <agent_id> --onboard-session <session_id> --answers '{"security_ack":true}'
+caw --format json onboard --session-id <SESSION_ID> --answers '{"security_ack":true}'
 ```
 
 Use `phase` + `bootstrap_stage` + `wallet_status` to track progress.
 
-**Assistants / LLM agents:** When `needs_input` is true, read `prompts` and present each question to the **human**; only pass `--answers` with keys matching the current prompt `id` values after you have their input. **Do not** pass `{"skip_phase":true}` unless the user explicitly asks to skip that optional step—`skip_phase` completes the pending phase without collecting those answers, which is only for explicit opt-out.
+**Assistants / LLM agents:** When `needs_input` is true, read `prompts` and present each question to the **user**; only pass `--answers` with keys matching the current prompt `id` values after you have their input. **Do not** pass `{"skip_phase":true}` unless the user explicitly asks to skip that optional step—`skip_phase` completes the pending phase without collecting those answers, which is only for explicit opt-out.
 
-Without `--profile`, starts a new onboarding; with `--profile <agent_id>`, resumes an existing one.
+When `needs_input` is false, **immediately show the `message` to the user** and follow `next_action` (for wallet activation, the CLI usually suggests polling about every 10 seconds — use the exact interval in `next_action` if it differs). Do not analyze or deliberate on the response — just relay the message and execute the next action.
+
+Without `--session-id`, starts a new onboarding. With `--session-id <SESSION_ID>`, resumes that session.
+If the provided `--session-id` does not exist, the CLI creates a new session automatically.
 
 **Non-interactive mode:** For scripted / CI usage, add `--non-interactive` to get the legacy synchronous behavior (requires `--token` and/or `--create-wallet`).
 
@@ -70,9 +75,11 @@ caw profile claim                   # generate a claim link
 caw profile claim-info              # check claim status
 ```
 
-`claim` returns a `claim_link` URL. Share this link with your owner — they open it in the Web Console to complete the ownership transfer. Once claimed, the wallet becomes human-owned with full functionality (Cobo Gasless sponsorship becomes available via `--gasless`).
+`claim` returns a `claim_link` URL. Share this link with the user — they open it in the Web Console to complete the ownership transfer. Once claimed, the wallet becomes human-owned with full functionality (Cobo Gasless sponsorship becomes available via `--gasless`).
 
-Use `claim-info` to check the current state: `not_found` (no claim initiated), `valid` (pending, waiting for human), `expired`, or `claimed` (transfer complete).
+Use `claim-info` to check the current state: `not_found` (no claim initiated), `valid` (pending, waiting for the user), `expired`, or `claimed` (transfer complete).
+
+**Claim status tracking (profile claim only)**: `caw profile claim` supports `--context` for notification tracking. Include `prompt` in `--context` when initiating, then run `caw track --watch &` in the background. The prompt is read from the saved context — **this prompt applies to `caw profile claim` only.** When the terminal notification is delivered (claimed/expired), continue any established next steps from the conversation context. If there is no relevant context, no follow-up is needed. Use: `--context '{"channel":"<channel>", "target":"<target>", "session_id":<session_id>, "prompt":"include the status update and a next-step execution plan based on the conversation context. Prefix the response with [Notification] to distinguish it from normal conversation replies"}'`
 
 ## Profile Management
 

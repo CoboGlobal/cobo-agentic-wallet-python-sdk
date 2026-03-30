@@ -1,26 +1,17 @@
-# Pact automation
+# Automation with authorization
 
 Use this guide when the user asks to grant an operator agent scoped, time-bounded permissions and run tasks under those constraints.
 
-For PactSpec schema details, policy construction patterns, and validation rules, see [pact-knowledge.md](./pact-knowledge.md).
+For authorization spec schema details, policy construction patterns, and validation rules, see [authorization-spec.md](./authorization-spec.md).
 
 ## When to use
 
 - User asks for delegated automation (DCA, recurring swaps, rule-based execution).
-- User mentions `pact`, delegated API key, approval-based operator authorization, or long-running agent tasks.
+- User asks for delegated API key, approval-based operator authorization, or long-running agent tasks.
 
-## Core model
+## Submit authorization
 
-- A Pact defines **what is allowed** (`permissions`, `policies`, `resource_scope`, lifetime).
-- The agent scheduler defines **when to run** (interval/cron/checkpoints).
-- In the simplified protocol, the flow is:
-  1) operator submits pact
-  2) owner approves/rejects in CAW App
-  3) `GET /pacts/{id}` triggers lazy activation
-
-## Submit a pact
-
-Prefer full spec files for repeatability:
+Submit a new authorization request for owner approval. Prefer full spec files for repeatability:
 
 ```bash
 caw --format json pact submit \
@@ -42,7 +33,7 @@ caw --format json pact submit \
   --wait
 ```
 
-### PactSpec template
+### Authorization spec template
 
 ```json
 {
@@ -82,26 +73,26 @@ caw --format json pact submit \
   "resource_scope": {
     "wallet_id": "00000000-0000-0000-0000-000000000000"
   },
-  "program": "Weekly DCA: every Monday 09:00 UTC buy 100 USDC of ETH on Base."
+  "execution_plan": "Weekly DCA: every Monday 09:00 UTC buy 100 USDC of ETH on Base."
 }
 ```
 
-See [pact-knowledge.md — Policy Construction Patterns](./pact-knowledge.md#policy-construction-patterns) for more examples.
+See [authorization-spec.md — Policy Construction Patterns](./authorization-spec.md#policy-construction-patterns) for more examples.
 
-## Scheduler contract (required for multi-pact automation)
+## Scheduler contract (required for multi-authorization automation)
 
-When building an autonomous operator, run a background scheduler. Pact Service enforces authorization boundaries, but does not dispatch jobs for you.
+When building an autonomous operator, run a background scheduler. The authorization service enforces authorization boundaries, but does not dispatch jobs for you.
 
 ### Required loop
 
 Every `N` seconds (recommended default: `10s`):
 
-1. Pull active pacts:
+1. Pull active authorizations:
    ```bash
    caw --format json pact list --status active
    ```
 2. Reconcile local jobs with server truth:
-   - new active pact -> create/start local job
+   - new active authorization -> create/start local job
    - missing from active list -> stop local job
 3. Before each on-chain action, re-check:
    ```bash
@@ -114,7 +105,7 @@ Every `N` seconds (recommended default: `10s`):
 - `DISCOVERED`: found from `pact list --status active`
 - `RUNNING`: task loop is executing
 - `PAUSED`: transient failure, retry allowed
-- `STOPPED`: pact became `revoked`/`expired`/`completed`/`rejected`
+- `STOPPED`: authorization became `revoked`/`expired`/`completed`/`rejected`
 
 Persist `pact_id`, checkpoints, and last idempotency key so process restarts do not lose state.
 
@@ -128,11 +119,11 @@ caw --format json pact events "<pact_id>"
 caw --format json pact revoke "<pact_id>" --confirm
 ```
 
-Terminal statuses (see [pact-knowledge.md — Lifecycle States](./pact-knowledge.md#lifecycle-states) for full diagram):
+Terminal statuses (see [authorization-spec.md — Lifecycle States](./authorization-spec.md#lifecycle-states) for full diagram):
 
 - `active`: ready to execute
 - `rejected`: owner rejected approval
-- `expired`: pact lifetime ended or approval expired
+- `expired`: authorization lifetime ended or approval expired
 - `completed`: completion condition met
 - `revoked`: owner revoked; stop immediately
 
