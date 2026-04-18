@@ -1,0 +1,103 @@
+[project]
+name = "cobo-agentic-wallet"
+version = "0.1.34"
+description = "Python SDK for Cobo Agentic Wallet - The Programmable Bank for Autonomous Agents"
+readme = "README.md"
+requires-python = ">=3.11"
+authors = [{ name = "Cobo", email = "dev@cobo.com" }]
+license = { text = "Apache-2.0" }
+keywords = ["agent", "wallet", "crypto", "cobo", "mcp", "llm", "ai"]
+classifiers = [
+    "Development Status :: 3 - Alpha",
+    "Intended Audience :: Developers",
+    "License :: OSI Approved :: Apache Software License",
+    "Programming Language :: Python :: 3",
+    "Programming Language :: Python :: 3.11",
+    "Programming Language :: Python :: 3.12",
+    "Programming Language :: Python :: 3.13",
+    "Topic :: Software Development :: Libraries",
+    "Topic :: Software Development :: Libraries :: Python Modules",
+]
+
+dependencies = [
+    "aiohttp>=3.9.0",
+    "pydantic>=2.0.0",
+    "python-dateutil>=2.8.2",
+    "urllib3>=2.6.3",
+    "typing-extensions>=4.7.1",
+    "pynacl>=1.6.0",
+]
+
+[project.urls]
+Homepage = "https://github.com/CoboGlobal/cobo-agentic-wallet-python-sdk"
+Documentation = "https://github.com/CoboGlobal/cobo-agentic-wallet-python-sdk#readme"
+Repository = "https://github.com/CoboGlobal/cobo-agentic-wallet-python-sdk"
+Issues = "https://github.com/CoboGlobal/cobo-agentic-wallet-python-sdk/issues"
+Changelog = "https://github.com/CoboGlobal/cobo-agentic-wallet-python-sdk/blob/master/CHANGELOG.md"
+
+[project.optional-dependencies]
+mcp = [
+    "fastmcp>=3.0.0",
+]
+langchain = [
+    "langchain>=1.0.0",
+]
+openai = [
+    "openai-agents>=0.10.4",
+]
+agno = [
+    "agno>=2.4.8",
+]
+all = [
+    "fastmcp>=3.0.0",
+    "langchain>=1.0.0",
+    "openai-agents>=0.10.4",
+    "agno>=2.4.8",
+]
+crewai = [
+    "crewai>=1.9.3",
+]
+agent-frameworks = [
+    "langchain>=1.0.0",
+    "openai-agents>=0.10.4",
+    "agno>=2.4.8",
+]
+
+[build-system]
+requires = ["setuptools>=69.0"]
+build-backend = "setuptools.build_meta"
+
+[tool.setuptools.packages.find]
+where = ["src"]
+include = ["cobo_agentic_wallet*", "cobo_agentic_wallet_api*"]
+
+
+[tool.ruff]
+line-length = 100
+target-version = "py312"
+
+[tool.ruff.lint.per-file-ignores]
+"src/cobo_agentic_wallet_api/**" = ["F841"]
+
+[tool.uv]
+# Install dev tools (e.g. ruff) on `uv sync` so `uv run ruff` works without `--extra dev`.
+default-groups = ["dev"]
+conflicts = [
+    [
+        { extra = "openai" },
+        { extra = "crewai" },
+    ],
+    [
+        { extra = "all" },
+        { extra = "crewai" },
+    ],
+    [
+        { extra = "agent-frameworks" },
+        { extra = "crewai" },
+    ],
+]
+
+[dependency-groups]
+dev = [
+    "ruff>=0.6.0",
+]
