@@ -28,10 +28,21 @@ class InlinePolicyCreate(BaseModel):
     """  # noqa: E501
 
     name: Annotated[str, Field(min_length=1, strict=True, max_length=255)]
-    type: PolicyType
-    rules: Optional[Dict[str, Any]] = None
-    priority: Optional[StrictInt] = 0
-    is_active: Optional[StrictBool] = True
+    type: PolicyType = Field(
+        description="Policy category. Possible values: `transfer`, `contract_call`, `message_sign`."
+    )
+    rules: Optional[Dict[str, Any]] = Field(
+        default=None,
+        description="Policy rule configuration. Structure depends on `type`; see the policy rules schema for each type.",
+    )
+    priority: Optional[StrictInt] = Field(
+        default=0,
+        description="Evaluation priority. Higher values take precedence when multiple policies match.",
+    )
+    is_active: Optional[StrictBool] = Field(
+        default=True,
+        description="Whether this policy is active. `true`: enforced. `false`: disabled.",
+    )
     __properties: ClassVar[List[str]] = ["name", "type", "rules", "priority", "is_active"]
 
     model_config = ConfigDict(

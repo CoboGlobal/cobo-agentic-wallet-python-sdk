@@ -26,10 +26,20 @@ class MessageSignResult(BaseModel):
     Response for message signing.
     """  # noqa: E501
 
-    id: Optional[StrictStr] = None
-    idempotent: Optional[StrictBool] = False
-    request_id: Optional[StrictStr] = None
-    status: StrictInt
+    id: Optional[StrictStr] = Field(
+        default=None,
+        description="User transaction UUID assigned at submission time. Null if creation failed before assignment.",
+    )
+    idempotent: Optional[StrictBool] = Field(
+        default=False,
+        description="Whether this response was returned from a previously submitted request with the same `request_id`. `true`: idempotent replay. `false`: new submission.",
+    )
+    request_id: Optional[StrictStr] = Field(
+        default=None, description="Client-supplied request identifier used for idempotency."
+    )
+    status: StrictInt = Field(
+        description="The user transaction status code. Typical values: 100 (pending approval), 900 (success), 901 (failed), 902 (rejected)."
+    )
     status_display: Optional[StrictStr] = Field(
         default="",
         description="The human-readable user transaction status (for example, `Initiated`, `Processing`, `Success`, `Failed`).",
@@ -38,7 +48,9 @@ class MessageSignResult(BaseModel):
         default=None,
         description="The Approval V2 record ID when `status=pending_approval`. Use this to track the approval via the Approvals operations.",
     )
-    destination_type: Optional[MessageSignDestType] = None
+    destination_type: Optional[MessageSignDestType] = Field(
+        default=None, description="Signing type used for this request. Possible values: `eip712`."
+    )
     signature: Optional[StrictStr] = Field(
         default=None, description="Hex-encoded signature (e.g. 0x...). Null if not yet completed."
     )

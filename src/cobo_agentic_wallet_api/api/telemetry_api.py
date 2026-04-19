@@ -48,7 +48,7 @@ class TelemetryApi:
     ) -> StandardResponseTelemetryConfigResponse:
         """Get telemetry config
 
-        Return the CLI telemetry feature-flag configuration for your authenticated session.  The response includes: - `enabled` — whether CLI telemetry collection is active. - `upload_url` — destination URL for telemetry uploads; empty string if not configured.
+        Return the CLI telemetry feature-flag configuration for your authenticated session. The response includes `enabled` (whether CLI telemetry collection is active) and `upload_url` (destination URL for telemetry uploads; empty string if not configured).
 
         :param x_api_key:
         :type x_api_key: str
@@ -87,7 +87,7 @@ class TelemetryApi:
     ) -> ApiResponse[StandardResponseTelemetryConfigResponse]:
         """Get telemetry config
 
-        Return the CLI telemetry feature-flag configuration for your authenticated session.  The response includes: - `enabled` — whether CLI telemetry collection is active. - `upload_url` — destination URL for telemetry uploads; empty string if not configured.
+        Return the CLI telemetry feature-flag configuration for your authenticated session. The response includes `enabled` (whether CLI telemetry collection is active) and `upload_url` (destination URL for telemetry uploads; empty string if not configured).
 
         :param x_api_key:
         :type x_api_key: str
@@ -126,7 +126,7 @@ class TelemetryApi:
     ) -> RESTResponseType:
         """Get telemetry config
 
-        Return the CLI telemetry feature-flag configuration for your authenticated session.  The response includes: - `enabled` — whether CLI telemetry collection is active. - `upload_url` — destination URL for telemetry uploads; empty string if not configured.
+        Return the CLI telemetry feature-flag configuration for your authenticated session. The response includes `enabled` (whether CLI telemetry collection is active) and `upload_url` (destination URL for telemetry uploads; empty string if not configured).
 
         :param x_api_key:
         :type x_api_key: str
@@ -194,7 +194,7 @@ class TelemetryApi:
     ) -> None:
         """Ingest session telemetry
 
-        Receive a session telemetry record that may contain nested child spans.  Uses the Langfuse SDK directly to preserve parent-child span nesting. Requires authentication.  Returns 204 on success.
+        Receive a session telemetry record that may contain nested child spans. Uses the Langfuse SDK directly to preserve parent-child span nesting. Returns HTTP 204 on success. Requires authentication.
 
         :param session_record: (required)
         :type session_record: SessionRecord
@@ -237,7 +237,7 @@ class TelemetryApi:
     ) -> ApiResponse[None]:
         """Ingest session telemetry
 
-        Receive a session telemetry record that may contain nested child spans.  Uses the Langfuse SDK directly to preserve parent-child span nesting. Requires authentication.  Returns 204 on success.
+        Receive a session telemetry record that may contain nested child spans. Uses the Langfuse SDK directly to preserve parent-child span nesting. Returns HTTP 204 on success. Requires authentication.
 
         :param session_record: (required)
         :type session_record: SessionRecord
@@ -280,7 +280,7 @@ class TelemetryApi:
     ) -> RESTResponseType:
         """Ingest session telemetry
 
-        Receive a session telemetry record that may contain nested child spans.  Uses the Langfuse SDK directly to preserve parent-child span nesting. Requires authentication.  Returns 204 on success.
+        Receive a session telemetry record that may contain nested child spans. Uses the Langfuse SDK directly to preserve parent-child span nesting. Returns HTTP 204 on success. Requires authentication.
 
         :param session_record: (required)
         :type session_record: SessionRecord
@@ -354,7 +354,7 @@ class TelemetryApi:
     ) -> None:
         """Ingest CLI telemetry record
 
-        Receive a CLI telemetry record from your agent, extract structured fields, and forward them to Logstash/Kibana via structured logging and an OpenTelemetry span.  Returns 204 on success. Requires authentication.
+        Receive a CLI telemetry record from your agent, extract structured fields, and forward them to Logstash/Kibana via structured logging and an OpenTelemetry span. Returns HTTP 204 on success. Requires authentication.
 
         :param langfuse_record: (required)
         :type langfuse_record: LangfuseRecord
@@ -397,7 +397,7 @@ class TelemetryApi:
     ) -> ApiResponse[None]:
         """Ingest CLI telemetry record
 
-        Receive a CLI telemetry record from your agent, extract structured fields, and forward them to Logstash/Kibana via structured logging and an OpenTelemetry span.  Returns 204 on success. Requires authentication.
+        Receive a CLI telemetry record from your agent, extract structured fields, and forward them to Logstash/Kibana via structured logging and an OpenTelemetry span. Returns HTTP 204 on success. Requires authentication.
 
         :param langfuse_record: (required)
         :type langfuse_record: LangfuseRecord
@@ -440,7 +440,7 @@ class TelemetryApi:
     ) -> RESTResponseType:
         """Ingest CLI telemetry record
 
-        Receive a CLI telemetry record from your agent, extract structured fields, and forward them to Logstash/Kibana via structured logging and an OpenTelemetry span.  Returns 204 on success. Requires authentication.
+        Receive a CLI telemetry record from your agent, extract structured fields, and forward them to Logstash/Kibana via structured logging and an OpenTelemetry span. Returns HTTP 204 on success. Requires authentication.
 
         :param langfuse_record: (required)
         :type langfuse_record: LangfuseRecord
@@ -514,7 +514,7 @@ class TelemetryApi:
     ) -> None:
         """Ingest raw Langfuse record
 
-        Receive a raw Langfuse telemetry record from your agent and re-emit it as an OpenTelemetry span.  Returns 204 on success. Requires authentication.
+        Receive a raw Langfuse telemetry record from your agent and re-emit it as an OpenTelemetry span. Returns HTTP 204 on success. Requires authentication.
 
         :param langfuse_record: (required)
         :type langfuse_record: LangfuseRecord
@@ -557,7 +557,7 @@ class TelemetryApi:
     ) -> ApiResponse[None]:
         """Ingest raw Langfuse record
 
-        Receive a raw Langfuse telemetry record from your agent and re-emit it as an OpenTelemetry span.  Returns 204 on success. Requires authentication.
+        Receive a raw Langfuse telemetry record from your agent and re-emit it as an OpenTelemetry span. Returns HTTP 204 on success. Requires authentication.
 
         :param langfuse_record: (required)
         :type langfuse_record: LangfuseRecord
@@ -600,7 +600,7 @@ class TelemetryApi:
     ) -> RESTResponseType:
         """Ingest raw Langfuse record
 
-        Receive a raw Langfuse telemetry record from your agent and re-emit it as an OpenTelemetry span.  Returns 204 on success. Requires authentication.
+        Receive a raw Langfuse telemetry record from your agent and re-emit it as an OpenTelemetry span. Returns HTTP 204 on success. Requires authentication.
 
         :param langfuse_record: (required)
         :type langfuse_record: LangfuseRecord

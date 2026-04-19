@@ -21,14 +21,14 @@ from cobo_agentic_wallet_api.models.provision_request import ProvisionRequest
 from cobo_agentic_wallet_api.models.standard_response_agent_status_response import (
     StandardResponseAgentStatusResponse,
 )
-from cobo_agentic_wallet_api.models.standard_response_api_key_create_result import (
-    StandardResponseApiKeyCreateResult,
+from cobo_agentic_wallet_api.models.standard_response_api_key_create_result_public import (
+    StandardResponseApiKeyCreateResultPublic,
 )
 from cobo_agentic_wallet_api.models.standard_response_dict_str_bool import (
     StandardResponseDictStrBool,
 )
-from cobo_agentic_wallet_api.models.standard_response_list_api_key_read import (
-    StandardResponseListApiKeyRead,
+from cobo_agentic_wallet_api.models.standard_response_list_api_key_public_read import (
+    StandardResponseListApiKeyPublicRead,
 )
 from cobo_agentic_wallet_api.models.standard_response_list_principal_read import (
     StandardResponseListPrincipalRead,
@@ -71,7 +71,7 @@ class IdentityApi:
             Annotated[StrictFloat, Field(gt=0)],
             Tuple[Annotated[StrictFloat, Field(gt=0)], Annotated[StrictFloat, Field(gt=0)]],
         ] = None,
-    ) -> StandardResponseApiKeyCreateResult:
+    ) -> StandardResponseApiKeyCreateResultPublic:
         """Create API key
 
         This operation creates a new API key for a principal.  When authenticated with a principal API key, the new key is created for the authenticated principal. When authenticated with a service credential, `principal_id` is required.  Use `scopes` to restrict what the key can access. The default scope `[\"*\"]` grants full access. Individual scopes use the format `resource:action` where action is `read`, `write`, or `status`. For example: `[\"wallet:read\", \"wallet:write\"]`.  Supply `expires_at` to set an expiry time. If omitted, the key does not expire.  <Note>The raw API key value is only returned once in the response. Store it securely — it cannot be retrieved again.</Note>
@@ -97,9 +97,9 @@ class IdentityApi:
         )
 
         _response_types_map: Dict[str, Optional[str]] = {
-            "201": "StandardResponseApiKeyCreateResult",
+            "201": "StandardResponseApiKeyCreateResultPublic",
             "422": "WrappedValidationError",
-            "200": "StandardResponseApiKeyCreateResult",
+            "200": "StandardResponseApiKeyCreateResultPublic",
         }
         response_data = self.api_client.call_api(*_param, _request_timeout=_request_timeout)
         response_data.read()
@@ -119,7 +119,7 @@ class IdentityApi:
             Annotated[StrictFloat, Field(gt=0)],
             Tuple[Annotated[StrictFloat, Field(gt=0)], Annotated[StrictFloat, Field(gt=0)]],
         ] = None,
-    ) -> ApiResponse[StandardResponseApiKeyCreateResult]:
+    ) -> ApiResponse[StandardResponseApiKeyCreateResultPublic]:
         """Create API key
 
         This operation creates a new API key for a principal.  When authenticated with a principal API key, the new key is created for the authenticated principal. When authenticated with a service credential, `principal_id` is required.  Use `scopes` to restrict what the key can access. The default scope `[\"*\"]` grants full access. Individual scopes use the format `resource:action` where action is `read`, `write`, or `status`. For example: `[\"wallet:read\", \"wallet:write\"]`.  Supply `expires_at` to set an expiry time. If omitted, the key does not expire.  <Note>The raw API key value is only returned once in the response. Store it securely — it cannot be retrieved again.</Note>
@@ -145,9 +145,9 @@ class IdentityApi:
         )
 
         _response_types_map: Dict[str, Optional[str]] = {
-            "201": "StandardResponseApiKeyCreateResult",
+            "201": "StandardResponseApiKeyCreateResultPublic",
             "422": "WrappedValidationError",
-            "200": "StandardResponseApiKeyCreateResult",
+            "200": "StandardResponseApiKeyCreateResultPublic",
         }
         response_data = self.api_client.call_api(*_param, _request_timeout=_request_timeout)
         response_data.read()
@@ -193,9 +193,9 @@ class IdentityApi:
         )
 
         _response_types_map: Dict[str, Optional[str]] = {
-            "201": "StandardResponseApiKeyCreateResult",
+            "201": "StandardResponseApiKeyCreateResultPublic",
             "422": "WrappedValidationError",
-            "200": "StandardResponseApiKeyCreateResult",
+            "200": "StandardResponseApiKeyCreateResultPublic",
         }
         response_data = self.api_client.call_api(*_param, _request_timeout=_request_timeout)
         return response_data.response
@@ -606,7 +606,7 @@ class IdentityApi:
             Annotated[StrictFloat, Field(gt=0)],
             Tuple[Annotated[StrictFloat, Field(gt=0)], Annotated[StrictFloat, Field(gt=0)]],
         ] = None,
-    ) -> StandardResponseListApiKeyRead:
+    ) -> StandardResponseListApiKeyPublicRead:
         """List API keys
 
         This operation retrieves all API keys for the authenticated principal. Requires principal API key authentication. Use cursor-based pagination with `after`/`before`.
@@ -641,7 +641,7 @@ class IdentityApi:
         )
 
         _response_types_map: Dict[str, Optional[str]] = {
-            "200": "StandardResponseListApiKeyRead",
+            "200": "StandardResponseListApiKeyPublicRead",
             "422": "WrappedValidationError",
         }
         response_data = self.api_client.call_api(*_param, _request_timeout=_request_timeout)
@@ -681,7 +681,7 @@ class IdentityApi:
             Annotated[StrictFloat, Field(gt=0)],
             Tuple[Annotated[StrictFloat, Field(gt=0)], Annotated[StrictFloat, Field(gt=0)]],
         ] = None,
-    ) -> ApiResponse[StandardResponseListApiKeyRead]:
+    ) -> ApiResponse[StandardResponseListApiKeyPublicRead]:
         """List API keys
 
         This operation retrieves all API keys for the authenticated principal. Requires principal API key authentication. Use cursor-based pagination with `after`/`before`.
@@ -716,7 +716,7 @@ class IdentityApi:
         )
 
         _response_types_map: Dict[str, Optional[str]] = {
-            "200": "StandardResponseListApiKeyRead",
+            "200": "StandardResponseListApiKeyPublicRead",
             "422": "WrappedValidationError",
         }
         response_data = self.api_client.call_api(*_param, _request_timeout=_request_timeout)
@@ -791,7 +791,7 @@ class IdentityApi:
         )
 
         _response_types_map: Dict[str, Optional[str]] = {
-            "200": "StandardResponseListApiKeyRead",
+            "200": "StandardResponseListApiKeyPublicRead",
             "422": "WrappedValidationError",
         }
         response_data = self.api_client.call_api(*_param, _request_timeout=_request_timeout)

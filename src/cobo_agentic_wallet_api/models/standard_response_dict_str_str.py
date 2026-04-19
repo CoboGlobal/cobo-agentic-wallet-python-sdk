@@ -29,8 +29,9 @@ class StandardResponseDictStrStr(BaseModel):
     success: Optional[StrictBool] = True
     result: Dict[str, StrictStr]
     suggestion: Optional[StrictStr] = ""
+    message: Optional[StrictStr] = ""
     meta: Optional[PaginationMeta] = None
-    __properties: ClassVar[List[str]] = ["success", "result", "suggestion", "meta"]
+    __properties: ClassVar[List[str]] = ["success", "result", "suggestion", "message", "meta"]
 
     model_config = ConfigDict(
         populate_by_name=True,
@@ -88,6 +89,7 @@ class StandardResponseDictStrStr(BaseModel):
                 "success": obj.get("success") if obj.get("success") is not None else True,
                 "result": obj.get("result"),
                 "suggestion": obj.get("suggestion") if obj.get("suggestion") is not None else "",
+                "message": obj.get("message") if obj.get("message") is not None else "",
                 "meta": PaginationMeta.from_dict(obj["meta"])
                 if obj.get("meta") is not None
                 else None,

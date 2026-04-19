@@ -67,7 +67,7 @@ class ApiClient:
         self.rest_client = rest.RESTClientObject(configuration)
         self.default_headers = {}
         # Set default User-Agent.
-        self.user_agent = "cobo-agentic-wallet-python-api/0.1.34"
+        self.user_agent = "cobo-agentic-wallet-python-api/0.1.35"
 
     def __enter__(self):
         return self

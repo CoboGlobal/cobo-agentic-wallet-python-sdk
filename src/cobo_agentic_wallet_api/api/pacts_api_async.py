@@ -27,7 +27,9 @@ from cobo_agentic_wallet_api.models.standard_response_pact_event_list_response i
 from cobo_agentic_wallet_api.models.standard_response_pact_list_response import (
     StandardResponsePactListResponse,
 )
-from cobo_agentic_wallet_api.models.standard_response_pact_read import StandardResponsePactRead
+from cobo_agentic_wallet_api.models.standard_response_pact_public_read import (
+    StandardResponsePactPublicRead,
+)
 from cobo_agentic_wallet_api.models.standard_response_pact_submit_response import (
     StandardResponsePactSubmitResponse,
 )
@@ -71,10 +73,10 @@ class AsyncPactsApi:
             Annotated[StrictFloat, Field(gt=0)],
             Tuple[Annotated[StrictFloat, Field(gt=0)], Annotated[StrictFloat, Field(gt=0)]],
         ] = None,
-    ) -> StandardResponsePactRead:
+    ) -> StandardResponsePactPublicRead:
         """Get pact detail
 
-        Retrieve pact details. The api_key field is only visible to the operator that submitted the pact.
+        Retrieve the full details of a specific pact. The `api_key` field is only visible to the operator that submitted the pact.
 
         :param pact_id: The UUID of the pact to retrieve, as returned by the submit or list endpoints. (required)
         :type pact_id: str
@@ -94,7 +96,7 @@ class AsyncPactsApi:
         )
 
         _response_types_map: Dict[str, Optional[str]] = {
-            "200": "StandardResponsePactRead",
+            "200": "StandardResponsePactPublicRead",
             "422": "WrappedValidationError",
         }
         response_data = await self.api_client.call_api(*_param, _request_timeout=_request_timeout)
@@ -118,10 +120,10 @@ class AsyncPactsApi:
             Annotated[StrictFloat, Field(gt=0)],
             Tuple[Annotated[StrictFloat, Field(gt=0)], Annotated[StrictFloat, Field(gt=0)]],
         ] = None,
-    ) -> ApiResponse[StandardResponsePactRead]:
+    ) -> ApiResponse[StandardResponsePactPublicRead]:
         """Get pact detail
 
-        Retrieve pact details. The api_key field is only visible to the operator that submitted the pact.
+        Retrieve the full details of a specific pact. The `api_key` field is only visible to the operator that submitted the pact.
 
         :param pact_id: The UUID of the pact to retrieve, as returned by the submit or list endpoints. (required)
         :type pact_id: str
@@ -141,7 +143,7 @@ class AsyncPactsApi:
         )
 
         _response_types_map: Dict[str, Optional[str]] = {
-            "200": "StandardResponsePactRead",
+            "200": "StandardResponsePactPublicRead",
             "422": "WrappedValidationError",
         }
         response_data = await self.api_client.call_api(*_param, _request_timeout=_request_timeout)
@@ -168,7 +170,7 @@ class AsyncPactsApi:
     ) -> AsyncRESTResponse:
         """Get pact detail
 
-        Retrieve pact details. The api_key field is only visible to the operator that submitted the pact.
+        Retrieve the full details of a specific pact. The `api_key` field is only visible to the operator that submitted the pact.
 
         :param pact_id: The UUID of the pact to retrieve, as returned by the submit or list endpoints. (required)
         :type pact_id: str
@@ -188,7 +190,7 @@ class AsyncPactsApi:
         )
 
         _response_types_map: Dict[str, Optional[str]] = {
-            "200": "StandardResponsePactRead",
+            "200": "StandardResponsePactPublicRead",
             "422": "WrappedValidationError",
         }
         response_data = await self.api_client.call_api(*_param, _request_timeout=_request_timeout)
@@ -232,15 +234,24 @@ class AsyncPactsApi:
     @validate_call
     async def get_wallet_pact_history(
         self,
-        wallet_id: Annotated[StrictStr, Field(description="Wallet UUID.")],
-        range: Annotated[StrictStr, Field(description="Window range (`1d`, `7d`, `30d`).")],
+        wallet_id: Annotated[
+            StrictStr, Field(description="The UUID of the wallet to retrieve pact history for.")
+        ],
+        range: Annotated[
+            StrictStr,
+            Field(
+                description="Time window for the history chart. Allowed values: `1d`, `7d`, `30d`."
+            ),
+        ],
         metric: Annotated[
             Optional[WalletPactHistoryMetric],
-            Field(description="Primary metric hint for pact sorting (`tx_count` or `tx_amount`)."),
+            Field(
+                description="Metric used to sort pacts within each bucket. Possible values: `tx_count`, `tx_amount`."
+            ),
         ] = None,
         lang: Annotated[
             Optional[PactStatsLanguage],
-            Field(description="Language hint for localized pact titles (`zh` or `en`)."),
+            Field(description="Language for localized pact titles. Possible values: `en`, `zh`."),
         ] = None,
         x_api_key: Optional[StrictStr] = None,
         _request_timeout: Union[
@@ -251,15 +262,15 @@ class AsyncPactsApi:
     ) -> StandardResponseWalletPactHistoryRead:
         """Get wallet pact history
 
-        Return wallet-level pact history buckets for the Pact history chart. Current implementation returns data from persisted transaction data.
+        Retrieve time-bucketed pact activity history for a wallet, suitable for charting. Data is derived from persisted transaction records. Use `range` to select the time window and `metric` to control the sort order.
 
-        :param wallet_id: Wallet UUID. (required)
+        :param wallet_id: The UUID of the wallet to retrieve pact history for. (required)
         :type wallet_id: str
-        :param range: Window range (`1d`, `7d`, `30d`). (required)
+        :param range: Time window for the history chart. Allowed values: `1d`, `7d`, `30d`. (required)
         :type range: str
-        :param metric: Primary metric hint for pact sorting (`tx_count` or `tx_amount`).
+        :param metric: Metric used to sort pacts within each bucket. Possible values: `tx_count`, `tx_amount`.
         :type metric: WalletPactHistoryMetric
-        :param lang: Language hint for localized pact titles (`zh` or `en`).
+        :param lang: Language for localized pact titles. Possible values: `en`, `zh`.
         :type lang: PactStatsLanguage
         :param x_api_key:
         :type x_api_key: str
@@ -292,15 +303,24 @@ class AsyncPactsApi:
     @validate_call
     async def get_wallet_pact_history_with_http_info(
         self,
-        wallet_id: Annotated[StrictStr, Field(description="Wallet UUID.")],
-        range: Annotated[StrictStr, Field(description="Window range (`1d`, `7d`, `30d`).")],
+        wallet_id: Annotated[
+            StrictStr, Field(description="The UUID of the wallet to retrieve pact history for.")
+        ],
+        range: Annotated[
+            StrictStr,
+            Field(
+                description="Time window for the history chart. Allowed values: `1d`, `7d`, `30d`."
+            ),
+        ],
         metric: Annotated[
             Optional[WalletPactHistoryMetric],
-            Field(description="Primary metric hint for pact sorting (`tx_count` or `tx_amount`)."),
+            Field(
+                description="Metric used to sort pacts within each bucket. Possible values: `tx_count`, `tx_amount`."
+            ),
         ] = None,
         lang: Annotated[
             Optional[PactStatsLanguage],
-            Field(description="Language hint for localized pact titles (`zh` or `en`)."),
+            Field(description="Language for localized pact titles. Possible values: `en`, `zh`."),
         ] = None,
         x_api_key: Optional[StrictStr] = None,
         _request_timeout: Union[
@@ -311,15 +331,15 @@ class AsyncPactsApi:
     ) -> ApiResponse[StandardResponseWalletPactHistoryRead]:
         """Get wallet pact history
 
-        Return wallet-level pact history buckets for the Pact history chart. Current implementation returns data from persisted transaction data.
+        Retrieve time-bucketed pact activity history for a wallet, suitable for charting. Data is derived from persisted transaction records. Use `range` to select the time window and `metric` to control the sort order.
 
-        :param wallet_id: Wallet UUID. (required)
+        :param wallet_id: The UUID of the wallet to retrieve pact history for. (required)
         :type wallet_id: str
-        :param range: Window range (`1d`, `7d`, `30d`). (required)
+        :param range: Time window for the history chart. Allowed values: `1d`, `7d`, `30d`. (required)
         :type range: str
-        :param metric: Primary metric hint for pact sorting (`tx_count` or `tx_amount`).
+        :param metric: Metric used to sort pacts within each bucket. Possible values: `tx_count`, `tx_amount`.
         :type metric: WalletPactHistoryMetric
-        :param lang: Language hint for localized pact titles (`zh` or `en`).
+        :param lang: Language for localized pact titles. Possible values: `en`, `zh`.
         :type lang: PactStatsLanguage
         :param x_api_key:
         :type x_api_key: str
@@ -352,15 +372,24 @@ class AsyncPactsApi:
     @validate_call
     async def get_wallet_pact_history_without_preload_content(
         self,
-        wallet_id: Annotated[StrictStr, Field(description="Wallet UUID.")],
-        range: Annotated[StrictStr, Field(description="Window range (`1d`, `7d`, `30d`).")],
+        wallet_id: Annotated[
+            StrictStr, Field(description="The UUID of the wallet to retrieve pact history for.")
+        ],
+        range: Annotated[
+            StrictStr,
+            Field(
+                description="Time window for the history chart. Allowed values: `1d`, `7d`, `30d`."
+            ),
+        ],
         metric: Annotated[
             Optional[WalletPactHistoryMetric],
-            Field(description="Primary metric hint for pact sorting (`tx_count` or `tx_amount`)."),
+            Field(
+                description="Metric used to sort pacts within each bucket. Possible values: `tx_count`, `tx_amount`."
+            ),
         ] = None,
         lang: Annotated[
             Optional[PactStatsLanguage],
-            Field(description="Language hint for localized pact titles (`zh` or `en`)."),
+            Field(description="Language for localized pact titles. Possible values: `en`, `zh`."),
         ] = None,
         x_api_key: Optional[StrictStr] = None,
         _request_timeout: Union[
@@ -371,15 +400,15 @@ class AsyncPactsApi:
     ) -> AsyncRESTResponse:
         """Get wallet pact history
 
-        Return wallet-level pact history buckets for the Pact history chart. Current implementation returns data from persisted transaction data.
+        Retrieve time-bucketed pact activity history for a wallet, suitable for charting. Data is derived from persisted transaction records. Use `range` to select the time window and `metric` to control the sort order.
 
-        :param wallet_id: Wallet UUID. (required)
+        :param wallet_id: The UUID of the wallet to retrieve pact history for. (required)
         :type wallet_id: str
-        :param range: Window range (`1d`, `7d`, `30d`). (required)
+        :param range: Time window for the history chart. Allowed values: `1d`, `7d`, `30d`. (required)
         :type range: str
-        :param metric: Primary metric hint for pact sorting (`tx_count` or `tx_amount`).
+        :param metric: Metric used to sort pacts within each bucket. Possible values: `tx_count`, `tx_amount`.
         :type metric: WalletPactHistoryMetric
-        :param lang: Language hint for localized pact titles (`zh` or `en`).
+        :param lang: Language for localized pact titles. Possible values: `en`, `zh`.
         :type lang: PactStatsLanguage
         :param x_api_key:
         :type x_api_key: str
@@ -456,10 +485,20 @@ class AsyncPactsApi:
     @validate_call
     async def get_wallet_pact_stats(
         self,
-        wallet_id: Annotated[StrictStr, Field(description="Wallet UUID.")],
+        wallet_id: Annotated[
+            StrictStr, Field(description="The UUID of the wallet to retrieve pact statistics for.")
+        ],
+        include_default: Annotated[
+            Optional[StrictBool],
+            Field(
+                description="Include default pacts (`is_default=true`) in the statistics. Excluded by default."
+            ),
+        ] = None,
         lang: Annotated[
             Optional[PactStatsLanguage],
-            Field(description="Language hint for localized display fields (`zh` or `en`)."),
+            Field(
+                description="Language for localized display fields. Possible values: `en`, `zh`."
+            ),
         ] = None,
         x_api_key: Optional[StrictStr] = None,
         _request_timeout: Union[
@@ -470,11 +509,13 @@ class AsyncPactsApi:
     ) -> StandardResponseWalletPactStatsRead:
         """Get wallet pact statistics
 
-        Return wallet-level pact aggregate metrics for the Pact stats banner. Current implementation returns data from persisted transaction data.
+        Retrieve aggregate pact metrics for a wallet, such as total pact count, active pacts, and cumulative spend. Data is derived from persisted transaction records.
 
-        :param wallet_id: Wallet UUID. (required)
+        :param wallet_id: The UUID of the wallet to retrieve pact statistics for. (required)
         :type wallet_id: str
-        :param lang: Language hint for localized display fields (`zh` or `en`).
+        :param include_default: Include default pacts (`is_default=true`) in the statistics. Excluded by default.
+        :type include_default: bool
+        :param lang: Language for localized display fields. Possible values: `en`, `zh`.
         :type lang: PactStatsLanguage
         :param x_api_key:
         :type x_api_key: str
@@ -488,6 +529,7 @@ class AsyncPactsApi:
 
         _param = self._get_wallet_pact_stats_serialize(
             wallet_id=wallet_id,
+            include_default=include_default,
             lang=lang,
             x_api_key=x_api_key,
         )
@@ -505,10 +547,20 @@ class AsyncPactsApi:
     @validate_call
     async def get_wallet_pact_stats_with_http_info(
         self,
-        wallet_id: Annotated[StrictStr, Field(description="Wallet UUID.")],
+        wallet_id: Annotated[
+            StrictStr, Field(description="The UUID of the wallet to retrieve pact statistics for.")
+        ],
+        include_default: Annotated[
+            Optional[StrictBool],
+            Field(
+                description="Include default pacts (`is_default=true`) in the statistics. Excluded by default."
+            ),
+        ] = None,
         lang: Annotated[
             Optional[PactStatsLanguage],
-            Field(description="Language hint for localized display fields (`zh` or `en`)."),
+            Field(
+                description="Language for localized display fields. Possible values: `en`, `zh`."
+            ),
         ] = None,
         x_api_key: Optional[StrictStr] = None,
         _request_timeout: Union[
@@ -519,11 +571,13 @@ class AsyncPactsApi:
     ) -> ApiResponse[StandardResponseWalletPactStatsRead]:
         """Get wallet pact statistics
 
-        Return wallet-level pact aggregate metrics for the Pact stats banner. Current implementation returns data from persisted transaction data.
+        Retrieve aggregate pact metrics for a wallet, such as total pact count, active pacts, and cumulative spend. Data is derived from persisted transaction records.
 
-        :param wallet_id: Wallet UUID. (required)
+        :param wallet_id: The UUID of the wallet to retrieve pact statistics for. (required)
         :type wallet_id: str
-        :param lang: Language hint for localized display fields (`zh` or `en`).
+        :param include_default: Include default pacts (`is_default=true`) in the statistics. Excluded by default.
+        :type include_default: bool
+        :param lang: Language for localized display fields. Possible values: `en`, `zh`.
         :type lang: PactStatsLanguage
         :param x_api_key:
         :type x_api_key: str
@@ -537,6 +591,7 @@ class AsyncPactsApi:
 
         _param = self._get_wallet_pact_stats_serialize(
             wallet_id=wallet_id,
+            include_default=include_default,
             lang=lang,
             x_api_key=x_api_key,
         )
@@ -554,10 +609,20 @@ class AsyncPactsApi:
     @validate_call
     async def get_wallet_pact_stats_without_preload_content(
         self,
-        wallet_id: Annotated[StrictStr, Field(description="Wallet UUID.")],
+        wallet_id: Annotated[
+            StrictStr, Field(description="The UUID of the wallet to retrieve pact statistics for.")
+        ],
+        include_default: Annotated[
+            Optional[StrictBool],
+            Field(
+                description="Include default pacts (`is_default=true`) in the statistics. Excluded by default."
+            ),
+        ] = None,
         lang: Annotated[
             Optional[PactStatsLanguage],
-            Field(description="Language hint for localized display fields (`zh` or `en`)."),
+            Field(
+                description="Language for localized display fields. Possible values: `en`, `zh`."
+            ),
         ] = None,
         x_api_key: Optional[StrictStr] = None,
         _request_timeout: Union[
@@ -568,11 +633,13 @@ class AsyncPactsApi:
     ) -> AsyncRESTResponse:
         """Get wallet pact statistics
 
-        Return wallet-level pact aggregate metrics for the Pact stats banner. Current implementation returns data from persisted transaction data.
+        Retrieve aggregate pact metrics for a wallet, such as total pact count, active pacts, and cumulative spend. Data is derived from persisted transaction records.
 
-        :param wallet_id: Wallet UUID. (required)
+        :param wallet_id: The UUID of the wallet to retrieve pact statistics for. (required)
         :type wallet_id: str
-        :param lang: Language hint for localized display fields (`zh` or `en`).
+        :param include_default: Include default pacts (`is_default=true`) in the statistics. Excluded by default.
+        :type include_default: bool
+        :param lang: Language for localized display fields. Possible values: `en`, `zh`.
         :type lang: PactStatsLanguage
         :param x_api_key:
         :type x_api_key: str
@@ -586,6 +653,7 @@ class AsyncPactsApi:
 
         _param = self._get_wallet_pact_stats_serialize(
             wallet_id=wallet_id,
+            include_default=include_default,
             lang=lang,
             x_api_key=x_api_key,
         )
@@ -600,6 +668,7 @@ class AsyncPactsApi:
     def _get_wallet_pact_stats_serialize(
         self,
         wallet_id,
+        include_default,
         lang,
         x_api_key,
     ) -> RequestSerialized:
@@ -616,6 +685,9 @@ class AsyncPactsApi:
         if wallet_id is not None:
             _path_params["wallet_id"] = wallet_id
         # process the query parameters
+        if include_default is not None:
+            _query_params.append(("include_default", include_default))
+
         if lang is not None:
             _query_params.append(("lang", lang.value))
 
@@ -642,18 +714,24 @@ class AsyncPactsApi:
         pact_id: Annotated[
             StrictStr,
             Field(
-                description="The UUID of the pact whose event history you want to retrieve, as returned by the submit or list endpoints."
+                description="The UUID of the pact whose event history to retrieve, as returned by the submit or list endpoints."
             ),
         ],
         after: Annotated[
-            Optional[StrictStr], Field(description="Cursor for forward pagination.")
+            Optional[StrictStr],
+            Field(
+                description="A cursor for forward pagination. Pass the `after` value from a previous response to retrieve the next page."
+            ),
         ] = None,
         before: Annotated[
-            Optional[StrictStr], Field(description="Cursor for backward pagination.")
+            Optional[StrictStr],
+            Field(
+                description="A cursor for backward pagination. Pass the `before` value from a previous response to retrieve the preceding page."
+            ),
         ] = None,
         offset: Annotated[
             Optional[Annotated[int, Field(le=9223372036854775807, strict=True, ge=0)]],
-            Field(description="Deprecated. Use cursors."),
+            Field(description="Deprecated. Use `after`/`before` cursors instead."),
         ] = None,
         limit: Annotated[
             Optional[Annotated[int, Field(le=200, strict=True, ge=1)]],
@@ -666,17 +744,17 @@ class AsyncPactsApi:
             Tuple[Annotated[StrictFloat, Field(gt=0)], Annotated[StrictFloat, Field(gt=0)]],
         ] = None,
     ) -> StandardResponsePactEventListResponse:
-        """Get pact event history
+        """List pact events
 
-        Retrieve the full lifecycle event history for the specified pact. Events are returned in chronological order. Use `after` or `before` cursor parameters for cursor-based pagination, or the deprecated `offset` parameter for offset-based pagination. The default page size is 50; maximum is 200.
+        Retrieve the full lifecycle event history for the specified pact. Events are returned in chronological order. Use `after` or `before` cursor parameters for cursor-based pagination, or the deprecated `offset` parameter for offset-based pagination.
 
-        :param pact_id: The UUID of the pact whose event history you want to retrieve, as returned by the submit or list endpoints. (required)
+        :param pact_id: The UUID of the pact whose event history to retrieve, as returned by the submit or list endpoints. (required)
         :type pact_id: str
-        :param after: Cursor for forward pagination.
+        :param after: A cursor for forward pagination. Pass the `after` value from a previous response to retrieve the next page.
         :type after: str
-        :param before: Cursor for backward pagination.
+        :param before: A cursor for backward pagination. Pass the `before` value from a previous response to retrieve the preceding page.
         :type before: str
-        :param offset: Deprecated. Use cursors.
+        :param offset: Deprecated. Use `after`/`before` cursors instead.
         :type offset: int
         :param limit: The maximum number of items to return. Range: [1, 200].
         :type limit: int
@@ -715,18 +793,24 @@ class AsyncPactsApi:
         pact_id: Annotated[
             StrictStr,
             Field(
-                description="The UUID of the pact whose event history you want to retrieve, as returned by the submit or list endpoints."
+                description="The UUID of the pact whose event history to retrieve, as returned by the submit or list endpoints."
             ),
         ],
         after: Annotated[
-            Optional[StrictStr], Field(description="Cursor for forward pagination.")
+            Optional[StrictStr],
+            Field(
+                description="A cursor for forward pagination. Pass the `after` value from a previous response to retrieve the next page."
+            ),
         ] = None,
         before: Annotated[
-            Optional[StrictStr], Field(description="Cursor for backward pagination.")
+            Optional[StrictStr],
+            Field(
+                description="A cursor for backward pagination. Pass the `before` value from a previous response to retrieve the preceding page."
+            ),
         ] = None,
         offset: Annotated[
             Optional[Annotated[int, Field(le=9223372036854775807, strict=True, ge=0)]],
-            Field(description="Deprecated. Use cursors."),
+            Field(description="Deprecated. Use `after`/`before` cursors instead."),
         ] = None,
         limit: Annotated[
             Optional[Annotated[int, Field(le=200, strict=True, ge=1)]],
@@ -739,17 +823,17 @@ class AsyncPactsApi:
             Tuple[Annotated[StrictFloat, Field(gt=0)], Annotated[StrictFloat, Field(gt=0)]],
         ] = None,
     ) -> ApiResponse[StandardResponsePactEventListResponse]:
-        """Get pact event history
+        """List pact events
 
-        Retrieve the full lifecycle event history for the specified pact. Events are returned in chronological order. Use `after` or `before` cursor parameters for cursor-based pagination, or the deprecated `offset` parameter for offset-based pagination. The default page size is 50; maximum is 200.
+        Retrieve the full lifecycle event history for the specified pact. Events are returned in chronological order. Use `after` or `before` cursor parameters for cursor-based pagination, or the deprecated `offset` parameter for offset-based pagination.
 
-        :param pact_id: The UUID of the pact whose event history you want to retrieve, as returned by the submit or list endpoints. (required)
+        :param pact_id: The UUID of the pact whose event history to retrieve, as returned by the submit or list endpoints. (required)
         :type pact_id: str
-        :param after: Cursor for forward pagination.
+        :param after: A cursor for forward pagination. Pass the `after` value from a previous response to retrieve the next page.
         :type after: str
-        :param before: Cursor for backward pagination.
+        :param before: A cursor for backward pagination. Pass the `before` value from a previous response to retrieve the preceding page.
         :type before: str
-        :param offset: Deprecated. Use cursors.
+        :param offset: Deprecated. Use `after`/`before` cursors instead.
         :type offset: int
         :param limit: The maximum number of items to return. Range: [1, 200].
         :type limit: int
@@ -788,18 +872,24 @@ class AsyncPactsApi:
         pact_id: Annotated[
             StrictStr,
             Field(
-                description="The UUID of the pact whose event history you want to retrieve, as returned by the submit or list endpoints."
+                description="The UUID of the pact whose event history to retrieve, as returned by the submit or list endpoints."
             ),
         ],
         after: Annotated[
-            Optional[StrictStr], Field(description="Cursor for forward pagination.")
+            Optional[StrictStr],
+            Field(
+                description="A cursor for forward pagination. Pass the `after` value from a previous response to retrieve the next page."
+            ),
         ] = None,
         before: Annotated[
-            Optional[StrictStr], Field(description="Cursor for backward pagination.")
+            Optional[StrictStr],
+            Field(
+                description="A cursor for backward pagination. Pass the `before` value from a previous response to retrieve the preceding page."
+            ),
         ] = None,
         offset: Annotated[
             Optional[Annotated[int, Field(le=9223372036854775807, strict=True, ge=0)]],
-            Field(description="Deprecated. Use cursors."),
+            Field(description="Deprecated. Use `after`/`before` cursors instead."),
         ] = None,
         limit: Annotated[
             Optional[Annotated[int, Field(le=200, strict=True, ge=1)]],
@@ -812,17 +902,17 @@ class AsyncPactsApi:
             Tuple[Annotated[StrictFloat, Field(gt=0)], Annotated[StrictFloat, Field(gt=0)]],
         ] = None,
     ) -> AsyncRESTResponse:
-        """Get pact event history
+        """List pact events
 
-        Retrieve the full lifecycle event history for the specified pact. Events are returned in chronological order. Use `after` or `before` cursor parameters for cursor-based pagination, or the deprecated `offset` parameter for offset-based pagination. The default page size is 50; maximum is 200.
+        Retrieve the full lifecycle event history for the specified pact. Events are returned in chronological order. Use `after` or `before` cursor parameters for cursor-based pagination, or the deprecated `offset` parameter for offset-based pagination.
 
-        :param pact_id: The UUID of the pact whose event history you want to retrieve, as returned by the submit or list endpoints. (required)
+        :param pact_id: The UUID of the pact whose event history to retrieve, as returned by the submit or list endpoints. (required)
         :type pact_id: str
-        :param after: Cursor for forward pagination.
+        :param after: A cursor for forward pagination. Pass the `after` value from a previous response to retrieve the next page.
         :type after: str
-        :param before: Cursor for backward pagination.
+        :param before: A cursor for backward pagination. Pass the `before` value from a previous response to retrieve the preceding page.
         :type before: str
-        :param offset: Deprecated. Use cursors.
+        :param offset: Deprecated. Use `after`/`before` cursors instead.
         :type offset: int
         :param limit: The maximum number of items to return. Range: [1, 200].
         :type limit: int
@@ -919,23 +1009,29 @@ class AsyncPactsApi:
             ),
         ] = None,
         after: Annotated[
-            Optional[StrictStr], Field(description="Cursor for forward pagination.")
+            Optional[StrictStr],
+            Field(
+                description="A cursor for forward pagination. Pass the `after` value from a previous response to retrieve the next page."
+            ),
         ] = None,
         before: Annotated[
-            Optional[StrictStr], Field(description="Cursor for backward pagination.")
+            Optional[StrictStr],
+            Field(
+                description="A cursor for backward pagination. Pass the `before` value from a previous response to retrieve the preceding page."
+            ),
         ] = None,
         offset: Annotated[
             Optional[Annotated[int, Field(le=9223372036854775807, strict=True, ge=0)]],
-            Field(description="Deprecated. Use cursors."),
+            Field(description="Deprecated. Use `after`/`before` cursors instead."),
         ] = None,
         limit: Annotated[
             Optional[Annotated[int, Field(le=100, strict=True, ge=1)]],
-            Field(description="Max results per page."),
+            Field(description="The maximum number of items to return. Range: [1, 100]."),
         ] = None,
         include_default: Annotated[
             Optional[StrictBool],
             Field(
-                description="Include default pacts (is_default=True) in results. Excluded by default."
+                description="Include default pacts (`is_default=true`) in results. Excluded by default."
             ),
         ] = None,
         x_api_key: Optional[StrictStr] = None,
@@ -953,15 +1049,15 @@ class AsyncPactsApi:
         :type status: PactStatus
         :param wallet_id: Filter results to pacts associated with this wallet. Pass the UUID of the wallet as returned by the wallets API.
         :type wallet_id: str
-        :param after: Cursor for forward pagination.
+        :param after: A cursor for forward pagination. Pass the `after` value from a previous response to retrieve the next page.
         :type after: str
-        :param before: Cursor for backward pagination.
+        :param before: A cursor for backward pagination. Pass the `before` value from a previous response to retrieve the preceding page.
         :type before: str
-        :param offset: Deprecated. Use cursors.
+        :param offset: Deprecated. Use `after`/`before` cursors instead.
         :type offset: int
-        :param limit: Max results per page.
+        :param limit: The maximum number of items to return. Range: [1, 100].
         :type limit: int
-        :param include_default: Include default pacts (is_default=True) in results. Excluded by default.
+        :param include_default: Include default pacts (`is_default=true`) in results. Excluded by default.
         :type include_default: bool
         :param x_api_key:
         :type x_api_key: str
@@ -1010,23 +1106,29 @@ class AsyncPactsApi:
             ),
         ] = None,
         after: Annotated[
-            Optional[StrictStr], Field(description="Cursor for forward pagination.")
+            Optional[StrictStr],
+            Field(
+                description="A cursor for forward pagination. Pass the `after` value from a previous response to retrieve the next page."
+            ),
         ] = None,
         before: Annotated[
-            Optional[StrictStr], Field(description="Cursor for backward pagination.")
+            Optional[StrictStr],
+            Field(
+                description="A cursor for backward pagination. Pass the `before` value from a previous response to retrieve the preceding page."
+            ),
         ] = None,
         offset: Annotated[
             Optional[Annotated[int, Field(le=9223372036854775807, strict=True, ge=0)]],
-            Field(description="Deprecated. Use cursors."),
+            Field(description="Deprecated. Use `after`/`before` cursors instead."),
         ] = None,
         limit: Annotated[
             Optional[Annotated[int, Field(le=100, strict=True, ge=1)]],
-            Field(description="Max results per page."),
+            Field(description="The maximum number of items to return. Range: [1, 100]."),
         ] = None,
         include_default: Annotated[
             Optional[StrictBool],
             Field(
-                description="Include default pacts (is_default=True) in results. Excluded by default."
+                description="Include default pacts (`is_default=true`) in results. Excluded by default."
             ),
         ] = None,
         x_api_key: Optional[StrictStr] = None,
@@ -1044,15 +1146,15 @@ class AsyncPactsApi:
         :type status: PactStatus
         :param wallet_id: Filter results to pacts associated with this wallet. Pass the UUID of the wallet as returned by the wallets API.
         :type wallet_id: str
-        :param after: Cursor for forward pagination.
+        :param after: A cursor for forward pagination. Pass the `after` value from a previous response to retrieve the next page.
         :type after: str
-        :param before: Cursor for backward pagination.
+        :param before: A cursor for backward pagination. Pass the `before` value from a previous response to retrieve the preceding page.
         :type before: str
-        :param offset: Deprecated. Use cursors.
+        :param offset: Deprecated. Use `after`/`before` cursors instead.
         :type offset: int
-        :param limit: Max results per page.
+        :param limit: The maximum number of items to return. Range: [1, 100].
         :type limit: int
-        :param include_default: Include default pacts (is_default=True) in results. Excluded by default.
+        :param include_default: Include default pacts (`is_default=true`) in results. Excluded by default.
         :type include_default: bool
         :param x_api_key:
         :type x_api_key: str
@@ -1101,23 +1203,29 @@ class AsyncPactsApi:
             ),
         ] = None,
         after: Annotated[
-            Optional[StrictStr], Field(description="Cursor for forward pagination.")
+            Optional[StrictStr],
+            Field(
+                description="A cursor for forward pagination. Pass the `after` value from a previous response to retrieve the next page."
+            ),
         ] = None,
         before: Annotated[
-            Optional[StrictStr], Field(description="Cursor for backward pagination.")
+            Optional[StrictStr],
+            Field(
+                description="A cursor for backward pagination. Pass the `before` value from a previous response to retrieve the preceding page."
+            ),
         ] = None,
         offset: Annotated[
             Optional[Annotated[int, Field(le=9223372036854775807, strict=True, ge=0)]],
-            Field(description="Deprecated. Use cursors."),
+            Field(description="Deprecated. Use `after`/`before` cursors instead."),
         ] = None,
         limit: Annotated[
             Optional[Annotated[int, Field(le=100, strict=True, ge=1)]],
-            Field(description="Max results per page."),
+            Field(description="The maximum number of items to return. Range: [1, 100]."),
         ] = None,
         include_default: Annotated[
             Optional[StrictBool],
             Field(
-                description="Include default pacts (is_default=True) in results. Excluded by default."
+                description="Include default pacts (`is_default=true`) in results. Excluded by default."
             ),
         ] = None,
         x_api_key: Optional[StrictStr] = None,
@@ -1135,15 +1243,15 @@ class AsyncPactsApi:
         :type status: PactStatus
         :param wallet_id: Filter results to pacts associated with this wallet. Pass the UUID of the wallet as returned by the wallets API.
         :type wallet_id: str
-        :param after: Cursor for forward pagination.
+        :param after: A cursor for forward pagination. Pass the `after` value from a previous response to retrieve the next page.
         :type after: str
-        :param before: Cursor for backward pagination.
+        :param before: A cursor for backward pagination. Pass the `before` value from a previous response to retrieve the preceding page.
         :type before: str
-        :param offset: Deprecated. Use cursors.
+        :param offset: Deprecated. Use `after`/`before` cursors instead.
         :type offset: int
-        :param limit: Max results per page.
+        :param limit: The maximum number of items to return. Range: [1, 100].
         :type limit: int
-        :param include_default: Include default pacts (is_default=True) in results. Excluded by default.
+        :param include_default: Include default pacts (`is_default=true`) in results. Excluded by default.
         :type include_default: bool
         :param x_api_key:
         :type x_api_key: str
@@ -1248,10 +1356,10 @@ class AsyncPactsApi:
             Annotated[StrictFloat, Field(gt=0)],
             Tuple[Annotated[StrictFloat, Field(gt=0)], Annotated[StrictFloat, Field(gt=0)]],
         ] = None,
-    ) -> StandardResponsePactRead:
-        """Revoke an active pact
+    ) -> StandardResponsePactPublicRead:
+        """Revoke active pact
 
-        Revoke an active pact. Only the wallet owner can revoke. This revokes the delegation and invalidates the pact-scoped API key.
+        Revoke an active pact. Only the wallet owner can revoke. Revoking the pact also revokes the associated delegation and invalidates the pact-scoped API key.
 
         :param pact_id: The UUID of the active pact to revoke, as returned by the submit or list endpoints. (required)
         :type pact_id: str
@@ -1271,7 +1379,7 @@ class AsyncPactsApi:
         )
 
         _response_types_map: Dict[str, Optional[str]] = {
-            "200": "StandardResponsePactRead",
+            "200": "StandardResponsePactPublicRead",
             "422": "WrappedValidationError",
         }
         response_data = await self.api_client.call_api(*_param, _request_timeout=_request_timeout)
@@ -1295,10 +1403,10 @@ class AsyncPactsApi:
             Annotated[StrictFloat, Field(gt=0)],
             Tuple[Annotated[StrictFloat, Field(gt=0)], Annotated[StrictFloat, Field(gt=0)]],
         ] = None,
-    ) -> ApiResponse[StandardResponsePactRead]:
-        """Revoke an active pact
+    ) -> ApiResponse[StandardResponsePactPublicRead]:
+        """Revoke active pact
 
-        Revoke an active pact. Only the wallet owner can revoke. This revokes the delegation and invalidates the pact-scoped API key.
+        Revoke an active pact. Only the wallet owner can revoke. Revoking the pact also revokes the associated delegation and invalidates the pact-scoped API key.
 
         :param pact_id: The UUID of the active pact to revoke, as returned by the submit or list endpoints. (required)
         :type pact_id: str
@@ -1318,7 +1426,7 @@ class AsyncPactsApi:
         )
 
         _response_types_map: Dict[str, Optional[str]] = {
-            "200": "StandardResponsePactRead",
+            "200": "StandardResponsePactPublicRead",
             "422": "WrappedValidationError",
         }
         response_data = await self.api_client.call_api(*_param, _request_timeout=_request_timeout)
@@ -1343,9 +1451,9 @@ class AsyncPactsApi:
             Tuple[Annotated[StrictFloat, Field(gt=0)], Annotated[StrictFloat, Field(gt=0)]],
         ] = None,
     ) -> AsyncRESTResponse:
-        """Revoke an active pact
+        """Revoke active pact
 
-        Revoke an active pact. Only the wallet owner can revoke. This revokes the delegation and invalidates the pact-scoped API key.
+        Revoke an active pact. Only the wallet owner can revoke. Revoking the pact also revokes the associated delegation and invalidates the pact-scoped API key.
 
         :param pact_id: The UUID of the active pact to revoke, as returned by the submit or list endpoints. (required)
         :type pact_id: str
@@ -1365,7 +1473,7 @@ class AsyncPactsApi:
         )
 
         _response_types_map: Dict[str, Optional[str]] = {
-            "200": "StandardResponsePactRead",
+            "200": "StandardResponsePactPublicRead",
             "422": "WrappedValidationError",
         }
         response_data = await self.api_client.call_api(*_param, _request_timeout=_request_timeout)
@@ -1419,7 +1527,7 @@ class AsyncPactsApi:
     ) -> StandardResponsePactSubmitResponse:
         """Submit pact for approval
 
-        Submit a pact specification for human approval. The operator's identity is resolved from the authenticated API key. The pact enters PENDING_APPROVAL status and a notification is sent to the CAW App.
+        Submit a pact specification for human approval. Your agent's identity is resolved from the authenticated API key. The pact enters `PENDING_APPROVAL` status and a notification is sent to the Cobo Agentic Wallet app. For unpaired agents, the pact is auto-approved and enters `ACTIVE` status immediately.
 
         :param pact_submit_request: (required)
         :type pact_submit_request: PactSubmitRequest
@@ -1462,7 +1570,7 @@ class AsyncPactsApi:
     ) -> ApiResponse[StandardResponsePactSubmitResponse]:
         """Submit pact for approval
 
-        Submit a pact specification for human approval. The operator's identity is resolved from the authenticated API key. The pact enters PENDING_APPROVAL status and a notification is sent to the CAW App.
+        Submit a pact specification for human approval. Your agent's identity is resolved from the authenticated API key. The pact enters `PENDING_APPROVAL` status and a notification is sent to the Cobo Agentic Wallet app. For unpaired agents, the pact is auto-approved and enters `ACTIVE` status immediately.
 
         :param pact_submit_request: (required)
         :type pact_submit_request: PactSubmitRequest
@@ -1505,7 +1613,7 @@ class AsyncPactsApi:
     ) -> AsyncRESTResponse:
         """Submit pact for approval
 
-        Submit a pact specification for human approval. The operator's identity is resolved from the authenticated API key. The pact enters PENDING_APPROVAL status and a notification is sent to the CAW App.
+        Submit a pact specification for human approval. Your agent's identity is resolved from the authenticated API key. The pact enters `PENDING_APPROVAL` status and a notification is sent to the Cobo Agentic Wallet app. For unpaired agents, the pact is auto-approved and enters `ACTIVE` status immediately.
 
         :param pact_submit_request: (required)
         :type pact_submit_request: PactSubmitRequest
@@ -1573,7 +1681,7 @@ class AsyncPactsApi:
         pact_id: Annotated[
             StrictStr,
             Field(
-                description="The UUID of the active pact whose completion conditions you want to update, as returned by the submit or list endpoints."
+                description="The UUID of the active pact whose completion conditions to update, as returned by the submit or list endpoints."
             ),
         ],
         pact_update_completion_conditions_request: PactUpdateCompletionConditionsRequest,
@@ -1583,12 +1691,12 @@ class AsyncPactsApi:
             Annotated[StrictFloat, Field(gt=0)],
             Tuple[Annotated[StrictFloat, Field(gt=0)], Annotated[StrictFloat, Field(gt=0)]],
         ] = None,
-    ) -> StandardResponsePactRead:
+    ) -> StandardResponsePactPublicRead:
         """Update completion conditions
 
-        Update the completion conditions of an active pact. Only tx_count, amount_spent, and amount_spent_usd conditions may be modified, and thresholds can only be increased — decreasing a threshold could cause the pact to complete prematurely.
+        Update the completion conditions of an active pact. Only `tx_count`, `amount_spent`, and `amount_spent_usd` conditions may be modified, and thresholds can only be increased — decreasing a threshold could cause the pact to complete prematurely.
 
-        :param pact_id: The UUID of the active pact whose completion conditions you want to update, as returned by the submit or list endpoints. (required)
+        :param pact_id: The UUID of the active pact whose completion conditions to update, as returned by the submit or list endpoints. (required)
         :type pact_id: str
         :param pact_update_completion_conditions_request: (required)
         :type pact_update_completion_conditions_request: PactUpdateCompletionConditionsRequest
@@ -1609,7 +1717,7 @@ class AsyncPactsApi:
         )
 
         _response_types_map: Dict[str, Optional[str]] = {
-            "200": "StandardResponsePactRead",
+            "200": "StandardResponsePactPublicRead",
             "422": "WrappedValidationError",
         }
         response_data = await self.api_client.call_api(*_param, _request_timeout=_request_timeout)
@@ -1624,7 +1732,7 @@ class AsyncPactsApi:
         pact_id: Annotated[
             StrictStr,
             Field(
-                description="The UUID of the active pact whose completion conditions you want to update, as returned by the submit or list endpoints."
+                description="The UUID of the active pact whose completion conditions to update, as returned by the submit or list endpoints."
             ),
         ],
         pact_update_completion_conditions_request: PactUpdateCompletionConditionsRequest,
@@ -1634,12 +1742,12 @@ class AsyncPactsApi:
             Annotated[StrictFloat, Field(gt=0)],
             Tuple[Annotated[StrictFloat, Field(gt=0)], Annotated[StrictFloat, Field(gt=0)]],
         ] = None,
-    ) -> ApiResponse[StandardResponsePactRead]:
+    ) -> ApiResponse[StandardResponsePactPublicRead]:
         """Update completion conditions
 
-        Update the completion conditions of an active pact. Only tx_count, amount_spent, and amount_spent_usd conditions may be modified, and thresholds can only be increased — decreasing a threshold could cause the pact to complete prematurely.
+        Update the completion conditions of an active pact. Only `tx_count`, `amount_spent`, and `amount_spent_usd` conditions may be modified, and thresholds can only be increased — decreasing a threshold could cause the pact to complete prematurely.
 
-        :param pact_id: The UUID of the active pact whose completion conditions you want to update, as returned by the submit or list endpoints. (required)
+        :param pact_id: The UUID of the active pact whose completion conditions to update, as returned by the submit or list endpoints. (required)
         :type pact_id: str
         :param pact_update_completion_conditions_request: (required)
         :type pact_update_completion_conditions_request: PactUpdateCompletionConditionsRequest
@@ -1660,7 +1768,7 @@ class AsyncPactsApi:
         )
 
         _response_types_map: Dict[str, Optional[str]] = {
-            "200": "StandardResponsePactRead",
+            "200": "StandardResponsePactPublicRead",
             "422": "WrappedValidationError",
         }
         response_data = await self.api_client.call_api(*_param, _request_timeout=_request_timeout)
@@ -1675,7 +1783,7 @@ class AsyncPactsApi:
         pact_id: Annotated[
             StrictStr,
             Field(
-                description="The UUID of the active pact whose completion conditions you want to update, as returned by the submit or list endpoints."
+                description="The UUID of the active pact whose completion conditions to update, as returned by the submit or list endpoints."
             ),
         ],
         pact_update_completion_conditions_request: PactUpdateCompletionConditionsRequest,
@@ -1688,9 +1796,9 @@ class AsyncPactsApi:
     ) -> AsyncRESTResponse:
         """Update completion conditions
 
-        Update the completion conditions of an active pact. Only tx_count, amount_spent, and amount_spent_usd conditions may be modified, and thresholds can only be increased — decreasing a threshold could cause the pact to complete prematurely.
+        Update the completion conditions of an active pact. Only `tx_count`, `amount_spent`, and `amount_spent_usd` conditions may be modified, and thresholds can only be increased — decreasing a threshold could cause the pact to complete prematurely.
 
-        :param pact_id: The UUID of the active pact whose completion conditions you want to update, as returned by the submit or list endpoints. (required)
+        :param pact_id: The UUID of the active pact whose completion conditions to update, as returned by the submit or list endpoints. (required)
         :type pact_id: str
         :param pact_update_completion_conditions_request: (required)
         :type pact_update_completion_conditions_request: PactUpdateCompletionConditionsRequest
@@ -1711,7 +1819,7 @@ class AsyncPactsApi:
         )
 
         _response_types_map: Dict[str, Optional[str]] = {
-            "200": "StandardResponsePactRead",
+            "200": "StandardResponsePactPublicRead",
             "422": "WrappedValidationError",
         }
         response_data = await self.api_client.call_api(*_param, _request_timeout=_request_timeout)
@@ -1761,7 +1869,7 @@ class AsyncPactsApi:
         pact_id: Annotated[
             StrictStr,
             Field(
-                description="The UUID of the active pact whose policies you want to replace, as returned by the submit or list endpoints."
+                description="The UUID of the active pact whose policies to replace, as returned by the submit or list endpoints."
             ),
         ],
         pact_update_policies_request: PactUpdatePoliciesRequest,
@@ -1771,12 +1879,12 @@ class AsyncPactsApi:
             Annotated[StrictFloat, Field(gt=0)],
             Tuple[Annotated[StrictFloat, Field(gt=0)], Annotated[StrictFloat, Field(gt=0)]],
         ] = None,
-    ) -> StandardResponsePactRead:
+    ) -> StandardResponsePactPublicRead:
         """Update pact policies
 
-        Full-replace the delegation-scoped policies of an active pact. Old policies are removed and the new list is created atomically within a single transaction to avoid a window with no policies. Only the wallet owner can update policies on an active pact.
+        Full-replace the delegation-scoped policies of an active pact. Existing policies are removed and the new list is created atomically to avoid a window with no policies. Only the wallet owner can update policies on an active pact.
 
-        :param pact_id: The UUID of the active pact whose policies you want to replace, as returned by the submit or list endpoints. (required)
+        :param pact_id: The UUID of the active pact whose policies to replace, as returned by the submit or list endpoints. (required)
         :type pact_id: str
         :param pact_update_policies_request: (required)
         :type pact_update_policies_request: PactUpdatePoliciesRequest
@@ -1797,7 +1905,7 @@ class AsyncPactsApi:
         )
 
         _response_types_map: Dict[str, Optional[str]] = {
-            "200": "StandardResponsePactRead",
+            "200": "StandardResponsePactPublicRead",
             "422": "WrappedValidationError",
         }
         response_data = await self.api_client.call_api(*_param, _request_timeout=_request_timeout)
@@ -1812,7 +1920,7 @@ class AsyncPactsApi:
         pact_id: Annotated[
             StrictStr,
             Field(
-                description="The UUID of the active pact whose policies you want to replace, as returned by the submit or list endpoints."
+                description="The UUID of the active pact whose policies to replace, as returned by the submit or list endpoints."
             ),
         ],
         pact_update_policies_request: PactUpdatePoliciesRequest,
@@ -1822,12 +1930,12 @@ class AsyncPactsApi:
             Annotated[StrictFloat, Field(gt=0)],
             Tuple[Annotated[StrictFloat, Field(gt=0)], Annotated[StrictFloat, Field(gt=0)]],
         ] = None,
-    ) -> ApiResponse[StandardResponsePactRead]:
+    ) -> ApiResponse[StandardResponsePactPublicRead]:
         """Update pact policies
 
-        Full-replace the delegation-scoped policies of an active pact. Old policies are removed and the new list is created atomically within a single transaction to avoid a window with no policies. Only the wallet owner can update policies on an active pact.
+        Full-replace the delegation-scoped policies of an active pact. Existing policies are removed and the new list is created atomically to avoid a window with no policies. Only the wallet owner can update policies on an active pact.
 
-        :param pact_id: The UUID of the active pact whose policies you want to replace, as returned by the submit or list endpoints. (required)
+        :param pact_id: The UUID of the active pact whose policies to replace, as returned by the submit or list endpoints. (required)
         :type pact_id: str
         :param pact_update_policies_request: (required)
         :type pact_update_policies_request: PactUpdatePoliciesRequest
@@ -1848,7 +1956,7 @@ class AsyncPactsApi:
         )
 
         _response_types_map: Dict[str, Optional[str]] = {
-            "200": "StandardResponsePactRead",
+            "200": "StandardResponsePactPublicRead",
             "422": "WrappedValidationError",
         }
         response_data = await self.api_client.call_api(*_param, _request_timeout=_request_timeout)
@@ -1863,7 +1971,7 @@ class AsyncPactsApi:
         pact_id: Annotated[
             StrictStr,
             Field(
-                description="The UUID of the active pact whose policies you want to replace, as returned by the submit or list endpoints."
+                description="The UUID of the active pact whose policies to replace, as returned by the submit or list endpoints."
             ),
         ],
         pact_update_policies_request: PactUpdatePoliciesRequest,
@@ -1876,9 +1984,9 @@ class AsyncPactsApi:
     ) -> AsyncRESTResponse:
         """Update pact policies
 
-        Full-replace the delegation-scoped policies of an active pact. Old policies are removed and the new list is created atomically within a single transaction to avoid a window with no policies. Only the wallet owner can update policies on an active pact.
+        Full-replace the delegation-scoped policies of an active pact. Existing policies are removed and the new list is created atomically to avoid a window with no policies. Only the wallet owner can update policies on an active pact.
 
-        :param pact_id: The UUID of the active pact whose policies you want to replace, as returned by the submit or list endpoints. (required)
+        :param pact_id: The UUID of the active pact whose policies to replace, as returned by the submit or list endpoints. (required)
         :type pact_id: str
         :param pact_update_policies_request: (required)
         :type pact_update_policies_request: PactUpdatePoliciesRequest
@@ -1899,7 +2007,7 @@ class AsyncPactsApi:
         )
 
         _response_types_map: Dict[str, Optional[str]] = {
-            "200": "StandardResponsePactRead",
+            "200": "StandardResponsePactPublicRead",
             "422": "WrappedValidationError",
         }
         response_data = await self.api_client.call_api(*_param, _request_timeout=_request_timeout)
@@ -1958,10 +2066,10 @@ class AsyncPactsApi:
             Annotated[StrictFloat, Field(gt=0)],
             Tuple[Annotated[StrictFloat, Field(gt=0)], Annotated[StrictFloat, Field(gt=0)]],
         ] = None,
-    ) -> StandardResponsePactRead:
-        """Withdraw a pending pact
+    ) -> StandardResponsePactPublicRead:
+        """Withdraw pending pact
 
-        Withdraw a pact that is still pending approval. Only the operator agent that submitted the pact can withdraw it. The linked approval is also rejected.
+        Withdraw a pact that is still pending approval. Only the operator agent that submitted the pact can withdraw it. The linked approval request is also rejected.
 
         :param pact_id: The UUID of the pending pact to withdraw, as returned by the submit or list endpoints. (required)
         :type pact_id: str
@@ -1981,7 +2089,7 @@ class AsyncPactsApi:
         )
 
         _response_types_map: Dict[str, Optional[str]] = {
-            "200": "StandardResponsePactRead",
+            "200": "StandardResponsePactPublicRead",
             "422": "WrappedValidationError",
         }
         response_data = await self.api_client.call_api(*_param, _request_timeout=_request_timeout)
@@ -2005,10 +2113,10 @@ class AsyncPactsApi:
             Annotated[StrictFloat, Field(gt=0)],
             Tuple[Annotated[StrictFloat, Field(gt=0)], Annotated[StrictFloat, Field(gt=0)]],
         ] = None,
-    ) -> ApiResponse[StandardResponsePactRead]:
-        """Withdraw a pending pact
+    ) -> ApiResponse[StandardResponsePactPublicRead]:
+        """Withdraw pending pact
 
-        Withdraw a pact that is still pending approval. Only the operator agent that submitted the pact can withdraw it. The linked approval is also rejected.
+        Withdraw a pact that is still pending approval. Only the operator agent that submitted the pact can withdraw it. The linked approval request is also rejected.
 
         :param pact_id: The UUID of the pending pact to withdraw, as returned by the submit or list endpoints. (required)
         :type pact_id: str
@@ -2028,7 +2136,7 @@ class AsyncPactsApi:
         )
 
         _response_types_map: Dict[str, Optional[str]] = {
-            "200": "StandardResponsePactRead",
+            "200": "StandardResponsePactPublicRead",
             "422": "WrappedValidationError",
         }
         response_data = await self.api_client.call_api(*_param, _request_timeout=_request_timeout)
@@ -2053,9 +2161,9 @@ class AsyncPactsApi:
             Tuple[Annotated[StrictFloat, Field(gt=0)], Annotated[StrictFloat, Field(gt=0)]],
         ] = None,
     ) -> AsyncRESTResponse:
-        """Withdraw a pending pact
+        """Withdraw pending pact
 
-        Withdraw a pact that is still pending approval. Only the operator agent that submitted the pact can withdraw it. The linked approval is also rejected.
+        Withdraw a pact that is still pending approval. Only the operator agent that submitted the pact can withdraw it. The linked approval request is also rejected.
 
         :param pact_id: The UUID of the pending pact to withdraw, as returned by the submit or list endpoints. (required)
         :type pact_id: str
@@ -2075,7 +2183,7 @@ class AsyncPactsApi:
         )
 
         _response_types_map: Dict[str, Optional[str]] = {
-            "200": "StandardResponsePactRead",
+            "200": "StandardResponsePactPublicRead",
             "422": "WrappedValidationError",
         }
         response_data = await self.api_client.call_api(*_param, _request_timeout=_request_timeout)

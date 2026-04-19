@@ -14,7 +14,7 @@ import pprint
 import re  # noqa: F401
 import json
 
-from pydantic import BaseModel, ConfigDict, StrictStr
+from pydantic import BaseModel, ConfigDict, Field, StrictStr
 from typing import Any, ClassVar, Dict, List
 from cobo_agentic_wallet_api.models.recipe_status import RecipeStatus
 from typing import Optional, Set
@@ -23,13 +23,15 @@ from typing_extensions import Self
 
 class RecipeCreateResult(BaseModel):
     """
-    RecipeCreateResult
+    Result returned after creating or submitting a recipe.
     """  # noqa: E501
 
     id: StrictStr
     slug: StrictStr
     url: StrictStr
-    status: RecipeStatus
+    status: RecipeStatus = Field(
+        description="Initial publication status after creation. Possible values: `draft`, `pending_review`, `published`, `rejected`."
+    )
     __properties: ClassVar[List[str]] = ["id", "slug", "url", "status"]
 
     model_config = ConfigDict(

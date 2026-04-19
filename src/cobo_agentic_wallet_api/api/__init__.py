@@ -16,6 +16,7 @@ if TYPE_CHECKING:
     from .pacts_api import PactsApi
     from .pending_operations_api import PendingOperationsApi
     from .recipes_api import RecipesApi
+    from .script_tools_api import ScriptToolsApi
     from .suggestions_api import SuggestionsApi
     from .telemetry_api import TelemetryApi
     from .transaction_records_api import TransactionRecordsApi
@@ -34,6 +35,7 @@ if TYPE_CHECKING:
     from .pacts_api_async import AsyncPactsApi
     from .pending_operations_api_async import AsyncPendingOperationsApi
     from .recipes_api_async import AsyncRecipesApi
+    from .script_tools_api_async import AsyncScriptToolsApi
     from .suggestions_api_async import AsyncSuggestionsApi
     from .telemetry_api_async import AsyncTelemetryApi
     from .transaction_records_api_async import AsyncTransactionRecordsApi
@@ -54,6 +56,7 @@ _API_CLASSES = {
     "PactsApi": "pacts_api",
     "PendingOperationsApi": "pending_operations_api",
     "RecipesApi": "recipes_api",
+    "ScriptToolsApi": "script_tools_api",
     "SuggestionsApi": "suggestions_api",
     "TelemetryApi": "telemetry_api",
     "TransactionRecordsApi": "transaction_records_api",
@@ -74,6 +77,7 @@ _ASYNC_API_CLASSES = {
     "AsyncPactsApi": "pacts_api_async",
     "AsyncPendingOperationsApi": "pending_operations_api_async",
     "AsyncRecipesApi": "recipes_api_async",
+    "AsyncScriptToolsApi": "script_tools_api_async",
     "AsyncSuggestionsApi": "suggestions_api_async",
     "AsyncTelemetryApi": "telemetry_api_async",
     "AsyncTransactionRecordsApi": "transaction_records_api_async",

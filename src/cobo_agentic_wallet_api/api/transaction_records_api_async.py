@@ -14,11 +14,11 @@ from typing import Dict, List, Optional, Tuple, Union
 from typing_extensions import Annotated
 
 from pydantic import StrictBool
-from cobo_agentic_wallet_api.models.standard_response_list_transaction_record_read import (
-    StandardResponseListTransactionRecordRead,
+from cobo_agentic_wallet_api.models.standard_response_list_user_transaction_read import (
+    StandardResponseListUserTransactionRead,
 )
-from cobo_agentic_wallet_api.models.standard_response_transaction_record_read import (
-    StandardResponseTransactionRecordRead,
+from cobo_agentic_wallet_api.models.standard_response_user_transaction_read import (
+    StandardResponseUserTransactionRead,
 )
 
 from cobo_agentic_wallet_api.api_client_async import AsyncApiClient, RequestSerialized
@@ -39,7 +39,7 @@ class AsyncTransactionRecordsApi:
         self.api_client = api_client
 
     @validate_call
-    async def get_transaction_record(
+    async def get_user_transaction(
         self,
         wallet_uuid: Annotated[
             StrictStr, Field(description="The UUID of the wallet that owns the transaction record.")
@@ -59,7 +59,7 @@ class AsyncTransactionRecordsApi:
             Annotated[StrictFloat, Field(gt=0)],
             Tuple[Annotated[StrictFloat, Field(gt=0)], Annotated[StrictFloat, Field(gt=0)]],
         ] = None,
-    ) -> StandardResponseTransactionRecordRead:
+    ) -> StandardResponseUserTransactionRead:
         """Get transaction record
 
         This operation retrieves a specific on-chain transaction record by its ID. The record ID can be retrieved by calling the List transaction records operation.
@@ -80,7 +80,7 @@ class AsyncTransactionRecordsApi:
         :return: Returns the result object.
         """  # noqa: E501
 
-        _param = self._get_transaction_record_serialize(
+        _param = self._get_user_transaction_serialize(
             wallet_uuid=wallet_uuid,
             record_uuid=record_uuid,
             ext=ext,
@@ -88,7 +88,7 @@ class AsyncTransactionRecordsApi:
         )
 
         _response_types_map: Dict[str, Optional[str]] = {
-            "200": "StandardResponseTransactionRecordRead",
+            "200": "StandardResponseUserTransactionRead",
             "422": "WrappedValidationError",
         }
         response_data = await self.api_client.call_api(*_param, _request_timeout=_request_timeout)
@@ -98,7 +98,7 @@ class AsyncTransactionRecordsApi:
         ).data
 
     @validate_call
-    async def get_transaction_record_with_http_info(
+    async def get_user_transaction_with_http_info(
         self,
         wallet_uuid: Annotated[
             StrictStr, Field(description="The UUID of the wallet that owns the transaction record.")
@@ -118,7 +118,7 @@ class AsyncTransactionRecordsApi:
             Annotated[StrictFloat, Field(gt=0)],
             Tuple[Annotated[StrictFloat, Field(gt=0)], Annotated[StrictFloat, Field(gt=0)]],
         ] = None,
-    ) -> ApiResponse[StandardResponseTransactionRecordRead]:
+    ) -> ApiResponse[StandardResponseUserTransactionRead]:
         """Get transaction record
 
         This operation retrieves a specific on-chain transaction record by its ID. The record ID can be retrieved by calling the List transaction records operation.
@@ -139,7 +139,7 @@ class AsyncTransactionRecordsApi:
         :return: Returns the result object.
         """  # noqa: E501
 
-        _param = self._get_transaction_record_serialize(
+        _param = self._get_user_transaction_serialize(
             wallet_uuid=wallet_uuid,
             record_uuid=record_uuid,
             ext=ext,
@@ -147,7 +147,7 @@ class AsyncTransactionRecordsApi:
         )
 
         _response_types_map: Dict[str, Optional[str]] = {
-            "200": "StandardResponseTransactionRecordRead",
+            "200": "StandardResponseUserTransactionRead",
             "422": "WrappedValidationError",
         }
         response_data = await self.api_client.call_api(*_param, _request_timeout=_request_timeout)
@@ -157,7 +157,7 @@ class AsyncTransactionRecordsApi:
         )
 
     @validate_call
-    async def get_transaction_record_without_preload_content(
+    async def get_user_transaction_without_preload_content(
         self,
         wallet_uuid: Annotated[
             StrictStr, Field(description="The UUID of the wallet that owns the transaction record.")
@@ -198,7 +198,7 @@ class AsyncTransactionRecordsApi:
         :return: Returns the result object.
         """  # noqa: E501
 
-        _param = self._get_transaction_record_serialize(
+        _param = self._get_user_transaction_serialize(
             wallet_uuid=wallet_uuid,
             record_uuid=record_uuid,
             ext=ext,
@@ -206,13 +206,13 @@ class AsyncTransactionRecordsApi:
         )
 
         _response_types_map: Dict[str, Optional[str]] = {
-            "200": "StandardResponseTransactionRecordRead",
+            "200": "StandardResponseUserTransactionRead",
             "422": "WrappedValidationError",
         }
         response_data = await self.api_client.call_api(*_param, _request_timeout=_request_timeout)
         return response_data
 
-    def _get_transaction_record_serialize(
+    def _get_user_transaction_serialize(
         self,
         wallet_uuid,
         record_uuid,
@@ -255,7 +255,7 @@ class AsyncTransactionRecordsApi:
         )
 
     @validate_call
-    async def get_transaction_record_by_request_id(
+    async def get_user_transaction_by_request_id(
         self,
         wallet_uuid: Annotated[
             StrictStr, Field(description="The UUID of the wallet that owns the transaction.")
@@ -281,7 +281,7 @@ class AsyncTransactionRecordsApi:
             Annotated[StrictFloat, Field(gt=0)],
             Tuple[Annotated[StrictFloat, Field(gt=0)], Annotated[StrictFloat, Field(gt=0)]],
         ] = None,
-    ) -> StandardResponseTransactionRecordRead:
+    ) -> StandardResponseUserTransactionRead:
         """Get transaction record by request id
 
         This operation retrieves a transaction record using the client-supplied idempotency key (`request_id`) scoped to the given wallet.
@@ -302,7 +302,7 @@ class AsyncTransactionRecordsApi:
         :return: Returns the result object.
         """  # noqa: E501
 
-        _param = self._get_transaction_record_by_request_id_serialize(
+        _param = self._get_user_transaction_by_request_id_serialize(
             wallet_uuid=wallet_uuid,
             request_id=request_id,
             ext=ext,
@@ -310,7 +310,7 @@ class AsyncTransactionRecordsApi:
         )
 
         _response_types_map: Dict[str, Optional[str]] = {
-            "200": "StandardResponseTransactionRecordRead",
+            "200": "StandardResponseUserTransactionRead",
             "422": "WrappedValidationError",
         }
         response_data = await self.api_client.call_api(*_param, _request_timeout=_request_timeout)
@@ -320,7 +320,7 @@ class AsyncTransactionRecordsApi:
         ).data
 
     @validate_call
-    async def get_transaction_record_by_request_id_with_http_info(
+    async def get_user_transaction_by_request_id_with_http_info(
         self,
         wallet_uuid: Annotated[
             StrictStr, Field(description="The UUID of the wallet that owns the transaction.")
@@ -346,7 +346,7 @@ class AsyncTransactionRecordsApi:
             Annotated[StrictFloat, Field(gt=0)],
             Tuple[Annotated[StrictFloat, Field(gt=0)], Annotated[StrictFloat, Field(gt=0)]],
         ] = None,
-    ) -> ApiResponse[StandardResponseTransactionRecordRead]:
+    ) -> ApiResponse[StandardResponseUserTransactionRead]:
         """Get transaction record by request id
 
         This operation retrieves a transaction record using the client-supplied idempotency key (`request_id`) scoped to the given wallet.
@@ -367,7 +367,7 @@ class AsyncTransactionRecordsApi:
         :return: Returns the result object.
         """  # noqa: E501
 
-        _param = self._get_transaction_record_by_request_id_serialize(
+        _param = self._get_user_transaction_by_request_id_serialize(
             wallet_uuid=wallet_uuid,
             request_id=request_id,
             ext=ext,
@@ -375,7 +375,7 @@ class AsyncTransactionRecordsApi:
         )
 
         _response_types_map: Dict[str, Optional[str]] = {
-            "200": "StandardResponseTransactionRecordRead",
+            "200": "StandardResponseUserTransactionRead",
             "422": "WrappedValidationError",
         }
         response_data = await self.api_client.call_api(*_param, _request_timeout=_request_timeout)
@@ -385,7 +385,7 @@ class AsyncTransactionRecordsApi:
         )
 
     @validate_call
-    async def get_transaction_record_by_request_id_without_preload_content(
+    async def get_user_transaction_by_request_id_without_preload_content(
         self,
         wallet_uuid: Annotated[
             StrictStr, Field(description="The UUID of the wallet that owns the transaction.")
@@ -432,7 +432,7 @@ class AsyncTransactionRecordsApi:
         :return: Returns the result object.
         """  # noqa: E501
 
-        _param = self._get_transaction_record_by_request_id_serialize(
+        _param = self._get_user_transaction_by_request_id_serialize(
             wallet_uuid=wallet_uuid,
             request_id=request_id,
             ext=ext,
@@ -440,13 +440,13 @@ class AsyncTransactionRecordsApi:
         )
 
         _response_types_map: Dict[str, Optional[str]] = {
-            "200": "StandardResponseTransactionRecordRead",
+            "200": "StandardResponseUserTransactionRead",
             "422": "WrappedValidationError",
         }
         response_data = await self.api_client.call_api(*_param, _request_timeout=_request_timeout)
         return response_data
 
-    def _get_transaction_record_by_request_id_serialize(
+    def _get_user_transaction_by_request_id_serialize(
         self,
         wallet_uuid,
         request_id,
@@ -489,7 +489,7 @@ class AsyncTransactionRecordsApi:
         )
 
     @validate_call
-    async def get_transaction_record_by_uuid(
+    async def get_user_transaction_by_uuid(
         self,
         record_uuid: Annotated[
             StrictStr, Field(description="The UUID of the transaction record to retrieve.")
@@ -506,7 +506,7 @@ class AsyncTransactionRecordsApi:
             Annotated[StrictFloat, Field(gt=0)],
             Tuple[Annotated[StrictFloat, Field(gt=0)], Annotated[StrictFloat, Field(gt=0)]],
         ] = None,
-    ) -> StandardResponseTransactionRecordRead:
+    ) -> StandardResponseUserTransactionRead:
         """Get transaction record by record id
 
         Retrieve a specific on-chain transaction record by its UUID without supplying the owning wallet. The authenticated principal must have view permission on the wallet that owns the record.
@@ -525,14 +525,14 @@ class AsyncTransactionRecordsApi:
         :return: Returns the result object.
         """  # noqa: E501
 
-        _param = self._get_transaction_record_by_uuid_serialize(
+        _param = self._get_user_transaction_by_uuid_serialize(
             record_uuid=record_uuid,
             ext=ext,
             x_api_key=x_api_key,
         )
 
         _response_types_map: Dict[str, Optional[str]] = {
-            "200": "StandardResponseTransactionRecordRead",
+            "200": "StandardResponseUserTransactionRead",
             "422": "WrappedValidationError",
         }
         response_data = await self.api_client.call_api(*_param, _request_timeout=_request_timeout)
@@ -542,7 +542,7 @@ class AsyncTransactionRecordsApi:
         ).data
 
     @validate_call
-    async def get_transaction_record_by_uuid_with_http_info(
+    async def get_user_transaction_by_uuid_with_http_info(
         self,
         record_uuid: Annotated[
             StrictStr, Field(description="The UUID of the transaction record to retrieve.")
@@ -559,7 +559,7 @@ class AsyncTransactionRecordsApi:
             Annotated[StrictFloat, Field(gt=0)],
             Tuple[Annotated[StrictFloat, Field(gt=0)], Annotated[StrictFloat, Field(gt=0)]],
         ] = None,
-    ) -> ApiResponse[StandardResponseTransactionRecordRead]:
+    ) -> ApiResponse[StandardResponseUserTransactionRead]:
         """Get transaction record by record id
 
         Retrieve a specific on-chain transaction record by its UUID without supplying the owning wallet. The authenticated principal must have view permission on the wallet that owns the record.
@@ -578,14 +578,14 @@ class AsyncTransactionRecordsApi:
         :return: Returns the result object.
         """  # noqa: E501
 
-        _param = self._get_transaction_record_by_uuid_serialize(
+        _param = self._get_user_transaction_by_uuid_serialize(
             record_uuid=record_uuid,
             ext=ext,
             x_api_key=x_api_key,
         )
 
         _response_types_map: Dict[str, Optional[str]] = {
-            "200": "StandardResponseTransactionRecordRead",
+            "200": "StandardResponseUserTransactionRead",
             "422": "WrappedValidationError",
         }
         response_data = await self.api_client.call_api(*_param, _request_timeout=_request_timeout)
@@ -595,7 +595,7 @@ class AsyncTransactionRecordsApi:
         )
 
     @validate_call
-    async def get_transaction_record_by_uuid_without_preload_content(
+    async def get_user_transaction_by_uuid_without_preload_content(
         self,
         record_uuid: Annotated[
             StrictStr, Field(description="The UUID of the transaction record to retrieve.")
@@ -631,20 +631,20 @@ class AsyncTransactionRecordsApi:
         :return: Returns the result object.
         """  # noqa: E501
 
-        _param = self._get_transaction_record_by_uuid_serialize(
+        _param = self._get_user_transaction_by_uuid_serialize(
             record_uuid=record_uuid,
             ext=ext,
             x_api_key=x_api_key,
         )
 
         _response_types_map: Dict[str, Optional[str]] = {
-            "200": "StandardResponseTransactionRecordRead",
+            "200": "StandardResponseUserTransactionRead",
             "422": "WrappedValidationError",
         }
         response_data = await self.api_client.call_api(*_param, _request_timeout=_request_timeout)
         return response_data
 
-    def _get_transaction_record_by_uuid_serialize(
+    def _get_user_transaction_by_uuid_serialize(
         self,
         record_uuid,
         ext,
@@ -684,7 +684,7 @@ class AsyncTransactionRecordsApi:
         )
 
     @validate_call
-    async def list_transaction_records(
+    async def list_user_transactions(
         self,
         wallet_uuid: Annotated[
             Optional[StrictStr],
@@ -721,7 +721,7 @@ class AsyncTransactionRecordsApi:
         type: Annotated[
             Optional[StrictStr],
             Field(
-                description="Filter records by transaction type. Possible values: `transfer`, `contract_call`, `deposit`, `message_sign`. If omitted, all types are returned."
+                description="Filter records by transaction type. Possible values: `transfer`, `contract_call`, `deposit`, `message_sign`, `x402_payment`, `mpp_payment`. If omitted, all types are returned."
             ),
         ] = None,
         token_id: Annotated[
@@ -754,7 +754,7 @@ class AsyncTransactionRecordsApi:
             Annotated[StrictFloat, Field(gt=0)],
             Tuple[Annotated[StrictFloat, Field(gt=0)], Annotated[StrictFloat, Field(gt=0)]],
         ] = None,
-    ) -> StandardResponseListTransactionRecordRead:
+    ) -> StandardResponseListUserTransactionRead:
         """List transaction records
 
         This operation retrieves on-chain transaction records, including transfers, contract calls, and deposits. When `wallet_uuid` is provided, records are scoped to that wallet (with permission enforcement). When omitted, records across all wallets visible to the authenticated principal are returned. Use cursor-based pagination with `after`/`before`.
@@ -771,7 +771,7 @@ class AsyncTransactionRecordsApi:
         :type limit: int
         :param status: Filter records by transaction status. Accepts UserTransactionStatus integer values (e.g. `900` for success, `901` for failed) or label strings (e.g. `success`, `processing`). If omitted, all statuses are returned.
         :type status: str
-        :param type: Filter records by transaction type. Possible values: `transfer`, `contract_call`, `deposit`, `message_sign`. If omitted, all types are returned.
+        :param type: Filter records by transaction type. Possible values: `transfer`, `contract_call`, `deposit`, `message_sign`, `x402_payment`, `mpp_payment`. If omitted, all types are returned.
         :type type: str
         :param token_id: Filter records by token ID (for example, `SETH`, `SETH_USDC`). Use the Cobo token ID format. If omitted, all tokens are returned.
         :type token_id: str
@@ -791,7 +791,7 @@ class AsyncTransactionRecordsApi:
         :return: Returns the result object.
         """  # noqa: E501
 
-        _param = self._list_transaction_records_serialize(
+        _param = self._list_user_transactions_serialize(
             wallet_uuid=wallet_uuid,
             after=after,
             before=before,
@@ -807,7 +807,7 @@ class AsyncTransactionRecordsApi:
         )
 
         _response_types_map: Dict[str, Optional[str]] = {
-            "200": "StandardResponseListTransactionRecordRead",
+            "200": "StandardResponseListUserTransactionRead",
             "422": "WrappedValidationError",
         }
         response_data = await self.api_client.call_api(*_param, _request_timeout=_request_timeout)
@@ -817,7 +817,7 @@ class AsyncTransactionRecordsApi:
         ).data
 
     @validate_call
-    async def list_transaction_records_with_http_info(
+    async def list_user_transactions_with_http_info(
         self,
         wallet_uuid: Annotated[
             Optional[StrictStr],
@@ -854,7 +854,7 @@ class AsyncTransactionRecordsApi:
         type: Annotated[
             Optional[StrictStr],
             Field(
-                description="Filter records by transaction type. Possible values: `transfer`, `contract_call`, `deposit`, `message_sign`. If omitted, all types are returned."
+                description="Filter records by transaction type. Possible values: `transfer`, `contract_call`, `deposit`, `message_sign`, `x402_payment`, `mpp_payment`. If omitted, all types are returned."
             ),
         ] = None,
         token_id: Annotated[
@@ -887,7 +887,7 @@ class AsyncTransactionRecordsApi:
             Annotated[StrictFloat, Field(gt=0)],
             Tuple[Annotated[StrictFloat, Field(gt=0)], Annotated[StrictFloat, Field(gt=0)]],
         ] = None,
-    ) -> ApiResponse[StandardResponseListTransactionRecordRead]:
+    ) -> ApiResponse[StandardResponseListUserTransactionRead]:
         """List transaction records
 
         This operation retrieves on-chain transaction records, including transfers, contract calls, and deposits. When `wallet_uuid` is provided, records are scoped to that wallet (with permission enforcement). When omitted, records across all wallets visible to the authenticated principal are returned. Use cursor-based pagination with `after`/`before`.
@@ -904,7 +904,7 @@ class AsyncTransactionRecordsApi:
         :type limit: int
         :param status: Filter records by transaction status. Accepts UserTransactionStatus integer values (e.g. `900` for success, `901` for failed) or label strings (e.g. `success`, `processing`). If omitted, all statuses are returned.
         :type status: str
-        :param type: Filter records by transaction type. Possible values: `transfer`, `contract_call`, `deposit`, `message_sign`. If omitted, all types are returned.
+        :param type: Filter records by transaction type. Possible values: `transfer`, `contract_call`, `deposit`, `message_sign`, `x402_payment`, `mpp_payment`. If omitted, all types are returned.
         :type type: str
         :param token_id: Filter records by token ID (for example, `SETH`, `SETH_USDC`). Use the Cobo token ID format. If omitted, all tokens are returned.
         :type token_id: str
@@ -924,7 +924,7 @@ class AsyncTransactionRecordsApi:
         :return: Returns the result object.
         """  # noqa: E501
 
-        _param = self._list_transaction_records_serialize(
+        _param = self._list_user_transactions_serialize(
             wallet_uuid=wallet_uuid,
             after=after,
             before=before,
@@ -940,7 +940,7 @@ class AsyncTransactionRecordsApi:
         )
 
         _response_types_map: Dict[str, Optional[str]] = {
-            "200": "StandardResponseListTransactionRecordRead",
+            "200": "StandardResponseListUserTransactionRead",
             "422": "WrappedValidationError",
         }
         response_data = await self.api_client.call_api(*_param, _request_timeout=_request_timeout)
@@ -950,7 +950,7 @@ class AsyncTransactionRecordsApi:
         )
 
     @validate_call
-    async def list_transaction_records_without_preload_content(
+    async def list_user_transactions_without_preload_content(
         self,
         wallet_uuid: Annotated[
             Optional[StrictStr],
@@ -987,7 +987,7 @@ class AsyncTransactionRecordsApi:
         type: Annotated[
             Optional[StrictStr],
             Field(
-                description="Filter records by transaction type. Possible values: `transfer`, `contract_call`, `deposit`, `message_sign`. If omitted, all types are returned."
+                description="Filter records by transaction type. Possible values: `transfer`, `contract_call`, `deposit`, `message_sign`, `x402_payment`, `mpp_payment`. If omitted, all types are returned."
             ),
         ] = None,
         token_id: Annotated[
@@ -1037,7 +1037,7 @@ class AsyncTransactionRecordsApi:
         :type limit: int
         :param status: Filter records by transaction status. Accepts UserTransactionStatus integer values (e.g. `900` for success, `901` for failed) or label strings (e.g. `success`, `processing`). If omitted, all statuses are returned.
         :type status: str
-        :param type: Filter records by transaction type. Possible values: `transfer`, `contract_call`, `deposit`, `message_sign`. If omitted, all types are returned.
+        :param type: Filter records by transaction type. Possible values: `transfer`, `contract_call`, `deposit`, `message_sign`, `x402_payment`, `mpp_payment`. If omitted, all types are returned.
         :type type: str
         :param token_id: Filter records by token ID (for example, `SETH`, `SETH_USDC`). Use the Cobo token ID format. If omitted, all tokens are returned.
         :type token_id: str
@@ -1057,7 +1057,7 @@ class AsyncTransactionRecordsApi:
         :return: Returns the result object.
         """  # noqa: E501
 
-        _param = self._list_transaction_records_serialize(
+        _param = self._list_user_transactions_serialize(
             wallet_uuid=wallet_uuid,
             after=after,
             before=before,
@@ -1073,13 +1073,13 @@ class AsyncTransactionRecordsApi:
         )
 
         _response_types_map: Dict[str, Optional[str]] = {
-            "200": "StandardResponseListTransactionRecordRead",
+            "200": "StandardResponseListUserTransactionRead",
             "422": "WrappedValidationError",
         }
         response_data = await self.api_client.call_api(*_param, _request_timeout=_request_timeout)
         return response_data
 
-    def _list_transaction_records_serialize(
+    def _list_user_transactions_serialize(
         self,
         wallet_uuid,
         after,

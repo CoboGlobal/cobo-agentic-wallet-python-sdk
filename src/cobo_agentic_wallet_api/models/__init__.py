@@ -17,119 +17,61 @@ if TYPE_CHECKING:
     # Import all Model classes for IDE type checking and autocompletion
     from .agent_status_response import AgentStatusResponse
     from .api_key_create import ApiKeyCreate
-    from .api_key_create_result import ApiKeyCreateResult
-    from .api_key_read import ApiKeyRead
+    from .api_key_create_result_public import ApiKeyCreateResultPublic
+    from .api_key_public_read import ApiKeyPublicRead
     from .applicable_limit_read import ApplicableLimitRead
-    from .approval_action import ApprovalAction
-    from .approval_list_response import ApprovalListResponse
-    from .approval_read import ApprovalRead
-    from .approval_status import ApprovalStatus
-    from .approval_subject_type import ApprovalSubjectType
-    from .artifact import Artifact
     from .audit_action import AuditAction
     from .audit_log_page import AuditLogPage
     from .audit_log_read import AuditLogRead
     from .audit_result import AuditResult
-    from .automated_check import AutomatedCheck
     from .balance_read import BalanceRead
     from .chain_info import ChainInfo
     from .chain_metadata import ChainMetadata
-    from .complete_export_response import CompleteExportResponse
     from .completion_condition import CompletionCondition
     from .completion_condition_type import CompletionConditionType
     from .contract_call_create import ContractCallCreate
     from .contract_call_submit_result import ContractCallSubmitResult
-    from .create_export_response import CreateExportResponse
-    from .custody_terms import CustodyTerms
-    from .delegation_create import DelegationCreate
-    from .delegation_freeze_request import DelegationFreezeRequest
-    from .delegation_freeze_result import DelegationFreezeResult
-    from .delegation_permission import DelegationPermission
-    from .delegation_read import DelegationRead
     from .delegation_spend_summary import DelegationSpendSummary
-    from .delegation_status import DelegationStatus
-    from .delegation_unfreeze_result import DelegationUnfreezeResult
-    from .delegation_update import DelegationUpdate
     from .delegation_usage_limit_summary import DelegationUsageLimitSummary
-    from .deliverable_spec import DeliverableSpec
-    from .dispute_resolution_spec import DisputeResolutionSpec
     from .drop_transaction_request import DropTransactionRequest
     from .eip1559_fee_request import EIP1559FeeRequest
+    from .evm_legacy_fee_request import EVMLegacyFeeRequest
     from .error import Error
     from .estimate_contract_call_fee_request import EstimateContractCallFeeRequest
     from .estimate_transfer_fee_read import EstimateTransferFeeRead
     from .estimate_transfer_fee_request import EstimateTransferFeeRequest
-    from .execution_plan import ExecutionPlan
+    from .eth_call_request import EthCallRequest
+    from .eth_call_result import EthCallResult
+    from .execute_script_request import ExecuteScriptRequest
+    from .execute_script_response import ExecuteScriptResponse
+    from .external_transaction_operation_type import ExternalTransactionOperationType
     from .external_transaction_read import ExternalTransactionRead
+    from .external_transaction_stage import ExternalTransactionStage
     from .faucet_deposit_request import FaucetDepositRequest
     from .faucet_deposit_result import FaucetDepositResult
     from .faucet_token_info import FaucetTokenInfo
     from .faucet_token_item import FaucetTokenItem
-    from .fee import Fee
     from .fee_estimate_read import FeeEstimateRead
-    from .freeze_scope import FreezeScope
-    from .hire_acknowledge_request import HireAcknowledgeRequest
-    from .hire_arbitration_ruling_create_request import HireArbitrationRulingCreateRequest
-    from .hire_arbitration_ruling_record import HireArbitrationRulingRecord
-    from .hire_cancellation_request import HireCancellationRequest
-    from .hire_delivery_create_request import HireDeliveryCreateRequest
-    from .hire_delivery_read import HireDeliveryRead
-    from .hire_delivery_review_action import HireDeliveryReviewAction
-    from .hire_delivery_review_create_request import HireDeliveryReviewCreateRequest
-    from .hire_dispute_create_request import HireDisputeCreateRequest
-    from .hire_dispute_read import HireDisputeRead
-    from .hire_dispute_response_create_request import HireDisputeResponseCreateRequest
-    from .hire_dispute_response_record import HireDisputeResponseRecord
-    from .hire_dispute_type import HireDisputeType
-    from .hire_event_list_response import HireEventListResponse
-    from .hire_event_read import HireEventRead
-    from .hire_fund_request import HireFundRequest
-    from .hire_list_response import HireListResponse
-    from .hire_milestone_read import HireMilestoneRead
-    from .hire_notification_preference import HireNotificationPreference
-    from .hire_pact_spec_input import HirePactSpecInput
-    from .hire_pact_spec_output import HirePactSpecOutput
-    from .hire_pact_spec_patch_input import HirePactSpecPatchInput
-    from .hire_pact_spec_patch_output import HirePactSpecPatchOutput
-    from .hire_participant_role import HireParticipantRole
-    from .hire_read import HireRead
-    from .hire_resolution import HireResolution
-    from .hire_review_request import HireReviewRequest
-    from .hire_settlement_proposal_create_request import HireSettlementProposalCreateRequest
-    from .hire_settlement_proposal_read import HireSettlementProposalRead
-    from .hire_settlement_record import HireSettlementRecord
-    from .hire_settlement_split import HireSettlementSplit
-    from .hire_settlement_type import HireSettlementType
-    from .hire_submission_record import HireSubmissionRecord
-    from .hire_submit_request import HireSubmitRequest
-    from .hire_summary import HireSummary
+    from .fee_request import FeeRequest
     from .inline_policy_create import InlinePolicyCreate
-    from .key_export_read import KeyExportRead
-    from .key_export_status import KeyExportStatus
     from .key_share_holder_group_status import KeyShareHolderGroupStatus
     from .key_share_holder_group_type import KeyShareHolderGroupType
     from .key_share_holder_type import KeyShareHolderType
     from .knowledge_search_type import KnowledgeSearchType
     from .langfuse_record import LangfuseRecord
-    from .merchant_info import MerchantInfo
     from .message_sign_create import MessageSignCreate
     from .message_sign_dest_type import MessageSignDestType
     from .message_sign_result import MessageSignResult
-    from .milestone_spec import MilestoneSpec
     from .mpp_challenge import MppChallenge
     from .mpp_session_action import MppSessionAction
     from .mpp_session_info import MppSessionInfo
     from .mpp_session_params import MppSessionParams
-    from .negotiated_spec_patch_entry_input import NegotiatedSpecPatchEntryInput
-    from .negotiated_spec_patch_entry_output import NegotiatedSpecPatchEntryOutput
     from .node_status_read import NodeStatusRead
-    from .pact_approval_response_input import PactApprovalResponseInput
-    from .pact_approval_response_output import PactApprovalResponseOutput
     from .pact_event_list_response import PactEventListResponse
     from .pact_event_read import PactEventRead
     from .pact_event_type import PactEventType
     from .pact_list_response import PactListResponse
-    from .pact_read import PactRead
+    from .pact_public_read import PactPublicRead
     from .pact_spec_input import PactSpecInput
     from .pact_spec_output import PactSpecOutput
     from .pact_stats_language import PactStatsLanguage
@@ -144,7 +86,6 @@ if TYPE_CHECKING:
     from .payment_create import PaymentCreate
     from .payment_protocol import PaymentProtocol
     from .payment_result import PaymentResult
-    from .payment_terms import PaymentTerms
     from .pending_operation_action_result import PendingOperationActionResult
     from .pending_operation_list_response import PendingOperationListResponse
     from .pending_operation_read import PendingOperationRead
@@ -181,14 +122,8 @@ if TYPE_CHECKING:
     from .recipe_submission_create import RecipeSubmissionCreate
     from .recipe_update import RecipeUpdate
     from .reject_pending_operation_request import RejectPendingOperationRequest
-    from .request import Request
-    from .resolve_approval_request import ResolveApprovalRequest
-    from .resolve_approval_response import ResolveApprovalResponse
-    from .resolve_export_request import ResolveExportRequest
-    from .resolve_export_response import ResolveExportResponse
-    from .response import Response
-    from .response1 import Response1
     from .sol_fee_request import SOLFeeRequest
+    from .script_brief import ScriptBrief
     from .search_recipes_request import SearchRecipesRequest
     from .session_record import SessionRecord
     from .session_span import SessionSpan
@@ -197,55 +132,42 @@ if TYPE_CHECKING:
     from .sol_instruction_account import SolInstructionAccount
     from .speedup_transaction_request import SpeedupTransactionRequest
     from .standard_response_agent_status_response import StandardResponseAgentStatusResponse
-    from .standard_response_api_key_create_result import StandardResponseApiKeyCreateResult
-    from .standard_response_approval_list_response import StandardResponseApprovalListResponse
-    from .standard_response_approval_read import StandardResponseApprovalRead
+    from .standard_response_api_key_create_result_public import (
+        StandardResponseApiKeyCreateResultPublic,
+    )
     from .standard_response_audit_log_page import StandardResponseAuditLogPage
     from .standard_response_chain_info import StandardResponseChainInfo
-    from .standard_response_complete_export_response import StandardResponseCompleteExportResponse
     from .standard_response_contract_call_submit_result import (
         StandardResponseContractCallSubmitResult,
-    )
-    from .standard_response_create_export_response import StandardResponseCreateExportResponse
-    from .standard_response_delegation_freeze_result import StandardResponseDelegationFreezeResult
-    from .standard_response_delegation_read import StandardResponseDelegationRead
-    from .standard_response_delegation_unfreeze_result import (
-        StandardResponseDelegationUnfreezeResult,
     )
     from .standard_response_dict_str_bool import StandardResponseDictStrBool
     from .standard_response_dict_str_str import StandardResponseDictStrStr
     from .standard_response_estimate_transfer_fee_read import (
         StandardResponseEstimateTransferFeeRead,
     )
+    from .standard_response_eth_call_result import StandardResponseEthCallResult
+    from .standard_response_execute_script_response import StandardResponseExecuteScriptResponse
     from .standard_response_faucet_deposit_result import StandardResponseFaucetDepositResult
-    from .standard_response_hire_event_list_response import StandardResponseHireEventListResponse
-    from .standard_response_hire_list_response import StandardResponseHireListResponse
-    from .standard_response_hire_read import StandardResponseHireRead
-    from .standard_response_key_export_read import StandardResponseKeyExportRead
-    from .standard_response_list_api_key_read import StandardResponseListApiKeyRead
+    from .standard_response_list_api_key_public_read import StandardResponseListApiKeyPublicRead
     from .standard_response_list_balance_read import StandardResponseListBalanceRead
-    from .standard_response_list_delegation_read import StandardResponseListDelegationRead
     from .standard_response_list_faucet_token_item import StandardResponseListFaucetTokenItem
-    from .standard_response_list_merchant_info import StandardResponseListMerchantInfo
     from .standard_response_list_policy_read import StandardResponseListPolicyRead
     from .standard_response_list_principal_read import StandardResponseListPrincipalRead
     from .standard_response_list_recent_address_read import StandardResponseListRecentAddressRead
     from .standard_response_list_recipe_category_read import StandardResponseListRecipeCategoryRead
     from .standard_response_list_recipe_read import StandardResponseListRecipeRead
-    from .standard_response_list_system_config_read import StandardResponseListSystemConfigRead
+    from .standard_response_list_script_brief import StandardResponseListScriptBrief
     from .standard_response_list_token_candidate import StandardResponseListTokenCandidate
-    from .standard_response_list_transaction_record_read import (
-        StandardResponseListTransactionRecordRead,
+    from .standard_response_list_user_transaction_read import (
+        StandardResponseListUserTransactionRead,
     )
-    from .standard_response_list_wallet_address_info import StandardResponseListWalletAddressInfo
     from .standard_response_list_wallet_address_read import StandardResponseListWalletAddressRead
     from .standard_response_list_wallet_read import StandardResponseListWalletRead
-    from .standard_response_list_webhook_dlq_read import StandardResponseListWebhookDLQRead
     from .standard_response_message_sign_result import StandardResponseMessageSignResult
     from .standard_response_node_status_read import StandardResponseNodeStatusRead
     from .standard_response_pact_event_list_response import StandardResponsePactEventListResponse
     from .standard_response_pact_list_response import StandardResponsePactListResponse
-    from .standard_response_pact_read import StandardResponsePactRead
+    from .standard_response_pact_public_read import StandardResponsePactPublicRead
     from .standard_response_pact_submit_response import StandardResponsePactSubmitResponse
     from .standard_response_payment_result import StandardResponsePaymentResult
     from .standard_response_pending_operation_action_result import (
@@ -265,17 +187,11 @@ if TYPE_CHECKING:
     from .standard_response_recipe_detail_read import StandardResponseRecipeDetailRead
     from .standard_response_recipe_document import StandardResponseRecipeDocument
     from .standard_response_recipe_search_response import StandardResponseRecipeSearchResponse
-    from .standard_response_resolve_approval_response import StandardResponseResolveApprovalResponse
-    from .standard_response_resolve_export_response import StandardResponseResolveExportResponse
-    from .standard_response_submit_reshare_nodes_response import (
-        StandardResponseSubmitReshareNodesResponse,
-    )
     from .standard_response_suggestion_response import StandardResponseSuggestionResponse
-    from .standard_response_system_config_read import StandardResponseSystemConfigRead
     from .standard_response_telemetry_config_response import StandardResponseTelemetryConfigResponse
     from .standard_response_transaction_rbf_result import StandardResponseTransactionRbfResult
-    from .standard_response_transaction_record_read import StandardResponseTransactionRecordRead
     from .standard_response_transfer_submit_result import StandardResponseTransferSubmitResult
+    from .standard_response_user_transaction_read import StandardResponseUserTransactionRead
     from .standard_response_waas_paginated_response_chain_metadata import (
         StandardResponseWaasPaginatedResponseChainMetadata,
     )
@@ -294,38 +210,30 @@ if TYPE_CHECKING:
     from .standard_response_wallet_tss_callback_response import (
         StandardResponseWalletTssCallbackResponse,
     )
-    from .standard_response_webhook_delete_result import StandardResponseWebhookDeleteResult
     from .standard_response_webhook_process_result import StandardResponseWebhookProcessResult
-    from .standard_response_webhook_registration_read import StandardResponseWebhookRegistrationRead
-    from .submit_reshare_nodes_request import SubmitReshareNodesRequest
-    from .submit_reshare_nodes_response import SubmitReshareNodesResponse
     from .suggestion_key import SuggestionKey
     from .suggestion_response import SuggestionResponse
-    from .system_config_read import SystemConfigRead
-    from .system_config_upsert import SystemConfigUpsert
     from .telemetry_config_response import TelemetryConfigResponse
     from .tier_evaluation_read import TierEvaluationRead
     from .token_candidate import TokenCandidate
     from .token_metadata import TokenMetadata
-    from .transaction_approval_response import TransactionApprovalResponse
+    from .transaction_provider import TransactionProvider
     from .transaction_rbf_result import TransactionRbfResult
-    from .transaction_record_extra import TransactionRecordExtra
-    from .transaction_record_read import TransactionRecordRead
-    from .transaction_record_type import TransactionRecordType
     from .transfer_create import TransferCreate
     from .transfer_submit_result import TransferSubmitResult
-    from .tss_key_share_group_snapshot import TssKeyShareGroupSnapshot
     from .ucw_share_public_data_callback import UcwSharePublicDataCallback
     from .ucw_tss_key_share_group_callback import UcwTssKeyShareGroupCallback
+    from .user_transaction_data import UserTransactionData
+    from .user_transaction_operation_type import UserTransactionOperationType
+    from .user_transaction_read import UserTransactionRead
+    from .user_transaction_request_type import UserTransactionRequestType
     from .validation_error import ValidationError
     from .validation_error_loc_inner import ValidationErrorLocInner
     from .vault_group_type import VaultGroupType
-    from .verification_spec import VerificationSpec
     from .waas_paginated_response_chain_metadata import WaasPaginatedResponseChainMetadata
     from .waas_paginated_response_token_metadata import WaasPaginatedResponseTokenMetadata
     from .waas_pagination import WaasPagination
     from .wallet_address_create import WalletAddressCreate
-    from .wallet_address_info import WalletAddressInfo
     from .wallet_address_read import WalletAddressRead
     from .wallet_create import WalletCreate
     from .wallet_detail_read import WalletDetailRead
@@ -355,12 +263,7 @@ if TYPE_CHECKING:
     from .wallet_tss_callback_response import WalletTssCallbackResponse
     from .wallet_type import WalletType
     from .wallet_update import WalletUpdate
-    from .webhook_dlq_read import WebhookDLQRead
-    from .webhook_delete_result import WebhookDeleteResult
     from .webhook_process_result import WebhookProcessResult
-    from .webhook_registration_create import WebhookRegistrationCreate
-    from .webhook_registration_read import WebhookRegistrationRead
-    from .work_scope import WorkScope
     from .wrapped_validation_error import WrappedValidationError
 
 
@@ -368,119 +271,61 @@ if TYPE_CHECKING:
 _MODEL_CLASSES = {
     "AgentStatusResponse": "agent_status_response",
     "ApiKeyCreate": "api_key_create",
-    "ApiKeyCreateResult": "api_key_create_result",
-    "ApiKeyRead": "api_key_read",
+    "ApiKeyCreateResultPublic": "api_key_create_result_public",
+    "ApiKeyPublicRead": "api_key_public_read",
     "ApplicableLimitRead": "applicable_limit_read",
-    "ApprovalAction": "approval_action",
-    "ApprovalListResponse": "approval_list_response",
-    "ApprovalRead": "approval_read",
-    "ApprovalStatus": "approval_status",
-    "ApprovalSubjectType": "approval_subject_type",
-    "Artifact": "artifact",
     "AuditAction": "audit_action",
     "AuditLogPage": "audit_log_page",
     "AuditLogRead": "audit_log_read",
     "AuditResult": "audit_result",
-    "AutomatedCheck": "automated_check",
     "BalanceRead": "balance_read",
     "ChainInfo": "chain_info",
     "ChainMetadata": "chain_metadata",
-    "CompleteExportResponse": "complete_export_response",
     "CompletionCondition": "completion_condition",
     "CompletionConditionType": "completion_condition_type",
     "ContractCallCreate": "contract_call_create",
     "ContractCallSubmitResult": "contract_call_submit_result",
-    "CreateExportResponse": "create_export_response",
-    "CustodyTerms": "custody_terms",
-    "DelegationCreate": "delegation_create",
-    "DelegationFreezeRequest": "delegation_freeze_request",
-    "DelegationFreezeResult": "delegation_freeze_result",
-    "DelegationPermission": "delegation_permission",
-    "DelegationRead": "delegation_read",
     "DelegationSpendSummary": "delegation_spend_summary",
-    "DelegationStatus": "delegation_status",
-    "DelegationUnfreezeResult": "delegation_unfreeze_result",
-    "DelegationUpdate": "delegation_update",
     "DelegationUsageLimitSummary": "delegation_usage_limit_summary",
-    "DeliverableSpec": "deliverable_spec",
-    "DisputeResolutionSpec": "dispute_resolution_spec",
     "DropTransactionRequest": "drop_transaction_request",
     "EIP1559FeeRequest": "eip1559_fee_request",
+    "EVMLegacyFeeRequest": "evm_legacy_fee_request",
     "Error": "error",
     "EstimateContractCallFeeRequest": "estimate_contract_call_fee_request",
     "EstimateTransferFeeRead": "estimate_transfer_fee_read",
     "EstimateTransferFeeRequest": "estimate_transfer_fee_request",
-    "ExecutionPlan": "execution_plan",
+    "EthCallRequest": "eth_call_request",
+    "EthCallResult": "eth_call_result",
+    "ExecuteScriptRequest": "execute_script_request",
+    "ExecuteScriptResponse": "execute_script_response",
+    "ExternalTransactionOperationType": "external_transaction_operation_type",
     "ExternalTransactionRead": "external_transaction_read",
+    "ExternalTransactionStage": "external_transaction_stage",
     "FaucetDepositRequest": "faucet_deposit_request",
     "FaucetDepositResult": "faucet_deposit_result",
     "FaucetTokenInfo": "faucet_token_info",
     "FaucetTokenItem": "faucet_token_item",
-    "Fee": "fee",
     "FeeEstimateRead": "fee_estimate_read",
-    "FreezeScope": "freeze_scope",
-    "HireAcknowledgeRequest": "hire_acknowledge_request",
-    "HireArbitrationRulingCreateRequest": "hire_arbitration_ruling_create_request",
-    "HireArbitrationRulingRecord": "hire_arbitration_ruling_record",
-    "HireCancellationRequest": "hire_cancellation_request",
-    "HireDeliveryCreateRequest": "hire_delivery_create_request",
-    "HireDeliveryRead": "hire_delivery_read",
-    "HireDeliveryReviewAction": "hire_delivery_review_action",
-    "HireDeliveryReviewCreateRequest": "hire_delivery_review_create_request",
-    "HireDisputeCreateRequest": "hire_dispute_create_request",
-    "HireDisputeRead": "hire_dispute_read",
-    "HireDisputeResponseCreateRequest": "hire_dispute_response_create_request",
-    "HireDisputeResponseRecord": "hire_dispute_response_record",
-    "HireDisputeType": "hire_dispute_type",
-    "HireEventListResponse": "hire_event_list_response",
-    "HireEventRead": "hire_event_read",
-    "HireFundRequest": "hire_fund_request",
-    "HireListResponse": "hire_list_response",
-    "HireMilestoneRead": "hire_milestone_read",
-    "HireNotificationPreference": "hire_notification_preference",
-    "HirePactSpecInput": "hire_pact_spec_input",
-    "HirePactSpecOutput": "hire_pact_spec_output",
-    "HirePactSpecPatchInput": "hire_pact_spec_patch_input",
-    "HirePactSpecPatchOutput": "hire_pact_spec_patch_output",
-    "HireParticipantRole": "hire_participant_role",
-    "HireRead": "hire_read",
-    "HireResolution": "hire_resolution",
-    "HireReviewRequest": "hire_review_request",
-    "HireSettlementProposalCreateRequest": "hire_settlement_proposal_create_request",
-    "HireSettlementProposalRead": "hire_settlement_proposal_read",
-    "HireSettlementRecord": "hire_settlement_record",
-    "HireSettlementSplit": "hire_settlement_split",
-    "HireSettlementType": "hire_settlement_type",
-    "HireSubmissionRecord": "hire_submission_record",
-    "HireSubmitRequest": "hire_submit_request",
-    "HireSummary": "hire_summary",
+    "FeeRequest": "fee_request",
     "InlinePolicyCreate": "inline_policy_create",
-    "KeyExportRead": "key_export_read",
-    "KeyExportStatus": "key_export_status",
     "KeyShareHolderGroupStatus": "key_share_holder_group_status",
     "KeyShareHolderGroupType": "key_share_holder_group_type",
     "KeyShareHolderType": "key_share_holder_type",
     "KnowledgeSearchType": "knowledge_search_type",
     "LangfuseRecord": "langfuse_record",
-    "MerchantInfo": "merchant_info",
     "MessageSignCreate": "message_sign_create",
     "MessageSignDestType": "message_sign_dest_type",
     "MessageSignResult": "message_sign_result",
-    "MilestoneSpec": "milestone_spec",
     "MppChallenge": "mpp_challenge",
     "MppSessionAction": "mpp_session_action",
     "MppSessionInfo": "mpp_session_info",
     "MppSessionParams": "mpp_session_params",
-    "NegotiatedSpecPatchEntryInput": "negotiated_spec_patch_entry_input",
-    "NegotiatedSpecPatchEntryOutput": "negotiated_spec_patch_entry_output",
     "NodeStatusRead": "node_status_read",
-    "PactApprovalResponseInput": "pact_approval_response_input",
-    "PactApprovalResponseOutput": "pact_approval_response_output",
     "PactEventListResponse": "pact_event_list_response",
     "PactEventRead": "pact_event_read",
     "PactEventType": "pact_event_type",
     "PactListResponse": "pact_list_response",
-    "PactRead": "pact_read",
+    "PactPublicRead": "pact_public_read",
     "PactSpecInput": "pact_spec_input",
     "PactSpecOutput": "pact_spec_output",
     "PactStatsLanguage": "pact_stats_language",
@@ -495,7 +340,6 @@ _MODEL_CLASSES = {
     "PaymentCreate": "payment_create",
     "PaymentProtocol": "payment_protocol",
     "PaymentResult": "payment_result",
-    "PaymentTerms": "payment_terms",
     "PendingOperationActionResult": "pending_operation_action_result",
     "PendingOperationListResponse": "pending_operation_list_response",
     "PendingOperationRead": "pending_operation_read",
@@ -532,14 +376,8 @@ _MODEL_CLASSES = {
     "RecipeSubmissionCreate": "recipe_submission_create",
     "RecipeUpdate": "recipe_update",
     "RejectPendingOperationRequest": "reject_pending_operation_request",
-    "Request": "request",
-    "ResolveApprovalRequest": "resolve_approval_request",
-    "ResolveApprovalResponse": "resolve_approval_response",
-    "ResolveExportRequest": "resolve_export_request",
-    "ResolveExportResponse": "resolve_export_response",
-    "Response": "response",
-    "Response1": "response1",
     "SOLFeeRequest": "sol_fee_request",
+    "ScriptBrief": "script_brief",
     "SearchRecipesRequest": "search_recipes_request",
     "SessionRecord": "session_record",
     "SessionSpan": "session_span",
@@ -548,47 +386,34 @@ _MODEL_CLASSES = {
     "SolInstructionAccount": "sol_instruction_account",
     "SpeedupTransactionRequest": "speedup_transaction_request",
     "StandardResponseAgentStatusResponse": "standard_response_agent_status_response",
-    "StandardResponseApiKeyCreateResult": "standard_response_api_key_create_result",
-    "StandardResponseApprovalListResponse": "standard_response_approval_list_response",
-    "StandardResponseApprovalRead": "standard_response_approval_read",
+    "StandardResponseApiKeyCreateResultPublic": "standard_response_api_key_create_result_public",
     "StandardResponseAuditLogPage": "standard_response_audit_log_page",
     "StandardResponseChainInfo": "standard_response_chain_info",
-    "StandardResponseCompleteExportResponse": "standard_response_complete_export_response",
     "StandardResponseContractCallSubmitResult": "standard_response_contract_call_submit_result",
-    "StandardResponseCreateExportResponse": "standard_response_create_export_response",
-    "StandardResponseDelegationFreezeResult": "standard_response_delegation_freeze_result",
-    "StandardResponseDelegationRead": "standard_response_delegation_read",
-    "StandardResponseDelegationUnfreezeResult": "standard_response_delegation_unfreeze_result",
     "StandardResponseDictStrBool": "standard_response_dict_str_bool",
     "StandardResponseDictStrStr": "standard_response_dict_str_str",
     "StandardResponseEstimateTransferFeeRead": "standard_response_estimate_transfer_fee_read",
+    "StandardResponseEthCallResult": "standard_response_eth_call_result",
+    "StandardResponseExecuteScriptResponse": "standard_response_execute_script_response",
     "StandardResponseFaucetDepositResult": "standard_response_faucet_deposit_result",
-    "StandardResponseHireEventListResponse": "standard_response_hire_event_list_response",
-    "StandardResponseHireListResponse": "standard_response_hire_list_response",
-    "StandardResponseHireRead": "standard_response_hire_read",
-    "StandardResponseKeyExportRead": "standard_response_key_export_read",
-    "StandardResponseListApiKeyRead": "standard_response_list_api_key_read",
+    "StandardResponseListApiKeyPublicRead": "standard_response_list_api_key_public_read",
     "StandardResponseListBalanceRead": "standard_response_list_balance_read",
-    "StandardResponseListDelegationRead": "standard_response_list_delegation_read",
     "StandardResponseListFaucetTokenItem": "standard_response_list_faucet_token_item",
-    "StandardResponseListMerchantInfo": "standard_response_list_merchant_info",
     "StandardResponseListPolicyRead": "standard_response_list_policy_read",
     "StandardResponseListPrincipalRead": "standard_response_list_principal_read",
     "StandardResponseListRecentAddressRead": "standard_response_list_recent_address_read",
     "StandardResponseListRecipeCategoryRead": "standard_response_list_recipe_category_read",
     "StandardResponseListRecipeRead": "standard_response_list_recipe_read",
-    "StandardResponseListSystemConfigRead": "standard_response_list_system_config_read",
+    "StandardResponseListScriptBrief": "standard_response_list_script_brief",
     "StandardResponseListTokenCandidate": "standard_response_list_token_candidate",
-    "StandardResponseListTransactionRecordRead": "standard_response_list_transaction_record_read",
-    "StandardResponseListWalletAddressInfo": "standard_response_list_wallet_address_info",
+    "StandardResponseListUserTransactionRead": "standard_response_list_user_transaction_read",
     "StandardResponseListWalletAddressRead": "standard_response_list_wallet_address_read",
     "StandardResponseListWalletRead": "standard_response_list_wallet_read",
-    "StandardResponseListWebhookDLQRead": "standard_response_list_webhook_dlq_read",
     "StandardResponseMessageSignResult": "standard_response_message_sign_result",
     "StandardResponseNodeStatusRead": "standard_response_node_status_read",
     "StandardResponsePactEventListResponse": "standard_response_pact_event_list_response",
     "StandardResponsePactListResponse": "standard_response_pact_list_response",
-    "StandardResponsePactRead": "standard_response_pact_read",
+    "StandardResponsePactPublicRead": "standard_response_pact_public_read",
     "StandardResponsePactSubmitResponse": "standard_response_pact_submit_response",
     "StandardResponsePaymentResult": "standard_response_payment_result",
     "StandardResponsePendingOperationActionResult": "standard_response_pending_operation_action_result",
@@ -604,15 +429,11 @@ _MODEL_CLASSES = {
     "StandardResponseRecipeDetailRead": "standard_response_recipe_detail_read",
     "StandardResponseRecipeDocument": "standard_response_recipe_document",
     "StandardResponseRecipeSearchResponse": "standard_response_recipe_search_response",
-    "StandardResponseResolveApprovalResponse": "standard_response_resolve_approval_response",
-    "StandardResponseResolveExportResponse": "standard_response_resolve_export_response",
-    "StandardResponseSubmitReshareNodesResponse": "standard_response_submit_reshare_nodes_response",
     "StandardResponseSuggestionResponse": "standard_response_suggestion_response",
-    "StandardResponseSystemConfigRead": "standard_response_system_config_read",
     "StandardResponseTelemetryConfigResponse": "standard_response_telemetry_config_response",
     "StandardResponseTransactionRbfResult": "standard_response_transaction_rbf_result",
-    "StandardResponseTransactionRecordRead": "standard_response_transaction_record_read",
     "StandardResponseTransferSubmitResult": "standard_response_transfer_submit_result",
+    "StandardResponseUserTransactionRead": "standard_response_user_transaction_read",
     "StandardResponseWaasPaginatedResponseChainMetadata": "standard_response_waas_paginated_response_chain_metadata",
     "StandardResponseWaasPaginatedResponseTokenMetadata": "standard_response_waas_paginated_response_token_metadata",
     "StandardResponseWalletAddressRead": "standard_response_wallet_address_read",
@@ -625,38 +446,30 @@ _MODEL_CLASSES = {
     "StandardResponseWalletRead": "standard_response_wallet_read",
     "StandardResponseWalletReshareResponse": "standard_response_wallet_reshare_response",
     "StandardResponseWalletTssCallbackResponse": "standard_response_wallet_tss_callback_response",
-    "StandardResponseWebhookDeleteResult": "standard_response_webhook_delete_result",
     "StandardResponseWebhookProcessResult": "standard_response_webhook_process_result",
-    "StandardResponseWebhookRegistrationRead": "standard_response_webhook_registration_read",
-    "SubmitReshareNodesRequest": "submit_reshare_nodes_request",
-    "SubmitReshareNodesResponse": "submit_reshare_nodes_response",
     "SuggestionKey": "suggestion_key",
     "SuggestionResponse": "suggestion_response",
-    "SystemConfigRead": "system_config_read",
-    "SystemConfigUpsert": "system_config_upsert",
     "TelemetryConfigResponse": "telemetry_config_response",
     "TierEvaluationRead": "tier_evaluation_read",
     "TokenCandidate": "token_candidate",
     "TokenMetadata": "token_metadata",
-    "TransactionApprovalResponse": "transaction_approval_response",
+    "TransactionProvider": "transaction_provider",
     "TransactionRbfResult": "transaction_rbf_result",
-    "TransactionRecordExtra": "transaction_record_extra",
-    "TransactionRecordRead": "transaction_record_read",
-    "TransactionRecordType": "transaction_record_type",
     "TransferCreate": "transfer_create",
     "TransferSubmitResult": "transfer_submit_result",
-    "TssKeyShareGroupSnapshot": "tss_key_share_group_snapshot",
     "UcwSharePublicDataCallback": "ucw_share_public_data_callback",
     "UcwTssKeyShareGroupCallback": "ucw_tss_key_share_group_callback",
+    "UserTransactionData": "user_transaction_data",
+    "UserTransactionOperationType": "user_transaction_operation_type",
+    "UserTransactionRead": "user_transaction_read",
+    "UserTransactionRequestType": "user_transaction_request_type",
     "ValidationError": "validation_error",
     "ValidationErrorLocInner": "validation_error_loc_inner",
     "VaultGroupType": "vault_group_type",
-    "VerificationSpec": "verification_spec",
     "WaasPaginatedResponseChainMetadata": "waas_paginated_response_chain_metadata",
     "WaasPaginatedResponseTokenMetadata": "waas_paginated_response_token_metadata",
     "WaasPagination": "waas_pagination",
     "WalletAddressCreate": "wallet_address_create",
-    "WalletAddressInfo": "wallet_address_info",
     "WalletAddressRead": "wallet_address_read",
     "WalletCreate": "wallet_create",
     "WalletDetailRead": "wallet_detail_read",
@@ -686,12 +499,7 @@ _MODEL_CLASSES = {
     "WalletTssCallbackResponse": "wallet_tss_callback_response",
     "WalletType": "wallet_type",
     "WalletUpdate": "wallet_update",
-    "WebhookDLQRead": "webhook_dlq_read",
-    "WebhookDeleteResult": "webhook_delete_result",
     "WebhookProcessResult": "webhook_process_result",
-    "WebhookRegistrationCreate": "webhook_registration_create",
-    "WebhookRegistrationRead": "webhook_registration_read",
-    "WorkScope": "work_scope",
     "WrappedValidationError": "wrapped_validation_error",
 }
 

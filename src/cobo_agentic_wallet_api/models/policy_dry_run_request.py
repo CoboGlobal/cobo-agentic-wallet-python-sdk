@@ -27,13 +27,28 @@ class PolicyDryRunRequest(BaseModel):
     PolicyDryRunRequest
     """  # noqa: E501
 
-    wallet_id: StrictStr
-    delegation_id: Optional[StrictStr] = None
-    operation_type: PendingOperationType
-    amount: Annotated[str, Field(min_length=1, strict=True, max_length=100)]
-    chain_id: Annotated[str, Field(min_length=1, strict=True, max_length=100)]
-    token_id: Optional[Annotated[str, Field(strict=True, max_length=100)]] = None
-    dst_addr: Optional[Annotated[str, Field(strict=True, max_length=255)]] = None
+    wallet_id: StrictStr = Field(description="UUID of the wallet to evaluate policies against.")
+    delegation_id: Optional[StrictStr] = Field(
+        default=None,
+        description="UUID of the delegation to include in the evaluation. Null for owner-initiated operations.",
+    )
+    operation_type: PendingOperationType = Field(
+        description="Operation type to simulate. Possible values: `transfer`, `contract_call`, `message_sign`."
+    )
+    amount: Annotated[str, Field(min_length=1, strict=True, max_length=100)] = Field(
+        description="Amount for the simulated operation as a decimal string. For `contract_call`, use `0` if no value is sent."
+    )
+    chain_id: Annotated[str, Field(min_length=1, strict=True, max_length=100)] = Field(
+        description="Cobo chain ID for the simulated operation (for example, `SETH`, `BASE_ETH`, `SOL`)."
+    )
+    token_id: Optional[Annotated[str, Field(strict=True, max_length=100)]] = Field(
+        default=None,
+        description="Cobo token ID for the simulated transfer (for example, `SETH`, `SETH_USDC`). Required for `transfer` operations.",
+    )
+    dst_addr: Optional[Annotated[str, Field(strict=True, max_length=255)]] = Field(
+        default=None,
+        description="Destination on-chain address. Required for `transfer` operations.",
+    )
     contract_addr: Optional[Annotated[str, Field(strict=True, max_length=255)]] = Field(
         default=None, description="EVM-only contract address."
     )

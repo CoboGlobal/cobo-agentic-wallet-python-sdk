@@ -28,14 +28,32 @@ class PolicyCreate(BaseModel):
     PolicyCreate
     """  # noqa: E501
 
-    scope: PolicyScope
-    wallet_id: Optional[StrictStr] = None
-    delegation_id: Optional[StrictStr] = None
+    scope: PolicyScope = Field(
+        description="Policy scope. Possible values: `global` (platform-wide, DENY only), `wallet` (wallet-scoped), `delegation` (delegation-scoped, ALLOW only)."
+    )
+    wallet_id: Optional[StrictStr] = Field(
+        default=None,
+        description="UUID of the wallet this policy applies to. Required when `scope=wallet`; derived from the delegation when `scope=delegation`; must be null for `scope=global`.",
+    )
+    delegation_id: Optional[StrictStr] = Field(
+        default=None,
+        description="UUID of the delegation this policy applies to. Required when `scope=delegation`; must be null for other scopes.",
+    )
     name: Annotated[str, Field(min_length=1, strict=True, max_length=255)]
-    policy_type: PolicyType
-    rules: Dict[str, Any]
-    priority: Optional[StrictInt] = 0
-    is_active: Optional[StrictBool] = True
+    policy_type: PolicyType = Field(
+        description="Policy category. Possible values: `transfer`, `contract_call`, `message_sign`."
+    )
+    rules: Dict[str, Any] = Field(
+        description="Policy rule configuration. Structure depends on `policy_type`."
+    )
+    priority: Optional[StrictInt] = Field(
+        default=0,
+        description="Evaluation priority. Higher values take precedence when multiple policies match.",
+    )
+    is_active: Optional[StrictBool] = Field(
+        default=True,
+        description="Whether this policy is active. `true`: enforced. `false`: disabled.",
+    )
     __properties: ClassVar[List[str]] = [
         "scope",
         "wallet_id",

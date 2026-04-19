@@ -24,7 +24,7 @@ from typing_extensions import Self
 
 class SearchRecipesRequest(BaseModel):
     """
-    SearchRecipesRequest
+    Request payload for recipe search across graph-based or knowledge-base sources.
     """  # noqa: E501
 
     query: StrictStr

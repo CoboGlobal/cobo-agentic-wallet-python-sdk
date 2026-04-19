@@ -497,7 +497,7 @@ class TransactionsApi:
     ) -> StandardResponseEstimateTransferFeeRead:
         """Estimate contract call fee
 
-        This operation estimates the network fee for a contract call without submitting a transaction. You can use the returned `recommended`, `slow`, and `fast` fee options when constructing the contract call request. Policy evaluation runs before the estimate — the operation returns an error if a policy would deny the equivalent contract call.
+        This operation estimates the network fee for a contract call without submitting a transaction. You can use the returned `recommended`, `slow`, and `fast` fee options when constructing the contract call request.
 
         :param wallet_uuid: The UUID of the wallet for which to estimate the contract call fee. Retrieve this value from the `id` field returned when the wallet was created. (required)
         :type wallet_uuid: str
@@ -549,7 +549,7 @@ class TransactionsApi:
     ) -> ApiResponse[StandardResponseEstimateTransferFeeRead]:
         """Estimate contract call fee
 
-        This operation estimates the network fee for a contract call without submitting a transaction. You can use the returned `recommended`, `slow`, and `fast` fee options when constructing the contract call request. Policy evaluation runs before the estimate — the operation returns an error if a policy would deny the equivalent contract call.
+        This operation estimates the network fee for a contract call without submitting a transaction. You can use the returned `recommended`, `slow`, and `fast` fee options when constructing the contract call request.
 
         :param wallet_uuid: The UUID of the wallet for which to estimate the contract call fee. Retrieve this value from the `id` field returned when the wallet was created. (required)
         :type wallet_uuid: str
@@ -601,7 +601,7 @@ class TransactionsApi:
     ) -> RESTResponseType:
         """Estimate contract call fee
 
-        This operation estimates the network fee for a contract call without submitting a transaction. You can use the returned `recommended`, `slow`, and `fast` fee options when constructing the contract call request. Policy evaluation runs before the estimate — the operation returns an error if a policy would deny the equivalent contract call.
+        This operation estimates the network fee for a contract call without submitting a transaction. You can use the returned `recommended`, `slow`, and `fast` fee options when constructing the contract call request.
 
         :param wallet_uuid: The UUID of the wallet for which to estimate the contract call fee. Retrieve this value from the `id` field returned when the wallet was created. (required)
         :type wallet_uuid: str
@@ -687,7 +687,7 @@ class TransactionsApi:
     ) -> StandardResponseEstimateTransferFeeRead:
         """Estimate transfer fee
 
-        This operation estimates the network fee for a token transfer without submitting a transaction. You can use the returned `recommended`, `slow`, and `fast` fee options when constructing the transfer request. Policy evaluation runs before the estimate — the operation returns an error if a policy would deny the equivalent transfer.
+        This operation estimates the network fee for a token transfer without submitting a transaction. You can use the returned `recommended`, `slow`, and `fast` fee options when constructing the transfer request.
 
         :param wallet_uuid: The UUID of the wallet for which to estimate the transfer fee. Retrieve this value from the `id` field returned when the wallet was created. (required)
         :type wallet_uuid: str
@@ -739,7 +739,7 @@ class TransactionsApi:
     ) -> ApiResponse[StandardResponseEstimateTransferFeeRead]:
         """Estimate transfer fee
 
-        This operation estimates the network fee for a token transfer without submitting a transaction. You can use the returned `recommended`, `slow`, and `fast` fee options when constructing the transfer request. Policy evaluation runs before the estimate — the operation returns an error if a policy would deny the equivalent transfer.
+        This operation estimates the network fee for a token transfer without submitting a transaction. You can use the returned `recommended`, `slow`, and `fast` fee options when constructing the transfer request.
 
         :param wallet_uuid: The UUID of the wallet for which to estimate the transfer fee. Retrieve this value from the `id` field returned when the wallet was created. (required)
         :type wallet_uuid: str
@@ -791,7 +791,7 @@ class TransactionsApi:
     ) -> RESTResponseType:
         """Estimate transfer fee
 
-        This operation estimates the network fee for a token transfer without submitting a transaction. You can use the returned `recommended`, `slow`, and `fast` fee options when constructing the transfer request. Policy evaluation runs before the estimate — the operation returns an error if a policy would deny the equivalent transfer.
+        This operation estimates the network fee for a token transfer without submitting a transaction. You can use the returned `recommended`, `slow`, and `fast` fee options when constructing the transfer request.
 
         :param wallet_uuid: The UUID of the wallet for which to estimate the transfer fee. Retrieve this value from the `id` field returned when the wallet was created. (required)
         :type wallet_uuid: str

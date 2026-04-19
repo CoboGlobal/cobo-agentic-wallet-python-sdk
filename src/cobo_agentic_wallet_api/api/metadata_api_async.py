@@ -13,7 +13,11 @@ from pydantic import validate_call, Field, StrictFloat, StrictStr
 from typing import Dict, List, Optional, Tuple, Union
 from typing_extensions import Annotated
 
+from cobo_agentic_wallet_api.models.eth_call_request import EthCallRequest
 from cobo_agentic_wallet_api.models.standard_response_chain_info import StandardResponseChainInfo
+from cobo_agentic_wallet_api.models.standard_response_eth_call_result import (
+    StandardResponseEthCallResult,
+)
 from cobo_agentic_wallet_api.models.standard_response_list_token_candidate import (
     StandardResponseListTokenCandidate,
 )
@@ -41,6 +45,164 @@ class AsyncMetadataApi:
         if api_client is None:
             api_client = AsyncApiClient.get_default()
         self.api_client = api_client
+
+    @validate_call
+    async def eth_call(
+        self,
+        eth_call_request: EthCallRequest,
+        x_api_key: Optional[StrictStr] = None,
+        _request_timeout: Union[
+            None,
+            Annotated[StrictFloat, Field(gt=0)],
+            Tuple[Annotated[StrictFloat, Field(gt=0)], Annotated[StrictFloat, Field(gt=0)]],
+        ] = None,
+    ) -> StandardResponseEthCallResult:
+        """Call a view/pure function on an EVM contract
+
+        Proxies an `eth_call` JSON-RPC request to the configured EVM node for the given chain. Suitable for calling view or pure contract functions without creating a transaction. Returns the raw hex result.
+
+        :param eth_call_request: (required)
+        :type eth_call_request: EthCallRequest
+        :param x_api_key:
+        :type x_api_key: str
+        :param _request_timeout: timeout setting for this request. If one
+                                 number provided, it will be total request
+                                 timeout. It can also be a pair (tuple) of
+                                 (connection, read) timeouts.
+        :type _request_timeout: int, tuple(int, int), optional
+        :return: Returns the result object.
+        """  # noqa: E501
+
+        _param = self._eth_call_serialize(
+            eth_call_request=eth_call_request,
+            x_api_key=x_api_key,
+        )
+
+        _response_types_map: Dict[str, Optional[str]] = {
+            "200": "StandardResponseEthCallResult",
+            "422": "WrappedValidationError",
+        }
+        response_data = await self.api_client.call_api(*_param, _request_timeout=_request_timeout)
+        return self.api_client.response_deserialize(
+            response_data=response_data,
+            response_types_map=_response_types_map,
+        ).data
+
+    @validate_call
+    async def eth_call_with_http_info(
+        self,
+        eth_call_request: EthCallRequest,
+        x_api_key: Optional[StrictStr] = None,
+        _request_timeout: Union[
+            None,
+            Annotated[StrictFloat, Field(gt=0)],
+            Tuple[Annotated[StrictFloat, Field(gt=0)], Annotated[StrictFloat, Field(gt=0)]],
+        ] = None,
+    ) -> ApiResponse[StandardResponseEthCallResult]:
+        """Call a view/pure function on an EVM contract
+
+        Proxies an `eth_call` JSON-RPC request to the configured EVM node for the given chain. Suitable for calling view or pure contract functions without creating a transaction. Returns the raw hex result.
+
+        :param eth_call_request: (required)
+        :type eth_call_request: EthCallRequest
+        :param x_api_key:
+        :type x_api_key: str
+        :param _request_timeout: timeout setting for this request. If one
+                                 number provided, it will be total request
+                                 timeout. It can also be a pair (tuple) of
+                                 (connection, read) timeouts.
+        :type _request_timeout: int, tuple(int, int), optional
+        :return: Returns the result object.
+        """  # noqa: E501
+
+        _param = self._eth_call_serialize(
+            eth_call_request=eth_call_request,
+            x_api_key=x_api_key,
+        )
+
+        _response_types_map: Dict[str, Optional[str]] = {
+            "200": "StandardResponseEthCallResult",
+            "422": "WrappedValidationError",
+        }
+        response_data = await self.api_client.call_api(*_param, _request_timeout=_request_timeout)
+        return self.api_client.response_deserialize(
+            response_data=response_data,
+            response_types_map=_response_types_map,
+        )
+
+    @validate_call
+    async def eth_call_without_preload_content(
+        self,
+        eth_call_request: EthCallRequest,
+        x_api_key: Optional[StrictStr] = None,
+        _request_timeout: Union[
+            None,
+            Annotated[StrictFloat, Field(gt=0)],
+            Tuple[Annotated[StrictFloat, Field(gt=0)], Annotated[StrictFloat, Field(gt=0)]],
+        ] = None,
+    ) -> AsyncRESTResponse:
+        """Call a view/pure function on an EVM contract
+
+        Proxies an `eth_call` JSON-RPC request to the configured EVM node for the given chain. Suitable for calling view or pure contract functions without creating a transaction. Returns the raw hex result.
+
+        :param eth_call_request: (required)
+        :type eth_call_request: EthCallRequest
+        :param x_api_key:
+        :type x_api_key: str
+        :param _request_timeout: timeout setting for this request. If one
+                                 number provided, it will be total request
+                                 timeout. It can also be a pair (tuple) of
+                                 (connection, read) timeouts.
+        :type _request_timeout: int, tuple(int, int), optional
+        :return: Returns the result object.
+        """  # noqa: E501
+
+        _param = self._eth_call_serialize(
+            eth_call_request=eth_call_request,
+            x_api_key=x_api_key,
+        )
+
+        _response_types_map: Dict[str, Optional[str]] = {
+            "200": "StandardResponseEthCallResult",
+            "422": "WrappedValidationError",
+        }
+        response_data = await self.api_client.call_api(*_param, _request_timeout=_request_timeout)
+        return response_data
+
+    def _eth_call_serialize(
+        self,
+        eth_call_request,
+        x_api_key,
+    ) -> RequestSerialized:
+        _path_params: Dict[str, str] = {}
+        _query_params: List[Tuple[str, str]] = []
+        _form_params: List[Tuple[str, str]] = []
+        _files: Dict[str, Union[str, bytes]] = {}
+        _body_params: Optional[bytes] = None
+
+        # set the HTTP header `Accept`
+        _header_params = {"Accept": "application/json", "Content-Type": "application/json"}
+
+        # process the path parameters
+        # process the query parameters
+        # process the header parameters
+        if x_api_key is not None:
+            _header_params["X-API-Key"] = x_api_key
+        # process the form parameters
+        # process the body parameter
+        if eth_call_request is not None:
+            _body_params = eth_call_request
+
+        return self.api_client.param_serialize(
+            method="POST",
+            resource_path="/api/v1/metadata/eth-call",
+            path_params=_path_params,
+            query_params=_query_params,
+            header_params=_header_params,
+            body=_body_params,
+            post_params=_form_params,
+            files=_files,
+        )
 
     @validate_call
     async def get_chain_info_by_chain_id(

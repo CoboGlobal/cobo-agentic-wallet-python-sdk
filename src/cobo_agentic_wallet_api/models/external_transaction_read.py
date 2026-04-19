@@ -17,6 +17,11 @@ import json
 from datetime import datetime
 from pydantic import BaseModel, ConfigDict, Field, StrictStr
 from typing import Any, ClassVar, Dict, List, Optional
+from cobo_agentic_wallet_api.models.external_transaction_operation_type import (
+    ExternalTransactionOperationType,
+)
+from cobo_agentic_wallet_api.models.external_transaction_stage import ExternalTransactionStage
+from cobo_agentic_wallet_api.models.transaction_provider import TransactionProvider
 from typing import Set
 from typing_extensions import Self
 
@@ -28,14 +33,16 @@ class ExternalTransactionRead(BaseModel):
 
     id: StrictStr = Field(description="The external transaction UUID.")
     user_transaction_uuid: StrictStr = Field(description="The parent UserTransaction UUID.")
-    operation_type: StrictStr = Field(
-        description="The operation type (transfer, contract_call, deposit, message_sign)."
+    operation_type: ExternalTransactionOperationType = Field(
+        description="The operation the ET performs. Possible values: `transfer`, `contract_call`, `message_sign`, `deposit`."
     )
-    stage: Optional[StrictStr] = Field(
-        default=None, description="Stage within the UT lifecycle (original, drop, speedup)."
+    stage: Optional[ExternalTransactionStage] = Field(
+        default=None,
+        description="Stage within the UT lifecycle. Possible values: `original`, `sign`, `broadcast`, `drop`, `speedup`, `delegation`, `userop`, `provider_userop`.",
     )
-    provider: Optional[StrictStr] = Field(
-        default=None, description="Downstream provider (waas, pimlico, alchemy)."
+    provider: Optional[TransactionProvider] = Field(
+        default=None,
+        description="Downstream provider that executes this ET. Possible values: `waas`, `alchemy`, `pimlico`, `node_rpc`.",
     )
     external_id: Optional[StrictStr] = Field(
         default=None, description="Provider-assigned transaction ID (e.g. WaaS cobo_tx_id)."

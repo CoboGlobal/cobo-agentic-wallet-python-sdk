@@ -73,6 +73,7 @@ class AsyncRecipesApi:
     ) -> StandardResponseRecipeDetailRead:
         """Archive recipe
 
+        Archive a recipe, removing it from public visibility. Requires service credential authentication. Archived recipes are not deleted and can be restored.
 
         :param recipe_id: (required)
         :type recipe_id: str
@@ -114,6 +115,7 @@ class AsyncRecipesApi:
     ) -> ApiResponse[StandardResponseRecipeDetailRead]:
         """Archive recipe
 
+        Archive a recipe, removing it from public visibility. Requires service credential authentication. Archived recipes are not deleted and can be restored.
 
         :param recipe_id: (required)
         :type recipe_id: str
@@ -155,6 +157,7 @@ class AsyncRecipesApi:
     ) -> AsyncRESTResponse:
         """Archive recipe
 
+        Archive a recipe, removing it from public visibility. Requires service credential authentication. Archived recipes are not deleted and can be restored.
 
         :param recipe_id: (required)
         :type recipe_id: str
@@ -228,6 +231,7 @@ class AsyncRecipesApi:
     ) -> StandardResponseRecipeCreateResult:
         """Create recipe
 
+        Create and publish a new recipe in the library. Requires service credential authentication. The recipe is synced to the knowledge hub after creation.
 
         :param recipe_create: (required)
         :type recipe_create: RecipeCreate
@@ -270,6 +274,7 @@ class AsyncRecipesApi:
     ) -> ApiResponse[StandardResponseRecipeCreateResult]:
         """Create recipe
 
+        Create and publish a new recipe in the library. Requires service credential authentication. The recipe is synced to the knowledge hub after creation.
 
         :param recipe_create: (required)
         :type recipe_create: RecipeCreate
@@ -312,6 +317,7 @@ class AsyncRecipesApi:
     ) -> AsyncRESTResponse:
         """Create recipe
 
+        Create and publish a new recipe in the library. Requires service credential authentication. The recipe is synced to the knowledge hub after creation.
 
         :param recipe_create: (required)
         :type recipe_create: RecipeCreate
@@ -377,7 +383,10 @@ class AsyncRecipesApi:
     async def get_recipe_by_slug(
         self,
         slug: StrictStr,
-        track_view: Optional[StrictBool] = None,
+        track_view: Annotated[
+            Optional[StrictBool],
+            Field(description="When `true` (default), increment the recipe's view counter."),
+        ] = None,
         _request_timeout: Union[
             None,
             Annotated[StrictFloat, Field(gt=0)],
@@ -386,10 +395,11 @@ class AsyncRecipesApi:
     ) -> StandardResponseRecipeDetailRead:
         """Get recipe detail by slug
 
+        Retrieve the full details of a public recipe by its URL slug.
 
         :param slug: (required)
         :type slug: str
-        :param track_view:
+        :param track_view: When `true` (default), increment the recipe's view counter.
         :type track_view: bool
         :param _request_timeout: timeout setting for this request. If one
                                  number provided, it will be total request
@@ -418,7 +428,10 @@ class AsyncRecipesApi:
     async def get_recipe_by_slug_with_http_info(
         self,
         slug: StrictStr,
-        track_view: Optional[StrictBool] = None,
+        track_view: Annotated[
+            Optional[StrictBool],
+            Field(description="When `true` (default), increment the recipe's view counter."),
+        ] = None,
         _request_timeout: Union[
             None,
             Annotated[StrictFloat, Field(gt=0)],
@@ -427,10 +440,11 @@ class AsyncRecipesApi:
     ) -> ApiResponse[StandardResponseRecipeDetailRead]:
         """Get recipe detail by slug
 
+        Retrieve the full details of a public recipe by its URL slug.
 
         :param slug: (required)
         :type slug: str
-        :param track_view:
+        :param track_view: When `true` (default), increment the recipe's view counter.
         :type track_view: bool
         :param _request_timeout: timeout setting for this request. If one
                                  number provided, it will be total request
@@ -459,7 +473,10 @@ class AsyncRecipesApi:
     async def get_recipe_by_slug_without_preload_content(
         self,
         slug: StrictStr,
-        track_view: Optional[StrictBool] = None,
+        track_view: Annotated[
+            Optional[StrictBool],
+            Field(description="When `true` (default), increment the recipe's view counter."),
+        ] = None,
         _request_timeout: Union[
             None,
             Annotated[StrictFloat, Field(gt=0)],
@@ -468,10 +485,11 @@ class AsyncRecipesApi:
     ) -> AsyncRESTResponse:
         """Get recipe detail by slug
 
+        Retrieve the full details of a public recipe by its URL slug.
 
         :param slug: (required)
         :type slug: str
-        :param track_view:
+        :param track_view: When `true` (default), increment the recipe's view counter.
         :type track_view: bool
         :param _request_timeout: timeout setting for this request. If one
                                  number provided, it will be total request
@@ -535,7 +553,9 @@ class AsyncRecipesApi:
         document_id: StrictStr,
         source: Annotated[
             Optional[RecipeSearchSource],
-            Field(description="Document source: 'graph' or 'knowledge'"),
+            Field(
+                description="Document source to retrieve from. Possible values: `graph`, `knowledge`."
+            ),
         ] = None,
         x_api_key: Optional[StrictStr] = None,
         _request_timeout: Union[
@@ -546,10 +566,11 @@ class AsyncRecipesApi:
     ) -> StandardResponseRecipeDocument:
         """Get full recipe document by ID
 
+        Retrieve the full content of a recipe document by its knowledge hub or graph document ID. The `document_id` is returned in search results.
 
         :param document_id: (required)
         :type document_id: str
-        :param source: Document source: 'graph' or 'knowledge'
+        :param source: Document source to retrieve from. Possible values: `graph`, `knowledge`.
         :type source: RecipeSearchSource
         :param x_api_key:
         :type x_api_key: str
@@ -583,7 +604,9 @@ class AsyncRecipesApi:
         document_id: StrictStr,
         source: Annotated[
             Optional[RecipeSearchSource],
-            Field(description="Document source: 'graph' or 'knowledge'"),
+            Field(
+                description="Document source to retrieve from. Possible values: `graph`, `knowledge`."
+            ),
         ] = None,
         x_api_key: Optional[StrictStr] = None,
         _request_timeout: Union[
@@ -594,10 +617,11 @@ class AsyncRecipesApi:
     ) -> ApiResponse[StandardResponseRecipeDocument]:
         """Get full recipe document by ID
 
+        Retrieve the full content of a recipe document by its knowledge hub or graph document ID. The `document_id` is returned in search results.
 
         :param document_id: (required)
         :type document_id: str
-        :param source: Document source: 'graph' or 'knowledge'
+        :param source: Document source to retrieve from. Possible values: `graph`, `knowledge`.
         :type source: RecipeSearchSource
         :param x_api_key:
         :type x_api_key: str
@@ -631,7 +655,9 @@ class AsyncRecipesApi:
         document_id: StrictStr,
         source: Annotated[
             Optional[RecipeSearchSource],
-            Field(description="Document source: 'graph' or 'knowledge'"),
+            Field(
+                description="Document source to retrieve from. Possible values: `graph`, `knowledge`."
+            ),
         ] = None,
         x_api_key: Optional[StrictStr] = None,
         _request_timeout: Union[
@@ -642,10 +668,11 @@ class AsyncRecipesApi:
     ) -> AsyncRESTResponse:
         """Get full recipe document by ID
 
+        Retrieve the full content of a recipe document by its knowledge hub or graph document ID. The `document_id` is returned in search results.
 
         :param document_id: (required)
         :type document_id: str
-        :param source: Document source: 'graph' or 'knowledge'
+        :param source: Document source to retrieve from. Possible values: `graph`, `knowledge`.
         :type source: RecipeSearchSource
         :param x_api_key:
         :type x_api_key: str
@@ -721,6 +748,7 @@ class AsyncRecipesApi:
     ) -> StandardResponseRecipeCounterResult:
         """Get recipe search count
 
+        Retrieve the total number of times a recipe has appeared in search results.
 
         :param recipe_id: (required)
         :type recipe_id: str
@@ -758,6 +786,7 @@ class AsyncRecipesApi:
     ) -> ApiResponse[StandardResponseRecipeCounterResult]:
         """Get recipe search count
 
+        Retrieve the total number of times a recipe has appeared in search results.
 
         :param recipe_id: (required)
         :type recipe_id: str
@@ -795,6 +824,7 @@ class AsyncRecipesApi:
     ) -> AsyncRESTResponse:
         """Get recipe search count
 
+        Retrieve the total number of times a recipe has appeared in search results.
 
         :param recipe_id: (required)
         :type recipe_id: str
@@ -852,7 +882,10 @@ class AsyncRecipesApi:
     @validate_call
     async def list_featured_recipes(
         self,
-        limit: Optional[Annotated[int, Field(le=50, strict=True, ge=1)]] = None,
+        limit: Annotated[
+            Optional[Annotated[int, Field(le=50, strict=True, ge=1)]],
+            Field(description="The maximum number of featured recipes to return. Range: [1, 50]."),
+        ] = None,
         _request_timeout: Union[
             None,
             Annotated[StrictFloat, Field(gt=0)],
@@ -861,8 +894,9 @@ class AsyncRecipesApi:
     ) -> StandardResponseListRecipeRead:
         """List featured recipes
 
+        Retrieve the list of editorially featured recipes from the public library.
 
-        :param limit:
+        :param limit: The maximum number of featured recipes to return. Range: [1, 50].
         :type limit: int
         :param _request_timeout: timeout setting for this request. If one
                                  number provided, it will be total request
@@ -889,7 +923,10 @@ class AsyncRecipesApi:
     @validate_call
     async def list_featured_recipes_with_http_info(
         self,
-        limit: Optional[Annotated[int, Field(le=50, strict=True, ge=1)]] = None,
+        limit: Annotated[
+            Optional[Annotated[int, Field(le=50, strict=True, ge=1)]],
+            Field(description="The maximum number of featured recipes to return. Range: [1, 50]."),
+        ] = None,
         _request_timeout: Union[
             None,
             Annotated[StrictFloat, Field(gt=0)],
@@ -898,8 +935,9 @@ class AsyncRecipesApi:
     ) -> ApiResponse[StandardResponseListRecipeRead]:
         """List featured recipes
 
+        Retrieve the list of editorially featured recipes from the public library.
 
-        :param limit:
+        :param limit: The maximum number of featured recipes to return. Range: [1, 50].
         :type limit: int
         :param _request_timeout: timeout setting for this request. If one
                                  number provided, it will be total request
@@ -926,7 +964,10 @@ class AsyncRecipesApi:
     @validate_call
     async def list_featured_recipes_without_preload_content(
         self,
-        limit: Optional[Annotated[int, Field(le=50, strict=True, ge=1)]] = None,
+        limit: Annotated[
+            Optional[Annotated[int, Field(le=50, strict=True, ge=1)]],
+            Field(description="The maximum number of featured recipes to return. Range: [1, 50]."),
+        ] = None,
         _request_timeout: Union[
             None,
             Annotated[StrictFloat, Field(gt=0)],
@@ -935,8 +976,9 @@ class AsyncRecipesApi:
     ) -> AsyncRESTResponse:
         """List featured recipes
 
+        Retrieve the list of editorially featured recipes from the public library.
 
-        :param limit:
+        :param limit: The maximum number of featured recipes to return. Range: [1, 50].
         :type limit: int
         :param _request_timeout: timeout setting for this request. If one
                                  number provided, it will be total request
@@ -1001,6 +1043,7 @@ class AsyncRecipesApi:
     ) -> StandardResponseListRecipeCategoryRead:
         """List recipe categories
 
+        Retrieve all available recipe categories from the public library.
 
         :param _request_timeout: timeout setting for this request. If one
                                  number provided, it will be total request
@@ -1032,6 +1075,7 @@ class AsyncRecipesApi:
     ) -> ApiResponse[StandardResponseListRecipeCategoryRead]:
         """List recipe categories
 
+        Retrieve all available recipe categories from the public library.
 
         :param _request_timeout: timeout setting for this request. If one
                                  number provided, it will be total request
@@ -1063,6 +1107,7 @@ class AsyncRecipesApi:
     ) -> AsyncRESTResponse:
         """List recipe categories
 
+        Retrieve all available recipe categories from the public library.
 
         :param _request_timeout: timeout setting for this request. If one
                                  number provided, it will be total request
@@ -1112,14 +1157,38 @@ class AsyncRecipesApi:
     @validate_call
     async def list_recipe_library(
         self,
-        offset: Optional[Annotated[int, Field(le=9223372036854775807, strict=True, ge=0)]] = None,
-        limit: Optional[Annotated[int, Field(le=100, strict=True, ge=1)]] = None,
-        category: Optional[StrictStr] = None,
-        tag: Optional[StrictStr] = None,
-        chain: Optional[StrictStr] = None,
-        featured: Optional[StrictBool] = None,
-        query: Optional[StrictStr] = None,
-        sort_by: Optional[RecipeLibrarySortBy] = None,
+        offset: Annotated[
+            Optional[Annotated[int, Field(le=9223372036854775807, strict=True, ge=0)]],
+            Field(description="Number of items to skip before returning results."),
+        ] = None,
+        limit: Annotated[
+            Optional[Annotated[int, Field(le=100, strict=True, ge=1)]],
+            Field(description="The maximum number of items to return. Range: [1, 100]."),
+        ] = None,
+        category: Annotated[
+            Optional[StrictStr], Field(description="Filter recipes by category slug.")
+        ] = None,
+        tag: Annotated[Optional[StrictStr], Field(description="Filter recipes by tag.")] = None,
+        chain: Annotated[
+            Optional[StrictStr],
+            Field(description="Filter recipes by blockchain (e.g. `ETH`, `SOL`)."),
+        ] = None,
+        featured: Annotated[
+            Optional[StrictBool],
+            Field(
+                description="When `true`, return only featured recipes. When `false`, exclude featured recipes. Omit to return all."
+            ),
+        ] = None,
+        query: Annotated[
+            Optional[StrictStr],
+            Field(description="Keyword search string to filter recipes by title or description."),
+        ] = None,
+        sort_by: Annotated[
+            Optional[RecipeLibrarySortBy],
+            Field(
+                description="Sort order for results. Possible values: `popular`, `newest`, `most_used`."
+            ),
+        ] = None,
         _request_timeout: Union[
             None,
             Annotated[StrictFloat, Field(gt=0)],
@@ -1128,22 +1197,23 @@ class AsyncRecipesApi:
     ) -> StandardResponseListRecipeRead:
         """List recipes in the public library
 
+        Retrieve published recipes from the public recipe library. Filter by category, tag, chain, or keyword. Use `offset` and `limit` for pagination.
 
-        :param offset:
+        :param offset: Number of items to skip before returning results.
         :type offset: int
-        :param limit:
+        :param limit: The maximum number of items to return. Range: [1, 100].
         :type limit: int
-        :param category:
+        :param category: Filter recipes by category slug.
         :type category: str
-        :param tag:
+        :param tag: Filter recipes by tag.
         :type tag: str
-        :param chain:
+        :param chain: Filter recipes by blockchain (e.g. `ETH`, `SOL`).
         :type chain: str
-        :param featured:
+        :param featured: When `true`, return only featured recipes. When `false`, exclude featured recipes. Omit to return all.
         :type featured: bool
-        :param query:
+        :param query: Keyword search string to filter recipes by title or description.
         :type query: str
-        :param sort_by:
+        :param sort_by: Sort order for results. Possible values: `popular`, `newest`, `most_used`.
         :type sort_by: RecipeLibrarySortBy
         :param _request_timeout: timeout setting for this request. If one
                                  number provided, it will be total request
@@ -1177,14 +1247,38 @@ class AsyncRecipesApi:
     @validate_call
     async def list_recipe_library_with_http_info(
         self,
-        offset: Optional[Annotated[int, Field(le=9223372036854775807, strict=True, ge=0)]] = None,
-        limit: Optional[Annotated[int, Field(le=100, strict=True, ge=1)]] = None,
-        category: Optional[StrictStr] = None,
-        tag: Optional[StrictStr] = None,
-        chain: Optional[StrictStr] = None,
-        featured: Optional[StrictBool] = None,
-        query: Optional[StrictStr] = None,
-        sort_by: Optional[RecipeLibrarySortBy] = None,
+        offset: Annotated[
+            Optional[Annotated[int, Field(le=9223372036854775807, strict=True, ge=0)]],
+            Field(description="Number of items to skip before returning results."),
+        ] = None,
+        limit: Annotated[
+            Optional[Annotated[int, Field(le=100, strict=True, ge=1)]],
+            Field(description="The maximum number of items to return. Range: [1, 100]."),
+        ] = None,
+        category: Annotated[
+            Optional[StrictStr], Field(description="Filter recipes by category slug.")
+        ] = None,
+        tag: Annotated[Optional[StrictStr], Field(description="Filter recipes by tag.")] = None,
+        chain: Annotated[
+            Optional[StrictStr],
+            Field(description="Filter recipes by blockchain (e.g. `ETH`, `SOL`)."),
+        ] = None,
+        featured: Annotated[
+            Optional[StrictBool],
+            Field(
+                description="When `true`, return only featured recipes. When `false`, exclude featured recipes. Omit to return all."
+            ),
+        ] = None,
+        query: Annotated[
+            Optional[StrictStr],
+            Field(description="Keyword search string to filter recipes by title or description."),
+        ] = None,
+        sort_by: Annotated[
+            Optional[RecipeLibrarySortBy],
+            Field(
+                description="Sort order for results. Possible values: `popular`, `newest`, `most_used`."
+            ),
+        ] = None,
         _request_timeout: Union[
             None,
             Annotated[StrictFloat, Field(gt=0)],
@@ -1193,22 +1287,23 @@ class AsyncRecipesApi:
     ) -> ApiResponse[StandardResponseListRecipeRead]:
         """List recipes in the public library
 
+        Retrieve published recipes from the public recipe library. Filter by category, tag, chain, or keyword. Use `offset` and `limit` for pagination.
 
-        :param offset:
+        :param offset: Number of items to skip before returning results.
         :type offset: int
-        :param limit:
+        :param limit: The maximum number of items to return. Range: [1, 100].
         :type limit: int
-        :param category:
+        :param category: Filter recipes by category slug.
         :type category: str
-        :param tag:
+        :param tag: Filter recipes by tag.
         :type tag: str
-        :param chain:
+        :param chain: Filter recipes by blockchain (e.g. `ETH`, `SOL`).
         :type chain: str
-        :param featured:
+        :param featured: When `true`, return only featured recipes. When `false`, exclude featured recipes. Omit to return all.
         :type featured: bool
-        :param query:
+        :param query: Keyword search string to filter recipes by title or description.
         :type query: str
-        :param sort_by:
+        :param sort_by: Sort order for results. Possible values: `popular`, `newest`, `most_used`.
         :type sort_by: RecipeLibrarySortBy
         :param _request_timeout: timeout setting for this request. If one
                                  number provided, it will be total request
@@ -1242,14 +1337,38 @@ class AsyncRecipesApi:
     @validate_call
     async def list_recipe_library_without_preload_content(
         self,
-        offset: Optional[Annotated[int, Field(le=9223372036854775807, strict=True, ge=0)]] = None,
-        limit: Optional[Annotated[int, Field(le=100, strict=True, ge=1)]] = None,
-        category: Optional[StrictStr] = None,
-        tag: Optional[StrictStr] = None,
-        chain: Optional[StrictStr] = None,
-        featured: Optional[StrictBool] = None,
-        query: Optional[StrictStr] = None,
-        sort_by: Optional[RecipeLibrarySortBy] = None,
+        offset: Annotated[
+            Optional[Annotated[int, Field(le=9223372036854775807, strict=True, ge=0)]],
+            Field(description="Number of items to skip before returning results."),
+        ] = None,
+        limit: Annotated[
+            Optional[Annotated[int, Field(le=100, strict=True, ge=1)]],
+            Field(description="The maximum number of items to return. Range: [1, 100]."),
+        ] = None,
+        category: Annotated[
+            Optional[StrictStr], Field(description="Filter recipes by category slug.")
+        ] = None,
+        tag: Annotated[Optional[StrictStr], Field(description="Filter recipes by tag.")] = None,
+        chain: Annotated[
+            Optional[StrictStr],
+            Field(description="Filter recipes by blockchain (e.g. `ETH`, `SOL`)."),
+        ] = None,
+        featured: Annotated[
+            Optional[StrictBool],
+            Field(
+                description="When `true`, return only featured recipes. When `false`, exclude featured recipes. Omit to return all."
+            ),
+        ] = None,
+        query: Annotated[
+            Optional[StrictStr],
+            Field(description="Keyword search string to filter recipes by title or description."),
+        ] = None,
+        sort_by: Annotated[
+            Optional[RecipeLibrarySortBy],
+            Field(
+                description="Sort order for results. Possible values: `popular`, `newest`, `most_used`."
+            ),
+        ] = None,
         _request_timeout: Union[
             None,
             Annotated[StrictFloat, Field(gt=0)],
@@ -1258,22 +1377,23 @@ class AsyncRecipesApi:
     ) -> AsyncRESTResponse:
         """List recipes in the public library
 
+        Retrieve published recipes from the public recipe library. Filter by category, tag, chain, or keyword. Use `offset` and `limit` for pagination.
 
-        :param offset:
+        :param offset: Number of items to skip before returning results.
         :type offset: int
-        :param limit:
+        :param limit: The maximum number of items to return. Range: [1, 100].
         :type limit: int
-        :param category:
+        :param category: Filter recipes by category slug.
         :type category: str
-        :param tag:
+        :param tag: Filter recipes by tag.
         :type tag: str
-        :param chain:
+        :param chain: Filter recipes by blockchain (e.g. `ETH`, `SOL`).
         :type chain: str
-        :param featured:
+        :param featured: When `true`, return only featured recipes. When `false`, exclude featured recipes. Omit to return all.
         :type featured: bool
-        :param query:
+        :param query: Keyword search string to filter recipes by title or description.
         :type query: str
-        :param sort_by:
+        :param sort_by: Sort order for results. Possible values: `popular`, `newest`, `most_used`.
         :type sort_by: RecipeLibrarySortBy
         :param _request_timeout: timeout setting for this request. If one
                                  number provided, it will be total request
@@ -1376,6 +1496,7 @@ class AsyncRecipesApi:
     ) -> StandardResponseRecipeDetailRead:
         """Review submitted recipe
 
+        Approve or reject a community-submitted recipe. Requires service credential authentication. Approved recipes are published to the library and synced to the knowledge hub.
 
         :param recipe_id: (required)
         :type recipe_id: str
@@ -1421,6 +1542,7 @@ class AsyncRecipesApi:
     ) -> ApiResponse[StandardResponseRecipeDetailRead]:
         """Review submitted recipe
 
+        Approve or reject a community-submitted recipe. Requires service credential authentication. Approved recipes are published to the library and synced to the knowledge hub.
 
         :param recipe_id: (required)
         :type recipe_id: str
@@ -1466,6 +1588,7 @@ class AsyncRecipesApi:
     ) -> AsyncRESTResponse:
         """Review submitted recipe
 
+        Approve or reject a community-submitted recipe. Requires service credential authentication. Approved recipes are published to the library and synced to the knowledge hub.
 
         :param recipe_id: (required)
         :type recipe_id: str
@@ -1545,6 +1668,7 @@ class AsyncRecipesApi:
     ) -> StandardResponseRecipeSearchResponse:
         """Search recipes
 
+        Search the recipe library using natural language. Set `source` to `knowledge` (default) to query the knowledge hub, or `graph` to query the LightRAG graph index. Optionally filter results by `chain` or `token`.
 
         :param search_recipes_request: (required)
         :type search_recipes_request: SearchRecipesRequest
@@ -1586,6 +1710,7 @@ class AsyncRecipesApi:
     ) -> ApiResponse[StandardResponseRecipeSearchResponse]:
         """Search recipes
 
+        Search the recipe library using natural language. Set `source` to `knowledge` (default) to query the knowledge hub, or `graph` to query the LightRAG graph index. Optionally filter results by `chain` or `token`.
 
         :param search_recipes_request: (required)
         :type search_recipes_request: SearchRecipesRequest
@@ -1627,6 +1752,7 @@ class AsyncRecipesApi:
     ) -> AsyncRESTResponse:
         """Search recipes
 
+        Search the recipe library using natural language. Set `source` to `knowledge` (default) to query the knowledge hub, or `graph` to query the LightRAG graph index. Optionally filter results by `chain` or `token`.
 
         :param search_recipes_request: (required)
         :type search_recipes_request: SearchRecipesRequest
@@ -1700,6 +1826,7 @@ class AsyncRecipesApi:
     ) -> StandardResponseRecipeCreateResult:
         """Submit community recipe
 
+        Submit a community-contributed recipe for review. The recipe enters a pending state until reviewed and approved by an admin.
 
         :param recipe_submission_create: (required)
         :type recipe_submission_create: RecipeSubmissionCreate
@@ -1742,6 +1869,7 @@ class AsyncRecipesApi:
     ) -> ApiResponse[StandardResponseRecipeCreateResult]:
         """Submit community recipe
 
+        Submit a community-contributed recipe for review. The recipe enters a pending state until reviewed and approved by an admin.
 
         :param recipe_submission_create: (required)
         :type recipe_submission_create: RecipeSubmissionCreate
@@ -1784,6 +1912,7 @@ class AsyncRecipesApi:
     ) -> AsyncRESTResponse:
         """Submit community recipe
 
+        Submit a community-contributed recipe for review. The recipe enters a pending state until reviewed and approved by an admin.
 
         :param recipe_submission_create: (required)
         :type recipe_submission_create: RecipeSubmissionCreate
@@ -1857,6 +1986,7 @@ class AsyncRecipesApi:
     ) -> StandardResponseRecipeCounterResult:
         """Increment recipe share count
 
+        Increment the share counter for a recipe. Call this endpoint when a user shares the recipe externally.
 
         :param recipe_id: (required)
         :type recipe_id: str
@@ -1894,6 +2024,7 @@ class AsyncRecipesApi:
     ) -> ApiResponse[StandardResponseRecipeCounterResult]:
         """Increment recipe share count
 
+        Increment the share counter for a recipe. Call this endpoint when a user shares the recipe externally.
 
         :param recipe_id: (required)
         :type recipe_id: str
@@ -1931,6 +2062,7 @@ class AsyncRecipesApi:
     ) -> AsyncRESTResponse:
         """Increment recipe share count
 
+        Increment the share counter for a recipe. Call this endpoint when a user shares the recipe externally.
 
         :param recipe_id: (required)
         :type recipe_id: str
@@ -1998,6 +2130,7 @@ class AsyncRecipesApi:
     ) -> StandardResponseRecipeCounterResult:
         """Increment recipe use count
 
+        Increment the use counter for a recipe. Call this endpoint when an authenticated user activates or runs a recipe.
 
         :param recipe_id: (required)
         :type recipe_id: str
@@ -2039,6 +2172,7 @@ class AsyncRecipesApi:
     ) -> ApiResponse[StandardResponseRecipeCounterResult]:
         """Increment recipe use count
 
+        Increment the use counter for a recipe. Call this endpoint when an authenticated user activates or runs a recipe.
 
         :param recipe_id: (required)
         :type recipe_id: str
@@ -2080,6 +2214,7 @@ class AsyncRecipesApi:
     ) -> AsyncRESTResponse:
         """Increment recipe use count
 
+        Increment the use counter for a recipe. Call this endpoint when an authenticated user activates or runs a recipe.
 
         :param recipe_id: (required)
         :type recipe_id: str
@@ -2154,6 +2289,7 @@ class AsyncRecipesApi:
     ) -> StandardResponseRecipeDetailRead:
         """Update recipe
 
+        Update an existing recipe in the library. Requires service credential authentication. Only provided fields are updated. The recipe is re-synced to the knowledge hub after the update.
 
         :param recipe_id: (required)
         :type recipe_id: str
@@ -2199,6 +2335,7 @@ class AsyncRecipesApi:
     ) -> ApiResponse[StandardResponseRecipeDetailRead]:
         """Update recipe
 
+        Update an existing recipe in the library. Requires service credential authentication. Only provided fields are updated. The recipe is re-synced to the knowledge hub after the update.
 
         :param recipe_id: (required)
         :type recipe_id: str
@@ -2244,6 +2381,7 @@ class AsyncRecipesApi:
     ) -> AsyncRESTResponse:
         """Update recipe
 
+        Update an existing recipe in the library. Requires service credential authentication. Only provided fields are updated. The recipe is re-synced to the knowledge hub after the update.
 
         :param recipe_id: (required)
         :type recipe_id: str

@@ -17,7 +17,7 @@ from typing_extensions import Self
 
 class PolicyType(str, Enum):
     """
-    Supported policy categories.
+    Supported policy categories.  Subset of ``caw_types.transaction.UserTransactionOperationType`` — values are shared so UT operation_type strings can be compared directly against PolicyType. Deposit is excluded because deposits are not policy-gated.
     """
 
     """

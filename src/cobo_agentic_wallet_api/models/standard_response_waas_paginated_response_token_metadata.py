@@ -32,8 +32,9 @@ class StandardResponseWaasPaginatedResponseTokenMetadata(BaseModel):
     success: Optional[StrictBool] = True
     result: WaasPaginatedResponseTokenMetadata
     suggestion: Optional[StrictStr] = ""
+    message: Optional[StrictStr] = ""
     meta: Optional[PaginationMeta] = None
-    __properties: ClassVar[List[str]] = ["success", "result", "suggestion", "meta"]
+    __properties: ClassVar[List[str]] = ["success", "result", "suggestion", "message", "meta"]
 
     model_config = ConfigDict(
         populate_by_name=True,
@@ -96,6 +97,7 @@ class StandardResponseWaasPaginatedResponseTokenMetadata(BaseModel):
                 if obj.get("result") is not None
                 else None,
                 "suggestion": obj.get("suggestion") if obj.get("suggestion") is not None else "",
+                "message": obj.get("message") if obj.get("message") is not None else "",
                 "meta": PaginationMeta.from_dict(obj["meta"])
                 if obj.get("meta") is not None
                 else None,

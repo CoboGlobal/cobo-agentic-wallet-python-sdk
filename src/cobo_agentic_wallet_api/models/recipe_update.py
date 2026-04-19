@@ -35,7 +35,7 @@ class RecipeUpdate(BaseModel):
     tags: Optional[List[StrictStr]] = None
     category: Optional[List[StrictStr]] = None
     example_prompts: Optional[List[StrictStr]] = None
-    icon: Optional[Annotated[str, Field(strict=True, max_length=8)]] = None
+    icon: Optional[Annotated[str, Field(strict=True, max_length=512)]] = None
     author_name: Optional[Annotated[str, Field(strict=True, max_length=128)]] = None
     featured: Optional[StrictBool] = None
     verified: Optional[StrictBool] = None

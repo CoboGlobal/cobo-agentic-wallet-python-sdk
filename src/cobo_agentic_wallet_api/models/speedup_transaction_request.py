@@ -17,7 +17,7 @@ import json
 from pydantic import BaseModel, ConfigDict, Field
 from typing import Any, ClassVar, Dict, List, Optional
 from typing_extensions import Annotated
-from cobo_agentic_wallet_api.models.fee import Fee
+from cobo_agentic_wallet_api.models.fee_request import FeeRequest
 from typing import Set
 from typing_extensions import Self
 
@@ -31,7 +31,7 @@ class SpeedupTransactionRequest(BaseModel):
         default=None,
         description="A client-supplied identifier for the replacement (speed-up) transaction, used for idempotency.",
     )
-    fee: Fee = Field(
+    fee: FeeRequest = Field(
         description="Custom fee parameters for the replacement (speed-up) transaction. Must specify a higher fee than the original transaction to satisfy RBF requirements."
     )
     cobo_transaction_id: Optional[Annotated[str, Field(strict=True, max_length=255)]] = Field(
@@ -94,7 +94,7 @@ class SpeedupTransactionRequest(BaseModel):
         _obj = cls.model_validate(
             {
                 "request_id": obj.get("request_id"),
-                "fee": Fee.from_dict(obj["fee"]) if obj.get("fee") is not None else None,
+                "fee": FeeRequest.from_dict(obj["fee"]) if obj.get("fee") is not None else None,
                 "cobo_transaction_id": obj.get("cobo_transaction_id"),
             }
         )

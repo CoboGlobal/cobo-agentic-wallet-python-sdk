@@ -35,7 +35,9 @@ class RecipeCreate(BaseModel):
     tags: Optional[List[StrictStr]] = None
     category: Optional[List[StrictStr]] = None
     example_prompts: Optional[List[StrictStr]] = None
-    icon: Optional[Annotated[str, Field(strict=True, max_length=8)]] = "📋"
+    icon: Optional[Annotated[str, Field(strict=True, max_length=512)]] = Field(
+        default="https://d.cobo.com/public/logos/logo_placeholder.png", description="Icon URL"
+    )
     author_name: Optional[Annotated[str, Field(strict=True, max_length=128)]] = None
     sdk_example_path: Optional[Annotated[str, Field(strict=True, max_length=255)]] = None
     locale: Optional[Annotated[str, Field(strict=True, max_length=8)]] = "en"
@@ -122,7 +124,9 @@ class RecipeCreate(BaseModel):
                 "tags": obj.get("tags"),
                 "category": obj.get("category"),
                 "example_prompts": obj.get("example_prompts"),
-                "icon": obj.get("icon") if obj.get("icon") is not None else "📋",
+                "icon": obj.get("icon")
+                if obj.get("icon") is not None
+                else "https://d.cobo.com/public/logos/logo_placeholder.png",
                 "author_name": obj.get("author_name"),
                 "sdk_example_path": obj.get("sdk_example_path"),
                 "locale": obj.get("locale") if obj.get("locale") is not None else "en",

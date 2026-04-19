@@ -34,7 +34,7 @@ class WalletCreate(BaseModel):
     )
     group_type: Optional[VaultGroupType] = Field(
         default=None,
-        description="The MPC key share scheme. `AGENT` (2-of-2): agent TSS node + Cobo, suitable for automated wallets. `HUMAN` (2-of-3): mobile TSS node + Cobo + backup, suitable for high-security human-controlled wallets. Defaults to `AGENT`.",
+        description="The MPC key share scheme. `AGENT` (2-of-2): agent TSS node + Cobo, suitable for automated wallets. `HUMAN` (2-of-2): mobile TSS node + Cobo, suitable for human-controlled wallets. Defaults to `AGENT`.",
     )
     main_node_id: Optional[StrictStr] = Field(
         default=None,

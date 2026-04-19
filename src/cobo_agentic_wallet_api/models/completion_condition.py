@@ -14,7 +14,7 @@ import pprint
 import re  # noqa: F401
 import json
 
-from pydantic import BaseModel, ConfigDict, StrictStr
+from pydantic import BaseModel, ConfigDict, Field, StrictStr
 from typing import Any, ClassVar, Dict, List, Optional
 from cobo_agentic_wallet_api.models.completion_condition_type import CompletionConditionType
 from typing import Set
@@ -26,8 +26,13 @@ class CompletionCondition(BaseModel):
     A single completion condition within PactSpec.
     """  # noqa: E501
 
-    type: CompletionConditionType
-    threshold: Optional[StrictStr] = None
+    type: CompletionConditionType = Field(
+        description="Condition type. Possible values: `time_elapsed` (seconds since activation), `tx_count` (transaction count), `amount_spent` (token amount), `amount_spent_usd` (USD value), `manual` (no automatic trigger)."
+    )
+    threshold: Optional[StrictStr] = Field(
+        default=None,
+        description="Threshold value that triggers completion. Required for all types except `manual`. Format varies by type: integer string for `tx_count`, decimal string for amounts, integer seconds for `time_elapsed`.",
+    )
     __properties: ClassVar[List[str]] = ["type", "threshold"]
 
     model_config = ConfigDict(

@@ -15,35 +15,51 @@ import re  # noqa: F401
 import json
 
 from datetime import datetime
-from pydantic import BaseModel, ConfigDict, StrictBool, StrictInt, StrictStr
-from typing import Any, ClassVar, Dict, List
+from pydantic import BaseModel, ConfigDict, Field, StrictBool, StrictInt, StrictStr
+from typing import Any, ClassVar, Dict, List, Optional
 from cobo_agentic_wallet_api.models.recipe_status import RecipeStatus
-from typing import Optional, Set
+from typing import Set
 from typing_extensions import Self
 
 
 class RecipeRead(BaseModel):
     """
-    RecipeRead
+    Recipe library entry returned from the API.
     """  # noqa: E501
 
     id: StrictStr
     slug: StrictStr
     title: StrictStr
     description: StrictStr
-    example_prompts: List[StrictStr]
-    chains: List[StrictStr]
-    tags: List[StrictStr]
-    category: List[StrictStr]
-    icon: StrictStr
+    example_prompts: List[StrictStr] = Field(
+        description="Sample prompts that demonstrate how to invoke this recipe."
+    )
+    chains: List[StrictStr] = Field(
+        description="Blockchain identifiers this recipe applies to (for example, `ethereum`, `solana`)."
+    )
+    tags: List[StrictStr] = Field(description="Descriptive tags for filtering and discovery.")
+    category: List[StrictStr] = Field(
+        description="Category labels used to group recipes in the library."
+    )
+    icon: Optional[str] = None
     author_name: StrictStr
-    status: RecipeStatus
-    featured: StrictBool
-    verified: StrictBool
-    view_count: StrictInt
-    use_count: StrictInt
-    share_count: StrictInt
-    search_count: StrictInt
+    status: RecipeStatus = Field(
+        description="Publication status of the recipe. Possible values: `draft`, `pending_review`, `published`, `rejected`."
+    )
+    featured: StrictBool = Field(
+        description="When `true`, the recipe is highlighted in the library. When `false`, it appears in the standard listing."
+    )
+    verified: StrictBool = Field(
+        description="When `true`, the recipe has been reviewed and verified by the platform. When `false`, it is community-submitted."
+    )
+    view_count: StrictInt = Field(description="Total number of times this recipe has been viewed.")
+    use_count: StrictInt = Field(
+        description="Total number of times this recipe has been used to start a task."
+    )
+    share_count: StrictInt = Field(description="Total number of times this recipe has been shared.")
+    search_count: StrictInt = Field(
+        description="Total number of times this recipe has appeared in search results."
+    )
     locale: StrictStr
     created_at: datetime
     updated_at: datetime
@@ -107,6 +123,11 @@ class RecipeRead(BaseModel):
             exclude=excluded_fields,
             exclude_none=True,
         )
+        # set to None if icon (nullable) is None
+        # and model_fields_set contains the field
+        if self.icon is None and "icon" in self.model_fields_set:
+            _dict["icon"] = None
+
         return _dict
 
     @classmethod

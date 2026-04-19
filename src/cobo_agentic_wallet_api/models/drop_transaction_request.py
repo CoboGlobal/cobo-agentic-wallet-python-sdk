@@ -17,7 +17,7 @@ import json
 from pydantic import BaseModel, ConfigDict, Field
 from typing import Any, ClassVar, Dict, List, Optional
 from typing_extensions import Annotated
-from cobo_agentic_wallet_api.models.fee import Fee
+from cobo_agentic_wallet_api.models.fee_request import FeeRequest
 from typing import Set
 from typing_extensions import Self
 
@@ -30,10 +30,7 @@ class DropTransactionRequest(BaseModel):
     request_id: Optional[Annotated[str, Field(strict=True, max_length=255)]] = Field(
         default=None, description="A client-supplied identifier for the replacement transaction."
     )
-    fee: Optional[Fee] = Field(
-        default=None,
-        description="Custom fee parameters for the replacement transaction. Required when the transaction is broadcasting (RBF drop).",
-    )
+    fee: Optional[FeeRequest] = None
     cobo_transaction_id: Optional[Annotated[str, Field(strict=True, max_length=255)]] = Field(
         default=None,
         description="The provider-side transaction ID to cancel. The transaction ID can be retrieved from the transfer or contract call response.",
@@ -80,6 +77,11 @@ class DropTransactionRequest(BaseModel):
         # override the default output from pydantic by calling `to_dict()` of fee
         if self.fee:
             _dict["fee"] = self.fee.to_dict()
+        # set to None if fee (nullable) is None
+        # and model_fields_set contains the field
+        if self.fee is None and "fee" in self.model_fields_set:
+            _dict["fee"] = None
+
         return _dict
 
     @classmethod
@@ -94,7 +96,7 @@ class DropTransactionRequest(BaseModel):
         _obj = cls.model_validate(
             {
                 "request_id": obj.get("request_id"),
-                "fee": Fee.from_dict(obj["fee"]) if obj.get("fee") is not None else None,
+                "fee": FeeRequest.from_dict(obj["fee"]) if obj.get("fee") is not None else None,
                 "cobo_transaction_id": obj.get("cobo_transaction_id"),
             }
         )

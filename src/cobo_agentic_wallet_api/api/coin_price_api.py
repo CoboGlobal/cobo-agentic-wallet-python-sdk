@@ -45,9 +45,7 @@ class CoinPriceApi:
         ],
         currency: Annotated[
             Optional[StrictStr],
-            Field(
-                description="Currency for returned prices. `USD` returns US Dollar prices; `CNY` returns Chinese Yuan prices. Defaults to `USD`."
-            ),
+            Field(description="Currency for returned prices. Currently only `USD` is supported."),
         ] = None,
         x_api_key: Optional[StrictStr] = None,
         _request_timeout: Union[
@@ -58,11 +56,11 @@ class CoinPriceApi:
     ) -> StandardResponseDictStrStr:
         """Get coin prices
 
-        This operation retrieves the latest prices for the specified asset coins. Prices are sourced from a background-synced table and are eventually consistent. USDT is always priced at `1`. The response is a map of coin ID to price string.
+        This operation retrieves the latest prices for the specified asset coins. Prices are sourced from a background-synced table and are eventually consistent. USDT is always priced at `1` USD. The response is a map of coin ID to price string.
 
         :param asset_coins: Comma-separated asset coin IDs, e.g. ETH,BTC (required)
         :type asset_coins: str
-        :param currency: Currency for returned prices. `USD` returns US Dollar prices; `CNY` returns Chinese Yuan prices. Defaults to `USD`.
+        :param currency: Currency for returned prices. Currently only `USD` is supported.
         :type currency: str
         :param x_api_key:
         :type x_api_key: str
@@ -104,9 +102,7 @@ class CoinPriceApi:
         ],
         currency: Annotated[
             Optional[StrictStr],
-            Field(
-                description="Currency for returned prices. `USD` returns US Dollar prices; `CNY` returns Chinese Yuan prices. Defaults to `USD`."
-            ),
+            Field(description="Currency for returned prices. Currently only `USD` is supported."),
         ] = None,
         x_api_key: Optional[StrictStr] = None,
         _request_timeout: Union[
@@ -117,11 +113,11 @@ class CoinPriceApi:
     ) -> ApiResponse[StandardResponseDictStrStr]:
         """Get coin prices
 
-        This operation retrieves the latest prices for the specified asset coins. Prices are sourced from a background-synced table and are eventually consistent. USDT is always priced at `1`. The response is a map of coin ID to price string.
+        This operation retrieves the latest prices for the specified asset coins. Prices are sourced from a background-synced table and are eventually consistent. USDT is always priced at `1` USD. The response is a map of coin ID to price string.
 
         :param asset_coins: Comma-separated asset coin IDs, e.g. ETH,BTC (required)
         :type asset_coins: str
-        :param currency: Currency for returned prices. `USD` returns US Dollar prices; `CNY` returns Chinese Yuan prices. Defaults to `USD`.
+        :param currency: Currency for returned prices. Currently only `USD` is supported.
         :type currency: str
         :param x_api_key:
         :type x_api_key: str
@@ -163,9 +159,7 @@ class CoinPriceApi:
         ],
         currency: Annotated[
             Optional[StrictStr],
-            Field(
-                description="Currency for returned prices. `USD` returns US Dollar prices; `CNY` returns Chinese Yuan prices. Defaults to `USD`."
-            ),
+            Field(description="Currency for returned prices. Currently only `USD` is supported."),
         ] = None,
         x_api_key: Optional[StrictStr] = None,
         _request_timeout: Union[
@@ -176,11 +170,11 @@ class CoinPriceApi:
     ) -> RESTResponseType:
         """Get coin prices
 
-        This operation retrieves the latest prices for the specified asset coins. Prices are sourced from a background-synced table and are eventually consistent. USDT is always priced at `1`. The response is a map of coin ID to price string.
+        This operation retrieves the latest prices for the specified asset coins. Prices are sourced from a background-synced table and are eventually consistent. USDT is always priced at `1` USD. The response is a map of coin ID to price string.
 
         :param asset_coins: Comma-separated asset coin IDs, e.g. ETH,BTC (required)
         :type asset_coins: str
-        :param currency: Currency for returned prices. `USD` returns US Dollar prices; `CNY` returns Chinese Yuan prices. Defaults to `USD`.
+        :param currency: Currency for returned prices. Currently only `USD` is supported.
         :type currency: str
         :param x_api_key:
         :type x_api_key: str

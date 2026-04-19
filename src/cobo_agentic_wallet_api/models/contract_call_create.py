@@ -17,7 +17,7 @@ import json
 from pydantic import BaseModel, ConfigDict, Field, StrictBool
 from typing import Any, ClassVar, Dict, List, Optional
 from typing_extensions import Annotated
-from cobo_agentic_wallet_api.models.fee import Fee
+from cobo_agentic_wallet_api.models.fee_request import FeeRequest
 from cobo_agentic_wallet_api.models.sol_address_lookup_table_account import (
     SolAddressLookupTableAccount,
 )
@@ -56,13 +56,10 @@ class ContractCallCreate(BaseModel):
         default=None,
         description="A client-supplied identifier for idempotency. If a contract call with the same `request_id` already exists for the same principal, the existing record is returned.",
     )
-    fee: Optional[Fee] = Field(
-        default=None,
-        description="Optional custom fee parameters. If omitted, the network default is used.",
-    )
+    fee: Optional[FeeRequest] = None
     src_addr: Optional[Annotated[str, Field(strict=True, max_length=255)]] = Field(
         default=None,
-        description="The source address to call from. If omitted, the wallet's most recently created address for this chain is used.",
+        description="The source address to call from. If omitted, the server auto-selects the wallet address on this chain with the highest available native token balance for this chain (explicit `src_addr` always takes precedence).",
     )
     sponsor: Optional[StrictBool] = Field(
         default=None,
@@ -145,6 +142,11 @@ class ContractCallCreate(BaseModel):
         # override the default output from pydantic by calling `to_dict()` of fee
         if self.fee:
             _dict["fee"] = self.fee.to_dict()
+        # set to None if fee (nullable) is None
+        # and model_fields_set contains the field
+        if self.fee is None and "fee" in self.model_fields_set:
+            _dict["fee"] = None
+
         return _dict
 
     @classmethod
@@ -172,7 +174,7 @@ class ContractCallCreate(BaseModel):
                 if obj.get("address_lookup_table_accounts") is not None
                 else None,
                 "request_id": obj.get("request_id"),
-                "fee": Fee.from_dict(obj["fee"]) if obj.get("fee") is not None else None,
+                "fee": FeeRequest.from_dict(obj["fee"]) if obj.get("fee") is not None else None,
                 "src_addr": obj.get("src_addr"),
                 "sponsor": obj.get("sponsor"),
                 "gas_provider": obj.get("gas_provider"),

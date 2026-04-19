@@ -46,9 +46,9 @@ class SuggestionsApi:
             Tuple[Annotated[StrictFloat, Field(gt=0)], Annotated[StrictFloat, Field(gt=0)]],
         ] = None,
     ) -> StandardResponseSuggestionResponse:
-        """Get Suggestion
+        """Get suggestion by key
 
-        Return the suggestion message for a given key.  Looks up Redis hash ``cli_suggestions`` field ``{key}`` first; falls back to the built-in default if Redis is unavailable or the field is not set. Returns empty string if the key has no built-in default. Returns 422 automatically for unrecognised keys (enforced by SuggestionKey enum).
+        Retrieve the suggestion message for a given key. Checks the Redis hash `cli_suggestions` field `{key}` first; falls back to the built-in default if Redis is unavailable or the field is not set. Returns an empty string if the key has no built-in default. Returns HTTP 422 automatically for unrecognized keys (enforced by the `SuggestionKey` enum).
 
         :param key: (required)
         :type key: SuggestionKey
@@ -89,9 +89,9 @@ class SuggestionsApi:
             Tuple[Annotated[StrictFloat, Field(gt=0)], Annotated[StrictFloat, Field(gt=0)]],
         ] = None,
     ) -> ApiResponse[StandardResponseSuggestionResponse]:
-        """Get Suggestion
+        """Get suggestion by key
 
-        Return the suggestion message for a given key.  Looks up Redis hash ``cli_suggestions`` field ``{key}`` first; falls back to the built-in default if Redis is unavailable or the field is not set. Returns empty string if the key has no built-in default. Returns 422 automatically for unrecognised keys (enforced by SuggestionKey enum).
+        Retrieve the suggestion message for a given key. Checks the Redis hash `cli_suggestions` field `{key}` first; falls back to the built-in default if Redis is unavailable or the field is not set. Returns an empty string if the key has no built-in default. Returns HTTP 422 automatically for unrecognized keys (enforced by the `SuggestionKey` enum).
 
         :param key: (required)
         :type key: SuggestionKey
@@ -132,9 +132,9 @@ class SuggestionsApi:
             Tuple[Annotated[StrictFloat, Field(gt=0)], Annotated[StrictFloat, Field(gt=0)]],
         ] = None,
     ) -> RESTResponseType:
-        """Get Suggestion
+        """Get suggestion by key
 
-        Return the suggestion message for a given key.  Looks up Redis hash ``cli_suggestions`` field ``{key}`` first; falls back to the built-in default if Redis is unavailable or the field is not set. Returns empty string if the key has no built-in default. Returns 422 automatically for unrecognised keys (enforced by SuggestionKey enum).
+        Retrieve the suggestion message for a given key. Checks the Redis hash `cli_suggestions` field `{key}` first; falls back to the built-in default if Redis is unavailable or the field is not set. Returns an empty string if the key has no built-in default. Returns HTTP 422 automatically for unrecognized keys (enforced by the `SuggestionKey` enum).
 
         :param key: (required)
         :type key: SuggestionKey
