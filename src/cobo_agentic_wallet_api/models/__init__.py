@@ -42,8 +42,6 @@ if TYPE_CHECKING:
     from .estimate_transfer_fee_request import EstimateTransferFeeRequest
     from .eth_call_request import EthCallRequest
     from .eth_call_result import EthCallResult
-    from .execute_script_request import ExecuteScriptRequest
-    from .execute_script_response import ExecuteScriptResponse
     from .external_transaction_operation_type import ExternalTransactionOperationType
     from .external_transaction_read import ExternalTransactionRead
     from .external_transaction_stage import ExternalTransactionStage
@@ -123,7 +121,6 @@ if TYPE_CHECKING:
     from .recipe_update import RecipeUpdate
     from .reject_pending_operation_request import RejectPendingOperationRequest
     from .sol_fee_request import SOLFeeRequest
-    from .script_brief import ScriptBrief
     from .search_recipes_request import SearchRecipesRequest
     from .session_record import SessionRecord
     from .session_span import SessionSpan
@@ -146,7 +143,6 @@ if TYPE_CHECKING:
         StandardResponseEstimateTransferFeeRead,
     )
     from .standard_response_eth_call_result import StandardResponseEthCallResult
-    from .standard_response_execute_script_response import StandardResponseExecuteScriptResponse
     from .standard_response_faucet_deposit_result import StandardResponseFaucetDepositResult
     from .standard_response_list_api_key_public_read import StandardResponseListApiKeyPublicRead
     from .standard_response_list_balance_read import StandardResponseListBalanceRead
@@ -156,7 +152,6 @@ if TYPE_CHECKING:
     from .standard_response_list_recent_address_read import StandardResponseListRecentAddressRead
     from .standard_response_list_recipe_category_read import StandardResponseListRecipeCategoryRead
     from .standard_response_list_recipe_read import StandardResponseListRecipeRead
-    from .standard_response_list_script_brief import StandardResponseListScriptBrief
     from .standard_response_list_token_candidate import StandardResponseListTokenCandidate
     from .standard_response_list_user_transaction_read import (
         StandardResponseListUserTransactionRead,
@@ -296,8 +291,6 @@ _MODEL_CLASSES = {
     "EstimateTransferFeeRequest": "estimate_transfer_fee_request",
     "EthCallRequest": "eth_call_request",
     "EthCallResult": "eth_call_result",
-    "ExecuteScriptRequest": "execute_script_request",
-    "ExecuteScriptResponse": "execute_script_response",
     "ExternalTransactionOperationType": "external_transaction_operation_type",
     "ExternalTransactionRead": "external_transaction_read",
     "ExternalTransactionStage": "external_transaction_stage",
@@ -377,7 +370,6 @@ _MODEL_CLASSES = {
     "RecipeUpdate": "recipe_update",
     "RejectPendingOperationRequest": "reject_pending_operation_request",
     "SOLFeeRequest": "sol_fee_request",
-    "ScriptBrief": "script_brief",
     "SearchRecipesRequest": "search_recipes_request",
     "SessionRecord": "session_record",
     "SessionSpan": "session_span",
@@ -394,7 +386,6 @@ _MODEL_CLASSES = {
     "StandardResponseDictStrStr": "standard_response_dict_str_str",
     "StandardResponseEstimateTransferFeeRead": "standard_response_estimate_transfer_fee_read",
     "StandardResponseEthCallResult": "standard_response_eth_call_result",
-    "StandardResponseExecuteScriptResponse": "standard_response_execute_script_response",
     "StandardResponseFaucetDepositResult": "standard_response_faucet_deposit_result",
     "StandardResponseListApiKeyPublicRead": "standard_response_list_api_key_public_read",
     "StandardResponseListBalanceRead": "standard_response_list_balance_read",
@@ -404,7 +395,6 @@ _MODEL_CLASSES = {
     "StandardResponseListRecentAddressRead": "standard_response_list_recent_address_read",
     "StandardResponseListRecipeCategoryRead": "standard_response_list_recipe_category_read",
     "StandardResponseListRecipeRead": "standard_response_list_recipe_read",
-    "StandardResponseListScriptBrief": "standard_response_list_script_brief",
     "StandardResponseListTokenCandidate": "standard_response_list_token_candidate",
     "StandardResponseListUserTransactionRead": "standard_response_list_user_transaction_read",
     "StandardResponseListWalletAddressRead": "standard_response_list_wallet_address_read",

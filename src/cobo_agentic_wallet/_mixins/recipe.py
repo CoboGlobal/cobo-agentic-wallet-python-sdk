@@ -73,11 +73,9 @@ class RecipeMixin:
         response = await self._recipes_api.get_recipe_by_slug(slug, track_view)
         return self._extract_result(response)
 
-    async def get_recipe_document(
-        self: "BaseClient", document_id: str, source: Any | None = None
-    ) -> Any:
+    async def get_recipe_document(self: "BaseClient", document_id: str) -> Any:
         """Get full recipe document by ID"""
-        response = await self._recipes_api.get_recipe_document(document_id, source)
+        response = await self._recipes_api.get_recipe_document(document_id)
         return self._extract_result(response)
 
     async def get_recipe_search_count(self: "BaseClient", recipe_id: str) -> Any:
@@ -124,12 +122,6 @@ class RecipeMixin:
         self: "BaseClient",
         query: str,
         source: Any | None = None,
-        mode: str | None = None,
-        top_k: int | None = None,
-        chunk_top_k: int | None = None,
-        max_entity_tokens: int | None = None,
-        max_relation_tokens: int | None = None,
-        max_total_tokens: int | None = None,
         limit: int | None = 1,
         chain: str | None = None,
         token: str | None = None,
@@ -140,12 +132,6 @@ class RecipeMixin:
         search_recipes_request = SearchRecipesRequest(
             query=query,
             source=source,
-            mode=mode,
-            top_k=top_k,
-            chunk_top_k=chunk_top_k,
-            max_entity_tokens=max_entity_tokens,
-            max_relation_tokens=max_relation_tokens,
-            max_total_tokens=max_total_tokens,
             limit=limit,
             chain=chain,
             token=token,

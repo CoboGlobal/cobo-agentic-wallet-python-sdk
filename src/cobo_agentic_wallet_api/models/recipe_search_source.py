@@ -23,7 +23,6 @@ class RecipeSearchSource(str, Enum):
     """
     allowed enum values
     """
-    GRAPH = "graph"
     KNOWLEDGE = "knowledge"
 
     _UNKNOWN_FALLBACK = None

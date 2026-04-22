@@ -24,32 +24,12 @@ from typing_extensions import Self
 
 class SearchRecipesRequest(BaseModel):
     """
-    Request payload for recipe search across graph-based or knowledge-base sources.
+    Request payload for recipe knowledge-base search.
     """  # noqa: E501
 
     query: StrictStr
     source: Optional[RecipeSearchSource] = Field(
-        default=None,
-        description="Search source: 'graph' for graph-based search, 'knowledge' for knowledge base",
-    )
-    mode: Optional[StrictStr] = Field(
-        default=None, description="Search mode: local, global, or mix"
-    )
-    top_k: Optional[StrictInt] = Field(
-        default=None, description="Entities (local/mix) or relationships (global/mix) count"
-    )
-    chunk_top_k: Optional[StrictInt] = Field(
-        default=None, description="Text chunks from vector search"
-    )
-    max_entity_tokens: Optional[StrictInt] = Field(
-        default=None, description="Token budget for entity context"
-    )
-    max_relation_tokens: Optional[StrictInt] = Field(
-        default=None, description="Token budget for relation context"
-    )
-    max_total_tokens: Optional[StrictInt] = Field(
-        default=None,
-        description="Overall token ceiling; chunks get whatever remains after KG context",
+        default=None, description="Search source (only 'knowledge' is supported)"
     )
     limit: Optional[StrictInt] = Field(default=1, description="Max results for knowledge search")
     chain: Optional[StrictStr] = Field(
@@ -68,12 +48,6 @@ class SearchRecipesRequest(BaseModel):
     __properties: ClassVar[List[str]] = [
         "query",
         "source",
-        "mode",
-        "top_k",
-        "chunk_top_k",
-        "max_entity_tokens",
-        "max_relation_tokens",
-        "max_total_tokens",
         "limit",
         "chain",
         "token",
@@ -133,12 +107,6 @@ class SearchRecipesRequest(BaseModel):
             {
                 "query": obj.get("query"),
                 "source": obj.get("source"),
-                "mode": obj.get("mode"),
-                "top_k": obj.get("top_k"),
-                "chunk_top_k": obj.get("chunk_top_k"),
-                "max_entity_tokens": obj.get("max_entity_tokens"),
-                "max_relation_tokens": obj.get("max_relation_tokens"),
-                "max_total_tokens": obj.get("max_total_tokens"),
                 "limit": obj.get("limit") if obj.get("limit") is not None else 1,
                 "chain": obj.get("chain"),
                 "token": obj.get("token"),

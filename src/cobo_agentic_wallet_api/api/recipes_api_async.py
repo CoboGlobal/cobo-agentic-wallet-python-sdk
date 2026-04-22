@@ -17,7 +17,6 @@ from pydantic import StrictBool
 from cobo_agentic_wallet_api.models.recipe_create import RecipeCreate
 from cobo_agentic_wallet_api.models.recipe_library_sort_by import RecipeLibrarySortBy
 from cobo_agentic_wallet_api.models.recipe_review_request import RecipeReviewRequest
-from cobo_agentic_wallet_api.models.recipe_search_source import RecipeSearchSource
 from cobo_agentic_wallet_api.models.recipe_submission_create import RecipeSubmissionCreate
 from cobo_agentic_wallet_api.models.recipe_update import RecipeUpdate
 from cobo_agentic_wallet_api.models.search_recipes_request import SearchRecipesRequest
@@ -551,12 +550,6 @@ class AsyncRecipesApi:
     async def get_recipe_document(
         self,
         document_id: StrictStr,
-        source: Annotated[
-            Optional[RecipeSearchSource],
-            Field(
-                description="Document source to retrieve from. Possible values: `graph`, `knowledge`."
-            ),
-        ] = None,
         x_api_key: Optional[StrictStr] = None,
         _request_timeout: Union[
             None,
@@ -566,12 +559,10 @@ class AsyncRecipesApi:
     ) -> StandardResponseRecipeDocument:
         """Get full recipe document by ID
 
-        Retrieve the full content of a recipe document by its knowledge hub or graph document ID. The `document_id` is returned in search results.
+        Retrieve the full content of a recipe document by its knowledge hub document ID. The `document_id` is returned in search results.
 
         :param document_id: (required)
         :type document_id: str
-        :param source: Document source to retrieve from. Possible values: `graph`, `knowledge`.
-        :type source: RecipeSearchSource
         :param x_api_key:
         :type x_api_key: str
         :param _request_timeout: timeout setting for this request. If one
@@ -584,7 +575,6 @@ class AsyncRecipesApi:
 
         _param = self._get_recipe_document_serialize(
             document_id=document_id,
-            source=source,
             x_api_key=x_api_key,
         )
 
@@ -602,12 +592,6 @@ class AsyncRecipesApi:
     async def get_recipe_document_with_http_info(
         self,
         document_id: StrictStr,
-        source: Annotated[
-            Optional[RecipeSearchSource],
-            Field(
-                description="Document source to retrieve from. Possible values: `graph`, `knowledge`."
-            ),
-        ] = None,
         x_api_key: Optional[StrictStr] = None,
         _request_timeout: Union[
             None,
@@ -617,12 +601,10 @@ class AsyncRecipesApi:
     ) -> ApiResponse[StandardResponseRecipeDocument]:
         """Get full recipe document by ID
 
-        Retrieve the full content of a recipe document by its knowledge hub or graph document ID. The `document_id` is returned in search results.
+        Retrieve the full content of a recipe document by its knowledge hub document ID. The `document_id` is returned in search results.
 
         :param document_id: (required)
         :type document_id: str
-        :param source: Document source to retrieve from. Possible values: `graph`, `knowledge`.
-        :type source: RecipeSearchSource
         :param x_api_key:
         :type x_api_key: str
         :param _request_timeout: timeout setting for this request. If one
@@ -635,7 +617,6 @@ class AsyncRecipesApi:
 
         _param = self._get_recipe_document_serialize(
             document_id=document_id,
-            source=source,
             x_api_key=x_api_key,
         )
 
@@ -653,12 +634,6 @@ class AsyncRecipesApi:
     async def get_recipe_document_without_preload_content(
         self,
         document_id: StrictStr,
-        source: Annotated[
-            Optional[RecipeSearchSource],
-            Field(
-                description="Document source to retrieve from. Possible values: `graph`, `knowledge`."
-            ),
-        ] = None,
         x_api_key: Optional[StrictStr] = None,
         _request_timeout: Union[
             None,
@@ -668,12 +643,10 @@ class AsyncRecipesApi:
     ) -> AsyncRESTResponse:
         """Get full recipe document by ID
 
-        Retrieve the full content of a recipe document by its knowledge hub or graph document ID. The `document_id` is returned in search results.
+        Retrieve the full content of a recipe document by its knowledge hub document ID. The `document_id` is returned in search results.
 
         :param document_id: (required)
         :type document_id: str
-        :param source: Document source to retrieve from. Possible values: `graph`, `knowledge`.
-        :type source: RecipeSearchSource
         :param x_api_key:
         :type x_api_key: str
         :param _request_timeout: timeout setting for this request. If one
@@ -686,7 +659,6 @@ class AsyncRecipesApi:
 
         _param = self._get_recipe_document_serialize(
             document_id=document_id,
-            source=source,
             x_api_key=x_api_key,
         )
 
@@ -700,7 +672,6 @@ class AsyncRecipesApi:
     def _get_recipe_document_serialize(
         self,
         document_id,
-        source,
         x_api_key,
     ) -> RequestSerialized:
         _path_params: Dict[str, str] = {}
@@ -716,9 +687,6 @@ class AsyncRecipesApi:
         if document_id is not None:
             _path_params["document_id"] = document_id
         # process the query parameters
-        if source is not None:
-            _query_params.append(("source", source.value))
-
         # process the header parameters
         if x_api_key is not None:
             _header_params["X-API-Key"] = x_api_key
@@ -1668,7 +1636,7 @@ class AsyncRecipesApi:
     ) -> StandardResponseRecipeSearchResponse:
         """Search recipes
 
-        Search the recipe library using natural language. Set `source` to `knowledge` (default) to query the knowledge hub, or `graph` to query the LightRAG graph index. Optionally filter results by `chain` or `token`.
+        Search the recipe library using natural language via the knowledge hub. Optionally filter results by `chain` or `token`.
 
         :param search_recipes_request: (required)
         :type search_recipes_request: SearchRecipesRequest
@@ -1710,7 +1678,7 @@ class AsyncRecipesApi:
     ) -> ApiResponse[StandardResponseRecipeSearchResponse]:
         """Search recipes
 
-        Search the recipe library using natural language. Set `source` to `knowledge` (default) to query the knowledge hub, or `graph` to query the LightRAG graph index. Optionally filter results by `chain` or `token`.
+        Search the recipe library using natural language via the knowledge hub. Optionally filter results by `chain` or `token`.
 
         :param search_recipes_request: (required)
         :type search_recipes_request: SearchRecipesRequest
@@ -1752,7 +1720,7 @@ class AsyncRecipesApi:
     ) -> AsyncRESTResponse:
         """Search recipes
 
-        Search the recipe library using natural language. Set `source` to `knowledge` (default) to query the knowledge hub, or `graph` to query the LightRAG graph index. Optionally filter results by `chain` or `token`.
+        Search the recipe library using natural language via the knowledge hub. Optionally filter results by `chain` or `token`.
 
         :param search_recipes_request: (required)
         :type search_recipes_request: SearchRecipesRequest

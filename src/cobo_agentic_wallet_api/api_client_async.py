@@ -64,7 +64,7 @@ class AsyncApiClient:
         self.rest_client = rest_async.AsyncRESTClientObject(configuration)
         self.default_headers = {}
         # Set default User-Agent.
-        self.user_agent = "cobo-agentic-wallet-python-api/0.1.37"
+        self.user_agent = "cobo-agentic-wallet-python-api/0.1.38"
 
     async def __aenter__(self):
         return self
