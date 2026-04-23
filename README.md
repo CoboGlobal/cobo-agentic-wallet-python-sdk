@@ -36,90 +36,28 @@ Instead of giving an agent a private key, Cobo Agentic Wallet gives it a control
 
 ## Get Started
 
-### 1. Install the `caw` CLI
+Before using this SDK, follow the [Get Started guide](https://github.com/CoboGlobal/cobo-agentic-wallet#get-started) in the main repo to install the `caw` CLI, onboard, and get your credentials.
 
-```bash
-curl -fsSL https://raw.githubusercontent.com/CoboGlobal/cobo-agentic-wallet/master/install.sh | bash
-```
-
-Then add `caw` to your PATH:
-
-```bash
-export PATH="$HOME/.cobo-agentic-wallet/bin:$PATH"
-```
-
-Verify the installation:
-
-```bash
-caw --version
-```
-
-### 2. Onboard and pair with the wallet owner
-
-Run the interactive onboarding wizard. You will need an invitation code from the wallet owner.
-
-```bash
-caw onboard --wait --invitation-code <invitation-code>
-```
-
-The wizard runs through several phases until wallet `status` becomes `active`.
-
-Once the wallet is active, generate a pairing token for the wallet owner:
-
-```bash
-caw wallet pair --code-only
-```
-
-The wallet owner enters the token in the Cobo Agentic Wallet app to complete ownership pairing. Check pairing status with:
-
-```bash
-caw wallet pair-status
-```
-
-### 3. Claim testnet tokens from the faucet
-
-```bash
-# List addresses for the wallet
-caw address list
-
-# Request native Sepolia ETH
-caw faucet deposit --token-id SETH --address <your-seth-address>
-```
-
-Check the balance with `caw wallet balance`.
-
-### 4. Get credentials
-
-```bash
-caw wallet current --show-api-key
-```
-
-Set the output values as environment variables:
-
-```bash
-export AGENT_WALLET_API_URL=https://api.agenticwallet.cobo.com
-export AGENT_WALLET_API_KEY=your-agent-api-key
-export AGENT_WALLET_WALLET_ID=your-wallet-uuid
-```
-
-### 5. Install the SDK
+### 1. Install the SDK
 
 ```bash
 pip install cobo-agentic-wallet
 ```
 
-### 6. Submit a pact and run a transfer
+### 2. Submit a pact and run a transfer
 
 ```python
 import asyncio
 import os
+import time
 
-from cobo_agentic_wallet import WalletAPIClient
+from cobo_agentic_wallet.client import WalletAPIClient
+from cobo_agentic_wallet.errors import PolicyDeniedError
 
 CHAIN_ID = "SETH"
 TOKEN_ID = "SETH"
-DESTINATION = "0x1111111111111111111111111111111111111111"
 ALLOWED_AMOUNT = "0.001"
+DENIED_AMOUNT = "0.005"
 DENY_THRESHOLD = "0.002"
 
 
@@ -127,12 +65,22 @@ async def main() -> None:
     api_url = os.environ["AGENT_WALLET_API_URL"]
     api_key = os.environ["AGENT_WALLET_API_KEY"]
     wallet_id = os.environ["AGENT_WALLET_WALLET_ID"]
+    destination = os.environ.get(
+        "CAW_DESTINATION",
+        "0x1111111111111111111111111111111111111111",
+    )
 
-    async with WalletAPIClient(base_url=api_url, api_key=api_key) as client:
-        # Submit a pact requesting transfer permissions
+    client = WalletAPIClient(base_url=api_url, api_key=api_key)
+
+    try:
+        # Step 1: Submit a pact requesting transfer permissions for 24 hours.
+        print(
+            f"[1/6] Submitting pact (allow {CHAIN_ID}/{TOKEN_ID} transfers, "
+            f"deny if amount > {DENY_THRESHOLD})..."
+        )
         pact_resp = await client.submit_pact(
             wallet_id=wallet_id,
-            intent="Transfer tokens for testing",
+            intent="Transfer tokens for integration testing",
             spec={
                 "policies": [
                     {
@@ -140,43 +88,124 @@ async def main() -> None:
                         "type": "transfer",
                         "rules": {
                             "effect": "allow",
-                            "when": {"chain_in": [CHAIN_ID]},
+                            "when": {
+                                "chain_in": [CHAIN_ID],
+                                "token_in": [{"chain_id": CHAIN_ID, "token_id": TOKEN_ID}],
+                            },
                             "deny_if": {"amount_gt": DENY_THRESHOLD},
                         },
                     }
                 ],
-                "completion_conditions": [{"type": "time_elapsed", "threshold": "86400"}],
+                "completion_conditions": [
+                    {"type": "time_elapsed", "threshold": "86400"}
+                ],
             },
         )
         pact_id = pact_resp["pact_id"]
-        print(f"Pact submitted: {pact_id}")
+        print(f"      pact submitted: id={pact_id}")
 
-        # Poll until the owner approves the pact
+        # Step 2: Poll until the owner approves the pact.
+        print("[2/6] Waiting for owner approval in the Cobo Agentic Wallet app...")
+        started = time.monotonic()
+        last_status = None
         while True:
             pact = await client.get_pact(pact_id)
-            if pact["status"] == "active":
+            status = pact.get("status", "")
+            if status != last_status:
+                elapsed = int(time.monotonic() - started)
+                print(f"      pact status -> {status} (elapsed {elapsed}s)")
+                last_status = status
+            if status == "active":
                 break
-            if pact["status"] in ("rejected", "expired", "revoked", "completed"):
-                raise RuntimeError(f"Pact ended: {pact['status']}")
+            if status in ("rejected", "expired", "revoked", "completed"):
+                raise RuntimeError(f"Pact reached terminal status before use: {status}")
             await asyncio.sleep(5)
 
-        # Execute a transfer using the pact-scoped API key
-        async with WalletAPIClient(base_url=api_url, api_key=pact["api_key"]) as pact_client:
-            tx = await pact_client.transfer_tokens(
+        # Step 3: Use the pact-scoped API key for all subsequent calls.
+        print("[3/6] Pact is active; switching to pact-scoped API key.")
+        pact_api_key = pact["api_key"]
+        pact_client = WalletAPIClient(base_url=api_url, api_key=pact_api_key)
+
+        try:
+            # Step 4: Execute an allowed transfer (within the deny threshold).
+            print(
+                f"[4/6] Submitting allowed transfer: {ALLOWED_AMOUNT} {TOKEN_ID} -> {destination}"
+            )
+            allowed = await pact_client.transfer_tokens(
                 wallet_id,
                 chain_id=CHAIN_ID,
-                dst_addr=DESTINATION,
+                dst_addr=destination,
                 token_id=TOKEN_ID,
                 amount=ALLOWED_AMOUNT,
             )
-            print(f"Transfer submitted: {tx['id']}")
+            print(
+                f"      ALLOWED: tx_id={allowed.get('id')} "
+                f"status={allowed.get('status')} ({allowed.get('status_display') or '-'}) "
+                f"request_id={allowed.get('request_id')} "
+                f"hash={allowed.get('transaction_hash') or '-'}"
+            )
+
+            # Step 5: Trigger a policy denial (amount exceeds the deny threshold),
+            # then follow the denial guidance and retry with a compliant amount.
+            print(
+                f"[5/6] Submitting transfer that should be blocked: "
+                f"{DENIED_AMOUNT} {TOKEN_ID} -> {destination}"
+            )
+            try:
+                await pact_client.transfer_tokens(
+                    wallet_id,
+                    chain_id=CHAIN_ID,
+                    dst_addr=destination,
+                    token_id=TOKEN_ID,
+                    amount=DENIED_AMOUNT,
+                )
+            except PolicyDeniedError as exc:
+                denial = exc.denial
+                print(
+                    f"      DENIED as expected: http={exc.status_code} "
+                    f"code={denial.code} reason={denial.reason}"
+                )
+                if denial.details:
+                    print(f"      details: {denial.details}")
+                if denial.suggestion:
+                    print(f"      suggestion: {denial.suggestion}")
+
+                print(
+                    f"      retrying with compliant amount {ALLOWED_AMOUNT} {TOKEN_ID}..."
+                )
+                retry = await pact_client.transfer_tokens(
+                    wallet_id,
+                    chain_id=CHAIN_ID,
+                    dst_addr=destination,
+                    token_id=TOKEN_ID,
+                    amount=ALLOWED_AMOUNT,
+                )
+                print(
+                    f"      RETRY ALLOWED: tx_id={retry.get('id')} "
+                    f"status={retry.get('status')} ({retry.get('status_display') or '-'}) "
+                    f"request_id={retry.get('request_id')} "
+                    f"hash={retry.get('transaction_hash') or '-'}"
+                )
+        finally:
+            await pact_client.close()
+
+        # Step 6: Verify allowed and denied events in audit logs.
+        print("[6/6] Fetching recent audit entries for this wallet...")
+        logs = await client.list_audit_logs(wallet_id=wallet_id, limit=20)
+        items = logs.get("items", []) if isinstance(logs, dict) else []
+        allowed_count = sum(1 for item in items if item.get("result") == "allowed")
+        denied_count = sum(1 for item in items if item.get("result") == "denied")
+        print(f"      audit (last {len(items)} entries): allowed={allowed_count}, denied={denied_count}")
+
+    finally:
+        await client.close()
 
 
 if __name__ == "__main__":
     asyncio.run(main())
 ```
 
-### 7. Add MCP or an agent framework
+### 3. Add MCP or an agent framework
 
 Use a framework only after the direct SDK flow works.
 
