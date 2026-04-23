@@ -2052,7 +2052,7 @@ class TransactionsApi:
     ) -> StandardResponseTransferSubmitResult:
         """Transfer tokens
 
-        This operation initiates a token transfer from the specified wallet.  You need to provide `dst_addr`, `amount`, and `token_id`. The `chain_id` is automatically resolved from `token_id`. Gas fees are covered automatically — you do not need to prepare gas tokens.  Supply `request_id` to enable idempotency. If a transfer with the same `request_id` already exists for the same principal, the existing record is returned with `idempotent=true`.  The operation returns `status=200` (`PENDING_APPROVAL`) when an approval policy requires review before execution. Use the `pending_operation_id` in the response to track and resolve the approval.  <Note>Policy evaluation runs before submission. The operation returns an error if a policy denies the transfer.</Note>
+        This operation initiates a token transfer from the specified wallet.  You need to provide `dst_addr`, `amount`, and `token_id`. The `chain_id` is automatically resolved from `token_id`.  Supply `request_id` to enable idempotency. If a transfer with the same `request_id` already exists for the same principal, the existing record is returned with `idempotent=true`.  The operation returns `status=200` (`PENDING_APPROVAL`) when an approval policy requires review before execution. Use the `pending_operation_id` in the response to track and resolve the approval.  <Note>Policy evaluation runs before submission. The operation returns an error if a policy denies the transfer.</Note>
 
         :param wallet_uuid: The UUID of the wallet to transfer tokens from. Retrieve this value from the `id` field returned when the wallet was created. (required)
         :type wallet_uuid: str
@@ -2105,7 +2105,7 @@ class TransactionsApi:
     ) -> ApiResponse[StandardResponseTransferSubmitResult]:
         """Transfer tokens
 
-        This operation initiates a token transfer from the specified wallet.  You need to provide `dst_addr`, `amount`, and `token_id`. The `chain_id` is automatically resolved from `token_id`. Gas fees are covered automatically — you do not need to prepare gas tokens.  Supply `request_id` to enable idempotency. If a transfer with the same `request_id` already exists for the same principal, the existing record is returned with `idempotent=true`.  The operation returns `status=200` (`PENDING_APPROVAL`) when an approval policy requires review before execution. Use the `pending_operation_id` in the response to track and resolve the approval.  <Note>Policy evaluation runs before submission. The operation returns an error if a policy denies the transfer.</Note>
+        This operation initiates a token transfer from the specified wallet.  You need to provide `dst_addr`, `amount`, and `token_id`. The `chain_id` is automatically resolved from `token_id`.  Supply `request_id` to enable idempotency. If a transfer with the same `request_id` already exists for the same principal, the existing record is returned with `idempotent=true`.  The operation returns `status=200` (`PENDING_APPROVAL`) when an approval policy requires review before execution. Use the `pending_operation_id` in the response to track and resolve the approval.  <Note>Policy evaluation runs before submission. The operation returns an error if a policy denies the transfer.</Note>
 
         :param wallet_uuid: The UUID of the wallet to transfer tokens from. Retrieve this value from the `id` field returned when the wallet was created. (required)
         :type wallet_uuid: str
@@ -2158,7 +2158,7 @@ class TransactionsApi:
     ) -> RESTResponseType:
         """Transfer tokens
 
-        This operation initiates a token transfer from the specified wallet.  You need to provide `dst_addr`, `amount`, and `token_id`. The `chain_id` is automatically resolved from `token_id`. Gas fees are covered automatically — you do not need to prepare gas tokens.  Supply `request_id` to enable idempotency. If a transfer with the same `request_id` already exists for the same principal, the existing record is returned with `idempotent=true`.  The operation returns `status=200` (`PENDING_APPROVAL`) when an approval policy requires review before execution. Use the `pending_operation_id` in the response to track and resolve the approval.  <Note>Policy evaluation runs before submission. The operation returns an error if a policy denies the transfer.</Note>
+        This operation initiates a token transfer from the specified wallet.  You need to provide `dst_addr`, `amount`, and `token_id`. The `chain_id` is automatically resolved from `token_id`.  Supply `request_id` to enable idempotency. If a transfer with the same `request_id` already exists for the same principal, the existing record is returned with `idempotent=true`.  The operation returns `status=200` (`PENDING_APPROVAL`) when an approval policy requires review before execution. Use the `pending_operation_id` in the response to track and resolve the approval.  <Note>Policy evaluation runs before submission. The operation returns an error if a policy denies the transfer.</Note>
 
         :param wallet_uuid: The UUID of the wallet to transfer tokens from. Retrieve this value from the `id` field returned when the wallet was created. (required)
         :type wallet_uuid: str
