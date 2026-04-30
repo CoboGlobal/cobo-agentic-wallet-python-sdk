@@ -1,7 +1,6 @@
 """Cobo Agentic Wallet SDK — async Python client for the Agentic Wallet REST API."""
 
 from cobo_agentic_wallet.client import WalletAPIClient
-from cobo_agentic_wallet_api.models.policy_scope import PolicyScope
 from cobo_agentic_wallet_api.models.policy_type import PolicyType
 from cobo_agentic_wallet_api.models.principal_type import PrincipalType
 from cobo_agentic_wallet_api.models.vault_group_type import VaultGroupType
@@ -30,7 +29,6 @@ __all__ = [
     "NotFoundError",
     "PolicyDenial",
     "PolicyDeniedError",
-    "PolicyScope",
     "PolicyType",
     "PrincipalType",
     "WalletAPIClient",

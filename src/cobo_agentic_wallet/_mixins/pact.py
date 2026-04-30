@@ -87,6 +87,7 @@ class PactMixin:
         original_intent: str | None = None,
         spec: Any = None,
         name: str | None = None,
+        recipe_slugs: list[str] | None = None,
     ) -> Any:
         """Submit pact for approval"""
         pact_submit_request = PactSubmitRequest(
@@ -95,6 +96,7 @@ class PactMixin:
             original_intent=original_intent,
             spec=spec,
             name=name,
+            recipe_slugs=recipe_slugs,
         )
         response = await self._pacts_api.submit_pact(pact_submit_request)
         return self._extract_result(response)

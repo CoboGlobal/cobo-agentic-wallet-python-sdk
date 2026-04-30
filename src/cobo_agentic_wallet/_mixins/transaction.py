@@ -142,15 +142,17 @@ class TransactionMixin:
         return self._extract_result(response)
 
     async def list_recent_addresses(
-        self: "BaseClient", wallet_uuid: str, limit: int | None = None
+        self: "BaseClient", wallet_uuid: str, limit: int | None = None, token_id: str | None = None
     ) -> Any:
         """List recent addresses"""
-        response = await self._transactions_api.list_recent_addresses(wallet_uuid, limit)
+        response = await self._transactions_api.list_recent_addresses(wallet_uuid, limit, token_id)
         return self._extract_result(response)
 
-    async def list_recent_addresses_by_user(self: "BaseClient", limit: int | None = None) -> Any:
+    async def list_recent_addresses_by_user(
+        self: "BaseClient", limit: int | None = None, token_id: str | None = None
+    ) -> Any:
         """List recent addresses for current user"""
-        response = await self._transactions_api.list_recent_addresses_by_user(limit)
+        response = await self._transactions_api.list_recent_addresses_by_user(limit, token_id)
         return self._extract_result(response)
 
     async def message_sign(

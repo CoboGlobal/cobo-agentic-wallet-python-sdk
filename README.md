@@ -22,6 +22,14 @@ Instead of giving an agent a private key, Cobo Agentic Wallet gives it a control
 [![Python versions](https://img.shields.io/pypi/pyversions/cobo-agentic-wallet)](https://pypi.org/project/cobo-agentic-wallet/)
 [![License](https://img.shields.io/github/license/CoboGlobal/cobo-agentic-wallet-python-sdk)](https://github.com/CoboGlobal/cobo-agentic-wallet-python-sdk/blob/master/LICENSE)
 
+## AI coding agent support
+
+If you are building with an AI coding agent (Claude Code, Cursor, Windsurf, etc.), install the CAW developer skill to give it context on the SDK and CLI:
+
+```bash
+npx skills add CoboGlobal/cobo-agentic-wallet --skill cobo-agentic-wallet-developer --yes --global
+```
+
 ## Related repositories
 
 - [CAW TypeScript SDK](https://github.com/CoboGlobal/cobo-agentic-wallet-typescript-sdk)

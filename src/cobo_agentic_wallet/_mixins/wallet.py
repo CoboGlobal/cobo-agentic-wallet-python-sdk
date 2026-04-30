@@ -81,7 +81,7 @@ class WalletMixin:
         return self._extract_result(response)
 
     async def initiate_wallet_pair(self: "BaseClient", wallet_pair_initiate: Any) -> Any:
-        """Initiate wallet pairing"""
+        """Initiate wallet pairing (or restore code)"""
         response = await self._wallets_api.initiate_wallet_pair(wallet_pair_initiate)
         return self._extract_result(response)
 
@@ -110,9 +110,11 @@ class WalletMixin:
         response = await self._wallets_api.update_wallet(wallet_uuid, wallet_update)
         return self._extract_result(response)
 
-    async def wallet_reshare(self: "BaseClient", wallet_uuid: str, *, node_id: str = None) -> Any:
+    async def wallet_reshare(
+        self: "BaseClient", wallet_uuid: str, *, node_id: str = None, token: str | None = None
+    ) -> Any:
         """Initiate wallet reshare"""
-        wallet_reshare_request = WalletReshareRequest(node_id=node_id)
+        wallet_reshare_request = WalletReshareRequest(node_id=node_id, token=token)
         response = await self._wallets_api.wallet_reshare(wallet_uuid, wallet_reshare_request)
         return self._extract_result(response)
 

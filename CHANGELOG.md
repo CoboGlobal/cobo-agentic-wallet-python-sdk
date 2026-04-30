@@ -1,5 +1,15 @@
 # Changelog
 
+## 0.1.39
+
+- Bumped OpenAPI document version to 1.2.4
+- **Pact**: `submit_pact` now accepts an optional `recipe_slugs` parameter to associate pact templates at submission time
+- **Recipe**: replaced the full recipe-library API surface with the focused method:
+  - `search_recipes` — `query` is now optional (defaults to `""`)
+- **Transaction**: `list_recent_addresses` and `list_recent_addresses_by_user` accept a new optional `token_id` filter
+- **Models added**: `WalletPairTokenPurpose`
+- **README**: added AI coding-agent setup section (`npx skills add` for the CAW developer skill)
+
 ## 0.1.34
 
 - Initial release of the Python SDK
