@@ -1,6 +1,6 @@
 [project]
 name = "cobo-agentic-wallet"
-version = "0.1.39"
+version = "0.1.40"
 description = "Python SDK for Cobo Agent Wallet - The Programmable Bank for Autonomous Agents"
 readme = "README.md"
 requires-python = ">=3.11"
@@ -33,11 +33,11 @@ Homepage = "https://github.com/CoboGlobal/cobo-agentic-wallet-python-sdk"
 Documentation = "https://github.com/CoboGlobal/cobo-agentic-wallet-python-sdk#readme"
 Repository = "https://github.com/CoboGlobal/cobo-agentic-wallet-python-sdk"
 Issues = "https://github.com/CoboGlobal/cobo-agentic-wallet-python-sdk/issues"
-Changelog = "https://github.com/CoboGlobal/cobo-agentic-wallet-python-sdk/blob/main/CHANGELOG.md"
+Changelog = "https://github.com/CoboGlobal/cobo-agentic-wallet-python-sdk/blob/master/CHANGELOG.md"
 
 [project.optional-dependencies]
 mcp = [
-    "fastmcp>=3.0.0",
+    "fastmcp>=3.2.0",
 ]
 langchain = [
     "langchain>=1.0.0",
@@ -49,7 +49,7 @@ agno = [
     "agno>=2.4.8",
 ]
 all = [
-    "fastmcp>=3.0.0",
+    "fastmcp>=3.2.0",
     "langchain>=1.0.0",
     "openai-agents>=0.10.4",
     "agno>=2.4.8",
@@ -70,7 +70,7 @@ dev = [
     "aioresponses>=0.7.4",
     "ruff>=0.6.0",
     "pyyaml>=6.0",
-    "fastmcp>=3.0.0",
+    "fastmcp>=3.2.0",
     "langchain>=1.0.0",
     "openai-agents>=0.10.4",
     "agno>=2.4.8",
@@ -141,5 +141,10 @@ dev = [
     "telethon>=1.42.0",
     # MCP integration tests (conftest imports cobo_agentic_wallet.mcp.server)
     "mcp>=1.0.0",
-    "fastmcp>=3.0.0",
+    "fastmcp>=3.2.0",
+    # caw-eval treasury management (plan-serene-dahl Wave 1)
+    "web3>=7.0.0",
+    "solders>=0.21.0",
+    # caw-eval trace upload (was previously installed ad-hoc, now declared)
+    "langfuse>=4.0.0",
 ]

@@ -17,16 +17,6 @@ class RecipeMixin:
     _extract_result: Any
     _recipes_api: Any
 
-    async def list_pact_templates(
-        self: "BaseClient",
-        offset: int | None = None,
-        limit: int | None = None,
-        recipe_slug: str | None = None,
-    ) -> Any:
-        """List pact templates"""
-        response = await self._recipes_api.list_pact_templates(offset, limit, recipe_slug)
-        return self._extract_result(response)
-
     async def search_recipes(
         self: "BaseClient",
         query: str | None = "",
@@ -36,6 +26,7 @@ class RecipeMixin:
         token: str | None = None,
         keywords: list[str] | None = None,
         search_type: Any | None = None,
+        wallet_id: str | None = None,
     ) -> Any:
         """Search recipes"""
         search_recipes_request = SearchRecipesRequest(
@@ -46,6 +37,7 @@ class RecipeMixin:
             token=token,
             keywords=keywords,
             search_type=search_type,
+            wallet_id=wallet_id,
         )
         response = await self._recipes_api.search_recipes(search_recipes_request)
         return self._extract_result(response)
